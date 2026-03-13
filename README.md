@@ -59,7 +59,7 @@ Figma Project Link:
 
 Project developed by:
 
-- Guilherme Dias Karkoski
+- 
 - [Collaborator Name]
 - [Collaborator Name]
 - [Collaborator Name]
