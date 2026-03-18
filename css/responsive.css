@@ -1,0 +1,81 @@
+/* ===== Mobile-first responsive adjustments ===== */
+
+/* Extra-small (< 576px) — base styles */
+.dashboard-card {
+  padding: 1rem 1.1rem;
+}
+
+.stat-box__value {
+  font-size: 1.1rem;
+}
+
+.dashboard-card__title {
+  font-size: 0.95rem;
+}
+
+.header__brand {
+  font-size: 1.05rem;
+}
+
+/* Small devices (>= 576px) */
+@media (min-width: 576px) {
+  .dashboard-card {
+    padding: 1.15rem 1.35rem;
+  }
+
+  .stat-box__value {
+    font-size: 1.2rem;
+  }
+
+  .dashboard-card__title {
+    font-size: 1rem;
+  }
+}
+
+/* Medium devices (>= 768px) */
+@media (min-width: 768px) {
+  .dashboard-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .stat-box__value {
+    font-size: 1.3rem;
+  }
+
+  .dashboard-card__title {
+    font-size: 1.05rem;
+  }
+
+  .header__brand {
+    font-size: 1.25rem;
+  }
+}
+
+/* Large devices (>= 992px) — two-column layout kicks in */
+@media (min-width: 992px) {
+  .stat-box__value {
+    font-size: 1.25rem;
+  }
+
+  .stat-box__label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra-large devices (>= 1200px) */
+@media (min-width: 1200px) {
+  .dashboard-card {
+    padding: 1.5rem 1.75rem;
+  }
+
+  .stat-box__value {
+    font-size: 1.35rem;
+  }
+}
+
+/* XXL devices (>= 1400px) */
+@media (min-width: 1400px) {
+  .dashboard-card {
+    padding: 1.5rem 2rem;
+  }
+}
