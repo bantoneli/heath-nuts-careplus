@@ -53,7 +53,7 @@ care-plus-challenge/
 The interface designs and prototypes were created in Figma.
 
 Figma Project Link:  
-`[Insert Figma Link Here]`
+https://www.figma.com/design/KKboX080aRXhbAyOwrMfv4/Challenger-Care-Plus
 
 ## Collaborators
 
