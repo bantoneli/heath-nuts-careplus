@@ -137,3 +137,57 @@ function renderAppointments(data) {
     </div>
   `).join('');
 }
+
+/**
+ * Header
+ */
+function renderHeader(options = {}) {
+  const placeholder = document.querySelector('#header-placeholder');
+  if (!placeholder) return;
+
+  const activePage = options.activePage || 'home';
+
+  placeholder.innerHTML = `
+  <header class="header py-2">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-4 d-flex align-items-center gap-2">
+          <button class="btn btn-sm p-1 header__nav-link" aria-label="Menu">
+            <i class="bi bi-grid-3x3-gap-fill fs-5"></i>
+          </button>
+          <span class="header__nav-link d-none d-sm-inline">Menu</span>
+        </div>
+        <div class="col-4 text-center d-flex align-items-center justify-content-center gap-2">
+          <span class="header__logo-icon">
+            <img src="assets/svg/health_nuts_icon.svg" alt="Health Nuts" width="36" height="36">
+          </span>
+          <span class="header__brand">Health Nuts</span>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-end gap-2">
+          <span class="header__nav-link d-none d-md-inline">Home</span>
+          <a href="index.html" class="header__nav-link ${activePage === 'home' ? 'active' : ''}" aria-label="Home">
+            <i class="bi bi-house-door-fill fs-5"></i>
+          </a>
+          <a href="#" class="header__nav-link" aria-label="Perfil">
+            <i class="bi bi-person-circle fs-5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>`;
+}
+
+/**
+ * Footer
+ */
+function renderFooter() {
+  const placeholder = document.querySelector('#footer-placeholder');
+  if (!placeholder) return;
+
+  placeholder.innerHTML = `
+  <footer class="footer">
+    <div class="container">
+      Feito com <span class="footer__heart">&hearts;</span> por Care Plus. Todos os direitos reservados.
+    </div>
+  </footer>`;
+}
