@@ -5,6 +5,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  renderHeader({ activePage: 'home' });
+  renderFooter();
   initEventListeners();
   initDashboard();
 });
