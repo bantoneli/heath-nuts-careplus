@@ -17,6 +17,21 @@
   font-size: 1.05rem;
 }
 
+/* Notifications: stack item actions on small screens */
+.notification-item {
+  flex-wrap: wrap;
+}
+
+.notification-item__subtitle {
+  white-space: normal;
+}
+
+.notification-item__actions {
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 0.35rem;
+}
+
 /* Small devices (>= 576px) */
 @media (min-width: 576px) {
   .dashboard-card {
@@ -29,6 +44,15 @@
 
   .dashboard-card__title {
     font-size: 1rem;
+  }
+
+  .notification-item {
+    flex-wrap: nowrap;
+  }
+
+  .notification-item__actions {
+    width: auto;
+    margin-top: 0;
   }
 }
 
