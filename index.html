@@ -1,19 +1,240 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Nuts Dashboard</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="css/style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Nuts — Dashboard</title>
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-	<script src="js/script.js"></script>
+  <!-- Header injetado via JS (componente reutilizável) -->
+  <div id="header-placeholder"></div>
 
+  <!-- ===== MAIN ===== -->
+  <main class="py-4">
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- ===== COLUNA ESQUERDA ===== -->
+        <div class="col-lg-6 d-flex flex-column gap-4">
+
+          <!-- Card: Bem-vindo -->
+          <section class="dashboard-card" aria-label="Resumo do usuário">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h1 class="dashboard-card__title">Bem-vindo de volta, João!</h1>
+              <button class="btn btn-accent" id="btn-atualizar">
+                <i class="bi bi-arrow-clockwise"></i> Atualizar
+              </button>
+            </div>
+
+            <!-- Stat boxes 2x2 -->
+            <div class="row g-2 mb-3" id="stats-grid">
+              <div class="col-6">
+                <div class="stat-box">
+                  <span class="stat-box__label">Nuts</span>
+                  <span class="stat-box__value">
+                    3.456 nuts
+                    <i class="bi bi-coin stat-box__icon"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stat-box">
+                  <span class="stat-box__label">Consultas</span>
+                  <span class="stat-box__value">
+                    2 futuras
+                    <i class="bi bi-calendar-event stat-box__icon"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stat-box">
+                  <span class="stat-box__label">Ranking Combinado</span>
+                  <span class="stat-box__value">
+                    234º Lugar
+                    <i class="bi bi-trophy stat-box__icon"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stat-box">
+                  <span class="stat-box__label">Ranking da sua Empresa</span>
+                  <span class="stat-box__value">
+                    3º Lugar
+                    <i class="bi bi-trophy-fill stat-box__icon"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Priority message -->
+            <p class="priority-msg mb-3">
+              <span class="priority-msg__dot"></span>
+              Você está a 150 pts da Prioridade 1 — você está quase lá!
+            </p>
+
+            <!-- Action buttons -->
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-primary-custom" id="btn-novo-agendamento">
+                <i class="bi bi-plus-circle-fill"></i> Novo agendamento
+              </button>
+              <button class="btn btn-accent" id="btn-ver-beneficios">
+                <i class="bi bi-gift-fill"></i> Ver benefícios
+              </button>
+            </div>
+          </section>
+
+          <!-- Card: Missão do dia -->
+          <section class="dashboard-card" aria-label="Missão do dia">
+            <div class="mission-card">
+              <div class="mission-card__text">
+                <span class="mission-card__label">Missão do dia</span>
+                <p class="mission-card__desc mb-0">Auferir pressão arterial</p>
+              </div>
+              <span class="badge-pts">+10 pts</span>
+            </div>
+          </section>
+
+          <!-- Card: Sequência -->
+          <section class="dashboard-card" aria-label="Sequência de dias">
+            <div class="streak-card">
+              <span class="icon-circle icon-circle--accent me-3">
+                <i class="bi bi-arrow-repeat"></i>
+              </span>
+              <div class="streak-card__text">
+                <p class="streak-card__title mb-0">Sequência de 5 dias</p>
+                <span class="streak-card__sub">Complete hoje para manter o bônus</span>
+              </div>
+              <span class="badge-pts badge-pts--yellow ms-2">+10 pts</span>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ===== COLUNA DIREITA ===== -->
+        <div class="col-lg-6 d-flex flex-column gap-4">
+
+          <!-- Card: Ranking por Especialidade -->
+          <section class="dashboard-card" aria-label="Ranking por especialidade">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h2 class="dashboard-card__title">Ranking por Especialidade</h2>
+              <button class="btn btn-accent" id="btn-ver-ranking">
+                <i class="bi bi-bar-chart-line-fill"></i> Ver ranking
+              </button>
+            </div>
+
+            <div id="ranking-list">
+              <!-- Nutrição -->
+              <div class="ranking-item">
+                <div class="ranking-item__icon">
+                  <img src="assets/img/nutricao.png" alt="Nutrição" width="36" height="36">
+                </div>
+                <div class="ranking-item__info">
+                  <span class="ranking-item__name">Nutrição</span>
+                  <span class="ranking-item__pts">1.250 pts</span>
+                </div>
+                <span class="ranking-item__rank">120º</span>
+              </div>
+
+              <!-- Psicologia -->
+              <div class="ranking-item">
+                <div class="ranking-item__icon">
+                  <img src="assets/img/psicologia.png" alt="Psicologia" width="36" height="36">
+                </div>
+                <div class="ranking-item__info">
+                  <span class="ranking-item__name">Psicologia</span>
+                  <span class="ranking-item__pts">1.320 pts</span>
+                </div>
+                <span class="ranking-item__rank">130º</span>
+              </div>
+
+              <!-- Endocrinologia -->
+              <div class="ranking-item">
+                <div class="ranking-item__icon">
+                  <img src="assets/img/endocrinologia.png" alt="Endocrinologia" width="36" height="36">
+                </div>
+                <div class="ranking-item__info">
+                  <span class="ranking-item__name">Endocrinologia</span>
+                  <span class="ranking-item__pts">1.450 pts</span>
+                </div>
+                <span class="ranking-item__rank">167º</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Card: Próximos agendamentos -->
+          <section class="dashboard-card" aria-label="Próximos agendamentos">
+            <h2 class="dashboard-card__title mb-3">Próximos agendamentos</h2>
+
+            <div id="appointments-list">
+              <div class="appointment-item">
+                <span class="appointment-item__specialty">Endocrinologista</span>
+                <p class="appointment-item__detail mb-0">Seg, 12 Nov &bull; 09:00 &bull; Dra. Cora Coralina</p>
+              </div>
+              <div class="appointment-item">
+                <span class="appointment-item__specialty">Nutricionista</span>
+                <p class="appointment-item__detail mb-0">Qui, 22 Nov &bull; 14:30 &bull; Nutricionista José Pereira</p>
+              </div>
+              <div class="appointment-item">
+                <span class="appointment-item__specialty">Dermatologista</span>
+                <p class="appointment-item__detail mb-0">Sex, 06 Dez &bull; 11:15 &bull; Dr. João Pelin</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Card: Badges conquistados -->
+          <section class="dashboard-card" aria-label="Badges conquistados">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h2 class="dashboard-card__title">Badges conquistados</h2>
+              <button class="btn btn-accent" id="btn-ver-regulamento">
+                <i class="bi bi-file-earmark-text-fill"></i> Ver regulamento
+              </button>
+            </div>
+
+            <div class="badges-categories mb-2">
+              <span class="badges-categories__tag">Dermatologia</span>
+              <span class="badges-categories__tag">Endocrinologia</span>
+              <span class="badges-categories__tag">Nutrição</span>
+              <span class="badges-categories__tag">Odontologia</span>
+              <span class="badges-categories__tag">Psicologia</span>
+            </div>
+
+            <div class="badges-icons">
+              <i class="bi bi-tree-fill badges-icons__tree"></i>
+              <i class="bi bi-tree-fill badges-icons__tree" style="opacity: 0.6;"></i>
+              <i class="bi bi-tree-fill badges-icons__tree" style="opacity: 0.4;"></i>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JavaScript Vanilla -->
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
