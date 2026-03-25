@@ -138,14 +138,149 @@ function renderAppointments(data) {
   `).join('');
 }
 
+/* ===== Notificações: Mock Data ===== */
+
+const NotificationsData = {
+  groups: [
+    {
+      label: 'Hoje',
+      items: [
+        {
+          icon: 'bi-calendar-check-fill',
+          iconColor: 'primary',
+          title: 'Lembrete de consulta amanhã às 09:30',
+          subtitle: 'Clínica Vida+ Centro • Check-in antecipado garante +30 pts',
+          pts: 30,
+          action: { label: 'Ver rota', icon: 'bi-signpost-split-fill' },
+          unread: true
+        },
+        {
+          icon: 'bi-graph-up-arrow',
+          iconColor: 'accent',
+          title: 'Você subiu para 12º no ranking da empresa',
+          subtitle: 'Parabéns! Continue registrando hábitos diários.',
+          badge: 'Novo',
+          unread: true
+        }
+      ]
+    },
+    {
+      label: 'Ontem',
+      items: [
+        {
+          icon: 'bi-gift-fill',
+          iconColor: 'primary',
+          title: 'Cupom de benefício disponível: 20% em exames',
+          subtitle: 'Resgate válido até 30/10 • Parceiro: Labsul Unidade 2',
+          pts: 20,
+          action: { label: 'Resgatar', icon: 'bi-qr-code' },
+          unread: false
+        },
+        {
+          icon: 'bi-trophy-fill',
+          iconColor: 'accent',
+          title: 'Meta semanal alcançada',
+          subtitle: 'Você completou 5/5 hábitos de bem-estar • +50 pts creditados',
+          pts: 50,
+          unread: false
+        }
+      ]
+    },
+    {
+      label: 'Esta semana',
+      items: [
+        {
+          icon: 'bi-bell-fill',
+          iconColor: 'primary',
+          title: 'Notificações inteligentes ativadas',
+          subtitle: 'Receba alertas de agendamentos, pontos e benefícios relevantes',
+          action: { label: 'Configurar', icon: null },
+          unread: false
+        }
+      ]
+    }
+  ]
+};
+
 /**
- * Header
+ * Renderiza a lista de notificações agrupadas por período.
+ */
+function renderNotificationsList(data) {
+  const container = document.querySelector('#notifications-list');
+  if (!container) return;
+
+  const groupsHtml = data.groups.map(group => {
+    const itemsHtml = group.items.map(item => {
+      const iconColorClass = item.iconColor === 'accent'
+        ? 'icon-circle--accent'
+        : 'icon-circle--primary';
+
+      let actionsHtml = '';
+      if (item.pts) {
+        actionsHtml += `<span class="badge-pts badge-pts--yellow">+${item.pts} pts</span>`;
+      }
+      if (item.badge) {
+        actionsHtml += `<span class="badge-pts">${item.badge}</span>`;
+      }
+      if (item.action) {
+        actionsHtml += `
+          <button class="btn btn-primary-custom btn-sm notification-item__cta">
+            ${item.action.icon ? `<i class="bi ${item.action.icon}"></i>` : ''}${item.action.label}
+          </button>`;
+      }
+
+      return `
+        <div class="notification-item ${item.unread ? 'notification-item--unread' : ''}">
+          <div class="icon-circle ${iconColorClass}">
+            <i class="bi ${item.icon}"></i>
+          </div>
+          <div class="notification-item__body">
+            <span class="notification-item__title">${item.title}</span>
+            <span class="notification-item__subtitle">${item.subtitle}</span>
+          </div>
+          <div class="notification-item__actions">
+            ${actionsHtml}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="notification-group">
+        <h6 class="notification-group__title">${group.label}</h6>
+        ${itemsHtml}
+      </div>`;
+  }).join('');
+
+  const endHtml = `
+    <div class="notification-list__end">
+      <i class="bi bi-envelope-open"></i>
+      <span>Sem mais notificações</span>
+    </div>`;
+
+  container.innerHTML = groupsHtml + endHtml;
+}
+
+/**
+ * Handler: Botão "Marcar como lidas" — remove indicador visual de não lidas.
+ */
+function handleMarcarComoLidas() {
+  const unreadItems = document.querySelectorAll('.notification-item--unread');
+  unreadItems.forEach(item => item.classList.remove('notification-item--unread'));
+}
+
+/**
+ * Componente reutilizável: Header.
+ * Injeta o HTML do header no elemento #header-placeholder.
+ * Aceita options para marcar a página ativa na navegação.
  */
 function renderHeader(options = {}) {
   const placeholder = document.querySelector('#header-placeholder');
   if (!placeholder) return;
 
   const activePage = options.activePage || 'home';
+  const prefix = options.isSubpage ? '../' : '';
+  const homeHref = prefix + 'index.html';
+  const notifHref = prefix + 'pages/notificacoes.html';
 
   placeholder.innerHTML = `
   <header class="header py-2">
@@ -159,17 +294,19 @@ function renderHeader(options = {}) {
         </div>
         <div class="col-4 text-center d-flex align-items-center justify-content-center gap-2">
           <span class="header__logo-icon">
-            <img src="assets/svg/health_nuts_icon.svg" alt="Health Nuts" width="36" height="36">
+            <img src="${prefix}assets/svg/health_nuts_icon.svg" alt="Health Nuts" width="36" height="36">
           </span>
           <span class="header__brand">Health Nuts</span>
         </div>
         <div class="col-4 d-flex align-items-center justify-content-end gap-2">
-          <span class="header__nav-link d-none d-md-inline">Home</span>
-          <a href="index.html" class="header__nav-link ${activePage === 'home' ? 'active' : ''}" aria-label="Home">
+          <span class="header__nav-link d-none d-md-inline ${activePage === 'notifications' ? '' : 'active'}">
+            ${activePage === 'notifications' ? 'Notificações' : 'Home'}
+          </span>
+          <a href="${homeHref}" class="header__nav-link ${activePage === 'home' ? 'active' : ''}" aria-label="Home">
             <i class="bi bi-house-door-fill fs-5"></i>
           </a>
-          <a href="#" class="header__nav-link" aria-label="Perfil">
-            <i class="bi bi-person-circle fs-5"></i>
+          <a href="${notifHref}" class="header__nav-link ${activePage === 'notifications' ? 'active' : ''}" aria-label="Notificações">
+            <i class="bi bi-bell-fill fs-5"></i>
           </a>
         </div>
       </div>
@@ -178,7 +315,8 @@ function renderHeader(options = {}) {
 }
 
 /**
- * Footer
+ * Componente reutilizável: Footer.
+ * Injeta o HTML do footer no elemento #footer-placeholder.
  */
 function renderFooter() {
   const placeholder = document.querySelector('#footer-placeholder');
