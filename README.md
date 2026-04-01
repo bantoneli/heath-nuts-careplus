@@ -25,25 +25,30 @@ These technologies were chosen to ensure responsive layouts, visual consistency,
 The project consists of multiple front-end screens designed to represent different parts of the application. The interfaces were developed following best practices for layout organization, responsiveness, and maintainability.
 
 ```
-care-plus-challenge/
-├── index.html
+heath-nuts-careplus/
+├── index.html              
 ├── pages/
 │   ├── login.html
-│   ├── dashboard.html
-│   └── contato.html
+│   ├── beneficios.html
+│   ├── rankings.html
+│   ├── agendamento.html
+│   ├── regulamento.html
+│   └── notificacoes.html
 ├── css/
-│   ├── styles.css
+│   ├── style.css
 │   └── responsive.css
 ├── js/
-│   ├── main.js
-│   └── utils.js
+│   ├── main.js            
+│   ├── components.js      
+│   └── notificacoes.js    
+├── mocks/                 
+│   ├── data/
+│   │   └── mock-data.js   
+│   └── behaviors/
+│       └── mock-behaviors.js 
 ├── assets/
-│   ├── images/
-│   ├── icons/
-│   └── logos/
-├── components/
-│   ├── navbar.html
-│   └── footer.html
+│   ├── img/
+│   └── svg/
 └── README.md
 ```
 
