@@ -97,6 +97,80 @@
   }
 }
 
+/* Rankings: mobile base */
+.ranking-podium {
+  flex-direction: column;
+}
+
+.ranking-podium__item {
+  min-width: auto;
+}
+
+.ranking-filters {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.ranking-filters__pills {
+  flex-wrap: wrap;
+}
+
+.points-history__item {
+  flex-wrap: wrap;
+}
+
+.points-history__meta {
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 0.25rem;
+  gap: 0.6rem;
+}
+
+.ranking-general__gain {
+  font-size: 0.75rem;
+}
+
+.ranking-general__item {
+  flex-wrap: wrap;
+}
+
+/* Small devices (>= 576px) — Rankings */
+@media (min-width: 576px) {
+  .ranking-podium {
+    flex-direction: row;
+  }
+
+  .ranking-filters__pills {
+    flex-wrap: nowrap;
+  }
+
+  .points-history__item {
+    flex-wrap: nowrap;
+  }
+
+  .points-history__meta {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .ranking-general__gain {
+    font-size: 0.82rem;
+  }
+
+  .ranking-general__item {
+    flex-wrap: nowrap;
+  }
+}
+
+/* Large devices (>= 992px) — Rankings filters inline */
+@media (min-width: 992px) {
+  .ranking-filters {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
 /* XXL devices (>= 1400px) */
 @media (min-width: 1400px) {
   .dashboard-card {
