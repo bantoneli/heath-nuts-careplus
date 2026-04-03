@@ -94,3 +94,40 @@ const NotificationsData = {
     }
   ]
 };
+
+const RankingsData = {
+  specialties: ['Dermatologia', 'Endocrinologia', 'Nutrição', 'Odontologia', 'Psicologia'],
+  activeSpecialty: 'Endocrinologia',
+  rankingTypes: ['Geral', 'Equipe'],
+  scopeTypes: ['Associados', 'Empresas'],
+  activeRankingType: 'Geral',
+  activeScopeType: 'Associados',
+  lastUpdated: 'Atualizado hoje, 08:00',
+
+  userPerformance: {
+    position: 167,
+    points: 1250,
+    pointsToNext: 150,
+    monthlyGain: 120
+  },
+
+  topRanking: [
+    { name: 'Ana Primeira', pts: 1950, avatarIcon: 'bi-person-fill', tier: 'gold' },
+    { name: 'João Segundo', pts: 1820, avatarIcon: 'bi-person-fill', tier: 'silver' },
+    { name: 'Maria Tercia', pts: 1520, avatarIcon: 'bi-person-fill', tier: 'bronze' }
+  ],
+
+  generalRanking: [
+    { position: 165, name: 'Maria Silva', pts: 1450, monthlyGain: 60, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 166, name: 'Carlos Souza', pts: 1320, monthlyGain: 40, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 167, name: 'Você', pts: 1250, monthlyGain: 120, avatarIcon: 'bi-person-fill', isCurrentUser: true },
+    { position: 168, name: 'Jane Doe', pts: 1240, monthlyGain: 30, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 169, name: 'Ana Campos', pts: 1210, monthlyGain: 20, avatarIcon: 'bi-person-fill', isCurrentUser: false }
+  ],
+
+  pointsHistory: [
+    { icon: 'bi-heart-pulse', title: 'Avaliação de Saúde', subtitle: 'Avaliação Hormonal completa', nuts: 100, pts: 100, expiry: '05/set/2026' },
+    { icon: 'bi-heart-pulse', title: 'Bioimpedância', subtitle: 'Realizar exame de bioimpedância', nuts: 50, pts: 50, expiry: '05/set/2026' },
+    { icon: 'bi-heart-pulse', title: 'Calorimetria', subtitle: 'Realizar exame de calorimetria', nuts: 50, pts: 50, expiry: '05/set/2026' }
+  ]
+};
