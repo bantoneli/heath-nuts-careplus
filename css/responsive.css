@@ -116,6 +116,12 @@
   flex-wrap: wrap;
 }
 
+
+
+.specialties-filters__pills {
+  flex-wrap: wrap;
+}
+
 .points-history__item {
   flex-wrap: wrap;
 }
@@ -145,6 +151,10 @@
     flex-wrap: nowrap;
   }
 
+  .specialties-filters__pills {
+    flex-wrap: nowrap;
+  }
+
   .points-history__item {
     flex-wrap: nowrap;
   }
@@ -170,6 +180,7 @@
     align-items: center;
   }
 }
+
 
 /* XXL devices (>= 1400px) */
 @media (min-width: 1400px) {
