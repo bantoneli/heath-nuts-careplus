@@ -116,8 +116,6 @@
   flex-wrap: wrap;
 }
 
-
-
 .specialties-filters__pills {
   flex-wrap: wrap;
 }
@@ -186,5 +184,16 @@
 @media (min-width: 1400px) {
   .dashboard-card {
     padding: 1.5rem 2rem;
+  }
+}
+
+/* Agendamento: período em telas estreitas */
+@media (max-width: 575.98px) {
+  #schedule-period.ranking-filters__toggle {
+    flex-direction: column;
+  }
+
+  #schedule-period .ranking-filters__toggle-btn {
+    width: 100%;
   }
 }
