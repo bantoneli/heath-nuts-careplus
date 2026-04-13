@@ -131,3 +131,68 @@ const RankingsData = {
     { icon: 'bi-heart-pulse', title: 'Calorimetria', subtitle: 'Realizar exame de calorimetria', nuts: 50, pts: 50, expiry: '05/set/2026' }
   ]
 };
+
+const RegulamentoData = {
+  specialties: ['Dermatologia', 'Endocrinologia', 'Nutrição', 'Odontologia', 'Psicologia'],
+  activeSpecialty: 'Endocrinologia',
+  
+
+  badges: [
+    { position: 165, name: 'Maria Silva', pts: 1450, monthlyGain: 60, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 166, name: 'Carlos Souza', pts: 1320, monthlyGain: 40, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 167, name: 'Você', pts: 1250, monthlyGain: 120, avatarIcon: 'bi-person-fill', isCurrentUser: true },
+    { position: 168, name: 'Jane Doe', pts: 1240, monthlyGain: 30, avatarIcon: 'bi-person-fill', isCurrentUser: false },
+    { position: 169, name: 'Ana Campos', pts: 1210, monthlyGain: 20, avatarIcon: 'bi-person-fill', isCurrentUser: false }
+  ],
+
+  actions: [
+    { icon: 'bi-heart-pulse', title: 'Avaliação de Saúde', subtitle: 'Avaliação Hormonal completa', nuts: 100, pts: 100, expiry: '05/set/2026' },
+    { icon: 'bi-heart-pulse', title: 'Bioimpedância', subtitle: 'Realizar exame de bioimpedância', nuts: 50, pts: 50, expiry: '05/set/2026' },
+    { icon: 'bi-heart-pulse', title: 'Calorimetria', subtitle: 'Realizar exame de calorimetria', nuts: 50, pts: 50, expiry: '05/set/2026' }
+  ]
+};
+
+const SchedulingData = {
+  specialties: ['Dermatologia', 'Endocrinologia', 'Nutrição', 'Odontologia', 'Psicologia'],
+  defaultSpecialty: 'Endocrinologia',
+  doctorBySpecialty: {
+    Dermatologia: 'Dr. João Pelin',
+    Endocrinologia: 'Dra. Cora Coralina',
+    Nutrição: 'Nutricionista José Pereira',
+    Odontologia: 'Dra. Mariana Lopes',
+    Psicologia: 'Psicóloga Ana Prado'
+  },
+  timeSlots: [
+    { id: '08:00', label: '08:00' },
+    { id: '09:00', label: '09:00' },
+    { id: '09:30', label: '09:30' },
+    { id: '10:30', label: '10:30' },
+    { id: 'encaixe', label: 'Encaixe' }
+  ],
+  defaultSlotId: '09:00',
+  defaultDateIso: '2025-10-03',
+  clinics: [
+    {
+      id: 'campo-belo',
+      name: 'Care Plus Clinic - Campo Belo',
+      detail: '500 m • Av. Ver. José Diniz, 3843'
+    },
+    {
+      id: 'brooklin',
+      name: 'Care Plus Clinic - Brooklin',
+      detail: '3,5 km • Av. das Nações Unidas, 12.901'
+    },
+    {
+      id: 'morumbi',
+      name: 'Care Plus Clinic - Morumbi',
+      detail: '4,4 km • Av. Roque Petroni Júnior, 1089'
+    }
+  ],
+  defaultClinicId: 'campo-belo',
+  benefits: [
+    { label: 'Chegue no horário', pts: 20 },
+    { label: 'Adicione no Google Calendar', pts: 30 },
+    { label: 'Confirme a presença', pts: 15 },
+    { label: 'Responda este questionário', pts: 25 }
+  ]
+};

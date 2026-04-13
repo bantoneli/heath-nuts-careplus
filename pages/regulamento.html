@@ -1,19 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Nuts Regulamento</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="../css/style.css">
-</head>
+	<title>Health Nuts — Regulamento</title>
 
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Bootstrap Icons -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/responsive.css">
+</head>
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-	<script src="../js/script.js"></script>
+	<div id="header-placeholder"></div>
 
+	<main class="py-4">
+		<div class="container">
+
+			<!-- Pdf viewer do regulamento -->
+			<div class="dashboard-card mb-3">
+				<h2 class="dashboard-card__title mb-2">Regulamento</h2>
+				<iframe 
+					class="pdf-viewer"
+					src="../assets/pdf/Regulamento Health Nuts.pdf">
+				</iframe>
+			</div>
+
+			<!-- Lista de ações de pontuáveis -->
+			<section class="dashboard-card mb-4" aria-label="Ganhando pontos">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="dashboard-card__title">Ganhando pontos</h2>
+					<button class="btn btn-accent" id="btn-ver-mais-historico">Ver mais</button>
+				</div>
+				<div class="mb-3 d-flex flex-column flex-lg-row justify-content-between" id="vertical-responsive">
+					<h6 class = "p-2 small" >Selecione a especialidade para ver as ações pontuáveis</h6>
+					<div id="specialties-filters"></div>
+				</div>
+				<div class="ranking-search flex-grow-1 mb-3">
+					<i class="bi bi-search ranking-search__icon"></i>
+					<input type="text" class="ranking-search__input" id="ranking-search-input" placeholder="Buscar ações" aria-label="Buscar ações">
+				</div>
+				<div id="actions-list"></div>
+			</section>
+
+			<!-- Lista dos badges -->
+			<section class="dashboard-card mb-4" aria-label="Ranking dos badges">
+				<h2 class="dashboard-card__title mb-3">Lista de badges</h2>
+				<div class="badge__item justify-content-between align-items-center flex-lg-row d-flex flex-column">
+					<div class="badge__summary d-flex gap-3 justify-content-between align-items-center">
+						<span class="badge__avatar" ><img src="../assets/svg/badges/Produtiva.svg" alt="Avatar" width="42" height="42"></span>
+						<div class="badge__info">
+							<span class="badge__name">Nogueira Produtiva</span>
+							<span class="badge__level">Medalha nível 1</span>
+						</div>
+					</div>
+					<span class="badge__gain">Agendamento prioridade 1, Encaixes e espresso pré-consulta</span>
+					<span class="badge__gain">Top 10% do ranking para esta especialidade</span>
+				</div>
+				<div class="badge__item justify-content-between align-items-center flex-lg-row d-flex flex-column">
+					<div class="badge__summary d-flex gap-3 justify-content-between align-items-center">
+						<span class="badge__avatar" ><img src="../assets/svg/badges/Serena.svg" alt="Avatar" width="42" height="42"></span>
+						<div class="badge__info">
+							<span class="badge__name">Nogueira Serena</span>
+							<span class="badge__level">Medalha nível 2</span>
+						</div>
+					</div>
+					<span class="badge__gain">Agendamento prioridade 1 e Encaixes</span>
+					<span class="badge__gain">Top 30% do ranking para esta especialidade</span>
+				</div>
+				<div class="badge__item justify-content-between align-items-center flex-lg-row d-flex flex-column">
+					<div class="badge__summary d-flex gap-3 justify-content-between align-items-center">
+						<span class="badge__avatar" ><img src="../assets/svg/badges/Juvenil.svg" alt="Avatar" width="42" height="42"></span>
+						<div class="badge__info">
+							<span class="badge__name">Nogueira Juvenil</span>
+							<span class="badge__level">Medalha nível 3</span>
+						</div>
+					</div>
+					<span class="badge__gain">Agendamento prioridade 2 e Encaixes</span>
+					<span class="badge__gain">Top 50% do ranking para esta especialidade</span>
+				</div>
+				<div class="badge__item justify-content-between align-items-center flex-lg-row d-flex flex-column">
+					<div class="badge__summary d-flex gap-3 justify-content-between align-items-center">
+						<span class="badge__avatar" ><img src="../assets/svg/badges/Energia.svg" alt="Avatar" width="42" height="42"></span>
+						<div class="badge__info">
+							<span class="badge__name">Broto da Transformação</span>
+							<span class="badge__level">Medalha nível 4</span>
+						</div>
+					</div>
+					<span class="badge__gain">Agendamento prioridade 2</span>
+					<span class="badge__gain">Top 70% do ranking para esta especialidade</span>
+				</div>
+				<div class="badge__item justify-content-between align-items-center flex-lg-row d-flex flex-column">
+					<div class="badge__summary d-flex gap-3 justify-content-between align-items-center">
+						<span class="badge__avatar" ><img src="../assets/svg/badges/Adormecida.svg" alt="Avatar" width="42" height="42"></span>
+						<div class="badge__info">
+							<span class="badge__name">Noz Adormecida</span>
+							<span class="badge__level">Medalha nível 5</span>
+						</div>
+					</div>
+					<span class="badge__gain">Agendamento prioridade 3</span>
+					<span class="badge__gain">Top 90% do ranking para esta especialidade</span>
+				</div>
+			</section>
+
+
+		</div>
+	</main>
+
+	<div id="footer-placeholder"></div>
+
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Mocks -->
+	<script src="../mocks/data/mock-data.js"></script>
+	<script src="../mocks/behaviors/mock-behaviors.js"></script>
+
+	<!-- JavaScript -->
+	<script src="../js/components.js"></script>
+	<script src="../js/componentsTemp.js"></script>
+	<script src="../js/regulamento.js"></script>
 </body>
 </html>

@@ -35,7 +35,7 @@ async function handleAtualizar() {
 }
 
 function handleNovoAgendamento() {
-  alert('Funcionalidade de agendamento será implementada em breve!');
+  window.location.href = 'pages/agendamento.html';
 }
 
 function handleVerBeneficios() {

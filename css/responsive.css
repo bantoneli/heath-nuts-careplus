@@ -116,6 +116,10 @@
   flex-wrap: wrap;
 }
 
+.specialties-filters__pills {
+  flex-wrap: wrap;
+}
+
 .points-history__item {
   flex-wrap: wrap;
 }
@@ -135,6 +139,15 @@
   flex-wrap: wrap;
 }
 
+#schedule-reminder {
+  display: flex;
+  width: 100%;
+}
+
+#schedule-reminder .ranking-filters__toggle-btn {
+  flex: 1;
+}
+
 /* Small devices (>= 576px) — Rankings */
 @media (min-width: 576px) {
   .ranking-podium {
@@ -142,6 +155,10 @@
   }
 
   .ranking-filters__pills {
+    flex-wrap: nowrap;
+  }
+
+  .specialties-filters__pills {
     flex-wrap: nowrap;
   }
 
@@ -171,9 +188,24 @@
   }
 }
 
+
 /* XXL devices (>= 1400px) */
 @media (min-width: 1400px) {
   .dashboard-card {
     padding: 1.5rem 2rem;
   }
+}
+
+/* Agendamento: período em telas estreitas */
+@media (max-width: 575.98px) {
+  #schedule-period.ranking-filters__toggle {
+    flex-direction: column;
+  }
+
+  #schedule-period .ranking-filters__toggle-btn {
+    width: 100%;
+  }
+
+
+
 }
