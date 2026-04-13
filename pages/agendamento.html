@@ -1,19 +1,177 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Nuts Agendamento</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="../css/style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Nuts — Agendamento</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-	<script src="../js/script.js"></script>
+  <div id="header-placeholder"></div>
 
+  <main class="py-4">
+    <div class="container">
+      <p class="schedule-page__eyebrow text-secondary small mb-2 mb-lg-3">Agendamento</p>
+
+      <div class="row g-4">
+        <!-- Coluna esquerda -->
+        <div class="col-lg-7 d-flex flex-column gap-4">
+
+          <section class="dashboard-card" aria-labelledby="schedule-specialty-title">
+            <h2 class="dashboard-card__title mb-3" id="schedule-specialty-title">Especialidade ou Médico</h2>
+
+            <p class="schedule-field-label mb-2">Especialidade</p>
+            <div class="ranking-filters__pills mb-3" id="schedule-specialty-pills" role="group" aria-label="Especialidade"></div>
+
+            <p class="schedule-field-label mb-2">Buscar médico</p>
+            <div class="ranking-search mb-3">
+              <i class="bi bi-person ranking-search__icon" aria-hidden="true"></i>
+              <input type="search" class="ranking-search__input" id="schedule-doctor-search" placeholder="Buscar por médico específico..." autocomplete="off" aria-label="Buscar por médico específico">
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="schedule-field-label mb-2 d-block" for="schedule-date">Data</label>
+                <div class="ranking-search">
+                  <i class="bi bi-calendar-event ranking-search__icon" aria-hidden="true"></i>
+                  <input type="date" class="ranking-search__input schedule-date-input" id="schedule-date" aria-label="Data da consulta">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <p class="schedule-field-label mb-2">Período</p>
+                <div class="ranking-filters__toggle w-100 flex-wrap" id="schedule-period" role="group" aria-label="Período do dia">
+                  <button type="button" class="ranking-filters__toggle-btn ranking-filters__toggle-btn--accent-active flex-grow-1" data-period="manha">Manhã</button>
+                  <button type="button" class="ranking-filters__toggle-btn flex-grow-1" data-period="tarde">Tarde</button>
+                  <button type="button" class="ranking-filters__toggle-btn flex-grow-1" data-period="noite">Noite</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="schedule-field-label mb-2">Horários disponíveis</p>
+            <div class="ranking-filters__pills flex-wrap" id="schedule-slots" role="group" aria-label="Horários disponíveis"></div>
+          </section>
+
+          <section class="dashboard-card" aria-labelledby="schedule-clinic-title">
+            <h2 class="dashboard-card__title mb-3" id="schedule-clinic-title">Escolha a clínica</h2>
+
+            <div class="ranking-search mb-3">
+              <i class="bi bi-geo-alt ranking-search__icon" aria-hidden="true"></i>
+              <input type="search" class="ranking-search__input" id="schedule-location-search" placeholder="Bairro ou região" value="Moema" autocomplete="off" aria-label="Buscar localização da clínica">
+            </div>
+
+            <ul class="clinic-list list-unstyled mb-3" id="schedule-clinic-list" aria-label="Lista de clínicas"></ul>
+
+            <div class="schedule-map ratio ratio-4x3 rounded-3 overflow-hidden">
+              <iframe
+                class="schedule-map__iframe"
+                title="Mapa — Care Plus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3659.1052681818546!2d-46.85230572360837!3d-23.49271755907604!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf0200025fe06f%3A0x428f14869a1131bc!2sCare%20Plus!5e0!3m2!1spt-BR!2sbr!4v1775771847335!5m2!1spt-BR!2sbr"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </section>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="col-lg-5 d-flex flex-column gap-4">
+          <section class="dashboard-card schedule-summary-card" aria-labelledby="schedule-summary-title">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h2 class="dashboard-card__title mb-0" id="schedule-summary-title">Resumo</h2>
+              <span class="badge-pts badge-pts--yellow">+80 pts</span>
+            </div>
+
+            <!-- Especialidade e médico em duas colunas (Figma) -->
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <div class="schedule-summary-label" id="lbl-summary-specialty">Especialidade</div>
+                <div class="schedule-summary-field" id="summary-specialty-wrap" aria-labelledby="lbl-summary-specialty">
+                  <span id="summary-specialty">Endocrinologia</span>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="schedule-summary-label" id="lbl-summary-doctor">Médico</div>
+                <div class="schedule-summary-field" id="summary-doctor-wrap" aria-labelledby="lbl-summary-doctor">
+                  <span id="summary-doctor">Dra. Cora Coralina</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="schedule-summary-label" id="lbl-summary-datetime">Data e horário</div>
+              <div class="schedule-summary-field schedule-summary-field--datetime d-flex align-items-center gap-2" id="summary-datetime-wrap" aria-labelledby="lbl-summary-datetime">
+                <i class="bi bi-clock schedule-summary-field__icon" aria-hidden="true"></i>
+                <span id="summary-datetime">Qua, 03/10/25 • 09:00</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="schedule-summary-label" id="lbl-summary-clinic">Clínica</div>
+              <div class="schedule-summary-field d-flex align-items-center gap-2" id="summary-clinic-wrap" aria-labelledby="lbl-summary-clinic">
+                <i class="bi bi-building schedule-summary-field__icon" aria-hidden="true"></i>
+                <span id="summary-clinic">Care Plus Clinic - Campo Belo</span>
+              </div>
+            </div>
+
+            <p class="schedule-field-label mb-2">Lembrete por WhatsApp</p>
+            <div class="ranking-filters__toggle w-100 flex-wrap mb-0" id="schedule-reminder" role="group" aria-label="Lembrete por WhatsApp">
+              <button type="button" class="ranking-filters__toggle-btn ranking-filters__toggle-btn--accent-active" data-reminder="24h">24h antes</button>
+              <button type="button" class="ranking-filters__toggle-btn" data-reminder="2h">2h antes</button>
+              <button type="button" class="ranking-filters__toggle-btn" data-reminder="none">Sem lembrete</button>
+            </div>
+
+            <footer class="schedule-summary-footer">
+              <div class="collapse schedule-summary-footer__collapse" id="schedule-observation-collapse">
+                <label class="schedule-summary-label d-block" for="schedule-observation">Sua observação</label>
+                <textarea class="form-control schedule-summary-observation-input mb-2" id="schedule-observation" rows="2" placeholder="Digite sua observação para a clínica…"></textarea>
+              </div>
+              <div class="d-flex flex-wrap gap-2 align-items-stretch schedule-summary-footer__actions">
+                <button type="button" class="btn schedule-summary-btn-outline flex-shrink-0" data-bs-toggle="collapse" data-bs-target="#schedule-observation-collapse" aria-expanded="false" aria-controls="schedule-observation-collapse">
+                  <i class="bi bi-chat-left-text" aria-hidden="true"></i> Adicionar observação
+                </button>
+                <button type="button" class="btn btn-primary-custom schedule-summary-btn-confirm flex-grow-1" id="btn-confirm-schedule">
+                  <i class="bi bi-check-lg" aria-hidden="true"></i> Confirmar
+                </button>
+              </div>
+              <p class="schedule-legal text-secondary small mb-0 text-center">
+                Ao confirmar, você concorda com as políticas da empresa e da clínica.
+              </p>
+            </footer>
+          </section>
+
+          <section class="dashboard-card" aria-labelledby="schedule-benefits-title">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+              <h2 class="dashboard-card__title mb-0 visually-hidden" id="schedule-benefits-title">Benefícios</h2>
+              <span class="btn-accent schedule-benefits-tag mb-0">
+                <i class="bi bi-gift-fill" aria-hidden="true"></i> Benefícios
+              </span>
+              <a href="rankings.html" class="btn btn-accent btn-sm">
+                <i class="bi bi-trophy" aria-hidden="true"></i> Ver rankings
+              </a>
+            </div>
+            <ul class="schedule-benefits-list list-unstyled mb-0" id="schedule-benefits-list"></ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../mocks/data/mock-data.js"></script>
+  <script src="../mocks/behaviors/mock-behaviors.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/agendamento.js"></script>
 </body>
 </html>

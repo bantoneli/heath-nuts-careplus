@@ -116,8 +116,6 @@
   flex-wrap: wrap;
 }
 
-
-
 .specialties-filters__pills {
   flex-wrap: wrap;
 }
@@ -139,6 +137,15 @@
 
 .ranking-general__item {
   flex-wrap: wrap;
+}
+
+#schedule-reminder {
+  display: flex;
+  width: 100%;
+}
+
+#schedule-reminder .ranking-filters__toggle-btn {
+  flex: 1;
 }
 
 /* Small devices (>= 576px) — Rankings */
@@ -187,4 +194,18 @@
   .dashboard-card {
     padding: 1.5rem 2rem;
   }
+}
+
+/* Agendamento: período em telas estreitas */
+@media (max-width: 575.98px) {
+  #schedule-period.ranking-filters__toggle {
+    flex-direction: column;
+  }
+
+  #schedule-period .ranking-filters__toggle-btn {
+    width: 100%;
+  }
+
+
+
 }
