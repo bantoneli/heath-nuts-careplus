@@ -139,6 +139,15 @@
   flex-wrap: wrap;
 }
 
+#schedule-reminder {
+  display: flex;
+  width: 100%;
+}
+
+#schedule-reminder .ranking-filters__toggle-btn {
+  flex: 1;
+}
+
 /* Small devices (>= 576px) — Rankings */
 @media (min-width: 576px) {
   .ranking-podium {
@@ -196,4 +205,7 @@
   #schedule-period .ranking-filters__toggle-btn {
     width: 100%;
   }
+
+
+
 }
