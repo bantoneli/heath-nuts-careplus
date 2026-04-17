@@ -282,7 +282,7 @@ function renderSpecialtiesFilters(data) {
 
 
     container.innerHTML = `
-        <div class="specialties-filters__pills">${pillsHtml}</div>
+        <div class="flex-nowrap specialties-filters__pills">${pillsHtml}</div>
         `;
 }
 

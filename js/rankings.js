@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initRankingsPage() {
-  renderRankingFilters(RankingsData);
+  renderSpecialtiesFilters(RankingsData);
   renderPodium(RankingsData.topRanking);
   renderGeneralRanking(RankingsData.generalRanking);
   renderPointsHistory(RankingsData.pointsHistory);
@@ -29,26 +29,43 @@ function updatePerformanceCard(perf) {
   if (nextEl) nextEl.textContent = 'Faltam ' + perf.pointsToNext + ' pts';
 }
 
+function getFiltersState() {
+  const activeRanking = document.querySelector(
+    '[data-ranking-type].specialties-filters__toggle-btn--active'
+  )?.dataset.rankingType;
+
+  const activeScope = document.querySelector(
+    '[data-scope-type].specialties-filters__toggle-btn--active'
+  )?.dataset.scopeType;
+
+  return {
+    rankingType: activeRanking,
+    scopeType: activeScope
+  };
+}
+
 function initRankingsEvents() {
-  // Specialty pills toggle
+  // Specialties filter
   document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('ranking-filters__pill')) {
-      document.querySelectorAll('.ranking-filters__pill').forEach(p =>
-        p.classList.remove('ranking-filters__pill--active')
+    if (e.target.classList.contains('specialties-filters__pill')) {
+      document.querySelectorAll('.specialties-filters__pill').forEach(p =>
+        p.classList.remove('specialties-filters__pill--active')
       );
-      e.target.classList.add('ranking-filters__pill--active');
+      e.target.classList.add('specialties-filters__pill--active');
     }
   });
 
   // Toggle groups (ranking type & scope)
   document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('ranking-filters__toggle-btn')) {
-      const group = e.target.closest('.ranking-filters__toggle');
+    if (e.target.classList.contains('specialties-filters__toggle-btn')) {
+      const group = e.target.closest('.specialties-filters__toggle');
       if (group) {
-        group.querySelectorAll('.ranking-filters__toggle-btn').forEach(b =>
-          b.classList.remove('ranking-filters__toggle-btn--active')
+        group.querySelectorAll('.specialties-filters__toggle-btn').forEach(b =>
+          b.classList.remove('specialties-filters__toggle-btn--active')
         );
-        e.target.classList.add('ranking-filters__toggle-btn--active');
+        e.target.classList.add('specialties-filters__toggle-btn--active');
+
+        const state = getFiltersState();
       }
     }
   });

@@ -29,18 +29,6 @@ function initRegulamentoEvents() {
         }
     });
 
-  // Toggle groups (ranking type & scope)
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('specialties-filters__toggle-btn')) {
-            const group = e.target.closest('.specialties-filters__toggle');
-            if (group) {
-                group.querySelectorAll('.specialties-filters__toggle-btn').forEach(b =>
-                    b.classList.remove('specialties-filters__toggle-btn--active')
-                );
-                e.target.classList.add('specialties-filters__toggle-btn--active');
-            }
-        }
-    });
 
     // Search   
     const searchInput = document.querySelector('#ranking-search-input');
