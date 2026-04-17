@@ -14,7 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initScheduleDateDefault();
   syncSummaryFromState();
   wireScheduleInteractions();
+  initSchedulePage();
 });
+
+function initSchedulePage() {
+    renderSpecialtiesFilters(RegulamentoData);
+}
 
 function formatScheduleDateDisplay(isoDate) {
   if (!isoDate) {
@@ -38,7 +43,7 @@ function getSelectedSlotLabel() {
 }
 
 function getSelectedSpecialty() {
-  const active = document.querySelector('#schedule-specialty-pills .ranking-filters__pill--accent-active');
+  const active = document.querySelector('#specialties-filters .specialties-filters__pill--active');
   return active ? active.dataset.specialty : SchedulingData.defaultSpecialty;
 }
 
@@ -69,15 +74,6 @@ function syncSummaryFromState() {
 }
 
 function renderSchedulingLists() {
-  const pills = document.querySelector('#schedule-specialty-pills');
-  if (pills) {
-    pills.innerHTML = SchedulingData.specialties.map(spec => {
-      const active =
-        spec === SchedulingData.defaultSpecialty ? ' ranking-filters__pill--accent-active' : '';
-      return `<button type="button" class="ranking-filters__pill${active}" data-specialty="${spec}">${spec}</button>`;
-    }).join('');
-  }
-
   const slots = document.querySelector('#schedule-slots');
   if (slots) {
     slots.innerHTML = SchedulingData.timeSlots.map(slot => {
@@ -143,11 +139,14 @@ function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
 }
 
 function wireScheduleInteractions() {
-  document.querySelector('#schedule-specialty-pills')?.addEventListener('click', e => {
-    const btn = e.target.closest('.ranking-filters__pill');
-    if (!btn) return;
-    setExclusiveAccent('#schedule-specialty-pills', '.ranking-filters__pill', btn);
-    syncSummaryFromState();
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('specialties-filters__pill')) {
+      document.querySelectorAll('.specialties-filters__pill').forEach(p =>
+        p.classList.remove('specialties-filters__pill--active')
+      );
+      e.target.classList.add('specialties-filters__pill--active');
+      syncSummaryFromState();
+    }
   });
 
   document.querySelector('#schedule-slots')?.addEventListener('click', e => {
