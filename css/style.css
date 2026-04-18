@@ -646,6 +646,38 @@ a {
   color: var(--color-white);
 }
 
+.specialties-filters__toggle {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+}
+
+.specialties-filters__toggle-btn {
+  background: var(--color-card);
+  color: var(--bs-gray-500);
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.specialties-filters__toggle-btn:hover {
+  color: var(--color-accent-hover);
+}
+
+.specialties-filters__toggle-btn--active {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.specialties-filters__toggle-btn--active:hover {
+  color: var(--color-white);
+}
+
+
 /* ===== Rankings: Podio Top 3 ===== */
 .ranking-podium {
   display: flex;
@@ -889,7 +921,7 @@ a {
 
 .specialties-filters__pill {
   background: var(--color-card);
-  color: var(--color-text);
+  color: var(--bs-gray-500);
   border: none;
   border-right: 1px solid var(--color-border);
   font-size: 0.82rem;
@@ -906,14 +938,14 @@ a {
 }
 
 .specialties-filters__pill:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-accent-hover);
+  color: var(--color-accent-hover);
 }
 
 .specialties-filters__pill--active {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary);
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border-color: var(--color-accent);
 }
 
 .specialties-filters__pill--active:hover {

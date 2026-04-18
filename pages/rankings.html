@@ -28,8 +28,24 @@
     <div class="container">
 
       <!-- Filtros de especialidade e tipo -->
-      <section aria-label="Filtros do ranking" id="ranking-filters"></section>
-
+      <section aria-label="Filtros do ranking">
+        <div class="dashboard-card mb-3">
+          <p class="ranking-filters__label mb-2">Selecione o Ranking que deseja ver</p>
+          <div class="ranking-filters">
+            <div id="specialties-filters"></div>
+            <div class="d-flex gap-2 ms-lg-auto flex-shrink-0 flex-wrap">
+              <div class="specialties-filters__toggle">
+                <button class="specialties-filters__toggle-btn specialties-filters__toggle-btn--active" data-ranking-type="Geral">Geral</button>
+                <button class="specialties-filters__toggle-btn" data-ranking-type="Equipe">Equipe</button>
+              </div>
+              <div class="specialties-filters__toggle">
+                <button class="specialties-filters__toggle-btn specialties-filters__toggle-btn--active" data-scope-type="Associados">Associados</button>
+                <button class="specialties-filters__toggle-btn" data-scope-type="Empresas">Empresas</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <!-- Desempenho + Top 3 -->
       <div class="row g-4 mb-4">
 
