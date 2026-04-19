@@ -166,6 +166,8 @@ a {
   flex-direction: column;
   gap: 0.15rem;
   transition: transform var(--transition-base);
+  width: 100%;
+  height: 100%;
 }
 
 .stat-box:hover {
@@ -185,7 +187,9 @@ a {
   color: var(--color-text);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
 }
 
 .stat-box__icon {
@@ -1314,4 +1318,7 @@ a {
   line-height: 1.35;
 }
 
-
+.ranking-general__item--estimated {
+  border: 2px dashed var(--color-accent);
+  background-color: rgba(255, 212, 95, 0.15);
+}

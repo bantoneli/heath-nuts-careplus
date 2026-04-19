@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRegulamentoPage() {
     renderSpecialtiesFilters(SpecialtiesData);
-    renderGeneralRanking(RegulamentoData.badges);
     renderActions(ActionsData.actions, false);
 }
 

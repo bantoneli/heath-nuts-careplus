@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initRankingsPage() {
-  renderSpecialtiesFilters(RankingsData);
+  renderSpecialtiesFilters(SpecialtiesData);
   renderPodium(RankingsData.topRanking);
   renderGeneralRanking(RankingsData.generalRanking);
-  renderPointsHistory(RankingsData.pointsHistory);
   updatePerformanceCard(RankingsData.userPerformance);
+  renderActions(RankingsData.pointsHistory, true);
+  renderRanking(SpecialtiesData.activeSpecialty)
 }
 
 function updatePerformanceCard(perf) {
