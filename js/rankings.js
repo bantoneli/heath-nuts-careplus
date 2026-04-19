@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function initRankingsPage() {
   renderSpecialtiesFilters(SpecialtiesData);
   renderPodium(RankingsData.topRanking);
-  renderGeneralRanking(RankingsData.generalRanking);
   updatePerformanceCard(RankingsData.userPerformance);
   renderActions(RankingsData.pointsHistory, true);
   renderRanking(SpecialtiesData.activeSpecialty)
@@ -53,6 +52,11 @@ function initRankingsEvents() {
         p.classList.remove('specialties-filters__pill--active')
       );
       e.target.classList.add('specialties-filters__pill--active');
+
+      const selectedSpecialty = getSelectedSpecialty();
+
+      renderRanking(selectedSpecialty);
+      renderActions(RankingsData.pointsHistory, true);
     }
   });
 
@@ -67,7 +71,35 @@ function initRankingsEvents() {
         e.target.classList.add('specialties-filters__toggle-btn--active');
 
         const state = getFiltersState();
+
+        
       }
+      if (e.target.dataset.scopeType === 'Empresas') {
+        // remover seleção de especialidade
+        document.querySelectorAll('.specialties-filters__pill')
+          .forEach(p => p.classList.remove('specialties-filters__pill--active'));
+
+        // forçar "Geral"
+        document.querySelectorAll('[data-ranking-type]')
+          .forEach(btn => btn.classList.remove('specialties-filters__toggle-btn--active'));
+
+        document.querySelector('[data-ranking-type="Geral"]')
+          ?.classList.add('specialties-filters__toggle-btn--active');
+      }
+      if (e.target.dataset.scopeType === 'Associados') {
+        // reativar especialidade default
+        const defaultSpecialty = SpecialtiesData.activeSpecialty;
+
+        document.querySelectorAll('.specialties-filters__pill')
+          .forEach(p => {
+            p.classList.toggle(
+              'specialties-filters__pill--active',
+              p.dataset.specialty === defaultSpecialty
+            );
+          });
+      }
+      const selectedSpecialty = getSelectedSpecialty();
+      renderRanking(selectedSpecialty);
     }
   });
 

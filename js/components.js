@@ -2,23 +2,6 @@
  * Componentes de UI compartilhados: renders e shell (header/footer).
  */
 
-function renderRanking(data) {
-  const container = document.querySelector('#ranking-list');
-  if (!container) return;
-
-  container.innerHTML = data.map(item => `
-    <div class="ranking-item">
-      <div class="ranking-item__icon">
-        <img src="${item.img}" alt="${item.specialty}" width="36" height="36">
-      </div>
-      <div class="ranking-item__info">
-        <span class="ranking-item__name">${item.specialty}</span>
-        <span class="ranking-item__pts">${item.pts.toLocaleString('pt-BR')} pts</span>
-      </div>
-      <span class="ranking-item__rank">${item.rank}º</span>
-    </div>
-  `).join('');
-}
 
 function renderAppointments(data) {
   const container = document.querySelector('#appointments-list');
@@ -179,25 +162,6 @@ function renderPodium(data) {
   `).join('');
 }
 
-function renderGeneralRanking(data) {
-  const container = document.querySelector('#general-ranking-list');
-  if (!container) return;
-
-  container.innerHTML = data.map(item => {
-    const currentClass = item.isCurrentUser ? ' ranking-general__item--current' : '';
-    return `
-      <div class="ranking-general__item${currentClass}">
-        <span class="ranking-general__position">${item.position}º</span>
-        <span class="ranking-general__avatar"><i class="bi ${item.avatarIcon}"></i></span>
-        <div class="ranking-general__info">
-          <span class="ranking-general__name">${item.name}</span>
-          <span class="ranking-general__pts">${item.pts.toLocaleString('pt-BR')} pts</span>
-        </div>
-        <span class="ranking-general__gain">+${item.monthlyGain} pts este mês</span>
-      </div>`;
-  }).join('');
-}
-
 function renderFooter() {
   const placeholder = document.querySelector('#footer-placeholder');
   if (!placeholder) return;
@@ -304,6 +268,15 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
 
 function renderRanking(selectedSpecialty) {
   // 1. Mapear dados por especialidade
+  const { rankingType, scopeType } = getFiltersState();
+  
+  if (scopeType === 'Empresas') {
+    renderCompanyRanking();
+    return;
+  }
+
+  const baseUser = UsersRanking.find(u => u.isCurrentUser);
+
   let ranking = UsersRanking
     .map(user => {
       const specialtyData = user.specialties?.[selectedSpecialty];
@@ -314,8 +287,12 @@ function renderRanking(selectedSpecialty) {
         monthlyGain: specialtyData?.monthlyGain ?? 0
       };
     })
-    .filter(user => user.points !== null); // remove null
+    .filter(user => user.points !== null);
 
+
+  if (rankingType?.trim() === 'Equipe') {
+    ranking = ranking.filter(user => user.company === baseUser.company);
+  }
   // 2. Ordenar
   ranking.sort((a, b) => b.points - a.points);
 
@@ -416,14 +393,139 @@ function renderRanking(selectedSpecialty) {
           ${user.name}
           ${isEstimated && isCurrent ? "(estimado)" : ""}
         </span>
+
         <span class="ranking-general__pts">
-          ${user.points} pts • ${selectedSpecialty}
+          ${user.points} pts • ${user.company}
         </span>
       </div>
 
       <div class="ranking-general__gain">
-        +${user.monthlyGain}
+        +${user.monthlyGain} pts no ultimo mês
       </div>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function renderCompanyRanking() {
+  const baseUser = UsersRanking.find(u => u.isCurrentUser);
+
+  // 1. descobrir líderes por especialidade
+  const specialties = Object.keys(UsersRanking[0].specialties);
+
+  const leaders = {};
+
+  specialties.forEach(spec => {
+    let max = 0;
+
+    UsersRanking.forEach(user => {
+      const pts = user.specialties?.[spec]?.pts;
+      if (pts && pts > max) max = pts;
+    });
+
+    leaders[spec] = max;
+  });
+
+  // 2. calcular score normalizado por usuário
+  const usersWithScore = UsersRanking.map(user => {
+    let values = [];
+
+    Object.entries(user.specialties || {}).forEach(([spec, data]) => {
+      const pts = data?.pts;
+      const leader = leaders[spec];
+
+      if (
+        pts !== null &&
+        pts !== undefined &&
+        leader > 0
+      ) {
+        const ratio = pts / leader;
+
+        values.push(ratio);
+      }
+    });
+
+    const avg =
+      values.length > 0
+        ? values.reduce((a, b) => a + b, 0) / values.length
+        : null;
+
+    return {
+      ...user,
+      generalizedScore: avg
+    };
+  }).filter(u => u.generalizedScore !== null);
+
+  // 3. agrupar por empresa
+  const companiesMap = {};
+
+  usersWithScore.forEach(user => {
+    if (!companiesMap[user.company]) {
+      companiesMap[user.company] = [];
+    }
+    companiesMap[user.company].push(user.generalizedScore);
+  });
+
+  // 4. média por empresa
+  let companies = Object.entries(companiesMap).map(([company, scores]) => {
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+
+    return {
+      company,
+      score: avg
+    };
+  });
+
+  // 5. ordenar
+  companies.sort((a, b) => b.score - a.score);
+
+  // 6. rank
+  companies = companies.map((c, i) => ({
+    ...c,
+    rank: i + 1
+  }));
+
+  // 🔥 7. encontrar empresa do usuário
+  const currentCompany = baseUser.company;
+
+  const index = companies.findIndex(c => c.company === currentCompany);
+
+  // 🔥 8. pegar 2 acima + 2 abaixo
+  const start = Math.max(0, index - 2);
+  const visibleCompanies = companies.slice(start, start + 5);
+
+  // 9. render
+  const container = document.getElementById("ranking-list");
+  container.innerHTML = "";
+
+  visibleCompanies.forEach(company => {
+    const isCurrent = company.company === currentCompany;
+
+    const div = document.createElement("div");
+
+    div.className = `
+      ranking-general__item
+      ${isCurrent ? "ranking-general__item--current" : ""}
+    `;
+
+    div.innerHTML = `
+      <div class="ranking-general__position">
+        #${company.rank}
+      </div>
+
+      <div class="ranking-general__avatar">
+        <i class="bi bi-building"></i>
+      </div>
+
+      <div class="ranking-general__info">
+        <span class="ranking-general__name">
+          ${company.company}
+        </span>
+      </div>
+      <span class="ranking-general__pts">
+        Score: ${(company.score * 100).toFixed(1)}%
+      </span>
     `;
 
     container.appendChild(div);
