@@ -16,7 +16,8 @@ function initRankingsPage() {
   renderPodium(RankingsData.topRanking);
   updatePerformanceCard(RankingsData.userPerformance);
   renderActions(RankingsData.pointsHistory, true);
-  renderRanking(SpecialtiesData.activeSpecialty)
+  renderRanking(SpecialtiesData.activeSpecialty);
+  updateRankingTitle();
 }
 
 function updatePerformanceCard(perf) {
@@ -57,6 +58,7 @@ function initRankingsEvents() {
       const selectedSpecialty = getSelectedSpecialty();
 
       renderRanking(selectedSpecialty);
+      updateRankingTitle();
       renderActions(RankingsData.pointsHistory, true);
     }
   });
@@ -91,6 +93,7 @@ function initRankingsEvents() {
       }
       const selectedSpecialty = getSelectedSpecialty();
       renderRanking(selectedSpecialty);
+      updateRankingTitle();
     }
   });
 
@@ -163,3 +166,26 @@ function enableFiltersForAssociates() {
   });
 }
 
+function updateRankingTitle() {
+  const { rankingType, scopeType } = getFiltersState();
+  const selectedSpecialty = getSelectedSpecialty();
+
+  const titleEl = document.querySelector('.ranking-title');
+
+  if (!titleEl) return;
+
+  // 🏢 Empresas
+  if (scopeType === 'Empresas') {
+    titleEl.textContent = 'Ranking de Empresas';
+    return;
+  }
+
+  // 👤 Associados
+  const specialtyLabel = selectedSpecialty || '';
+
+  if (rankingType === 'Equipe') {
+    titleEl.textContent = `Ranking da sua empresa • ${specialtyLabel}`;
+  } else {
+    titleEl.textContent = `Ranking de Associados • ${specialtyLabel}`;
+  }
+}
