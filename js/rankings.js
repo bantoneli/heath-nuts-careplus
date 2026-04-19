@@ -47,6 +47,7 @@ function getFiltersState() {
 function initRankingsEvents() {
   // Specialties filter
   document.addEventListener('click', (e) => {
+    if (e.target.disabled) return;
     if (e.target.classList.contains('specialties-filters__pill')) {
       document.querySelectorAll('.specialties-filters__pill').forEach(p =>
         p.classList.remove('specialties-filters__pill--active')
@@ -62,41 +63,31 @@ function initRankingsEvents() {
 
   // Toggle groups (ranking type & scope)
   document.addEventListener('click', (e) => {
+    if (e.target.disabled) return;
     if (e.target.classList.contains('specialties-filters__toggle-btn')) {
       const group = e.target.closest('.specialties-filters__toggle');
+
       if (group) {
         group.querySelectorAll('.specialties-filters__toggle-btn').forEach(b =>
           b.classList.remove('specialties-filters__toggle-btn--active')
         );
+
         e.target.classList.add('specialties-filters__toggle-btn--active');
 
-        const state = getFiltersState();
+        const { scopeType } = getFiltersState();
 
-        
-      }
-      if (e.target.dataset.scopeType === 'Empresas') {
-        // remover seleção de especialidade
-        document.querySelectorAll('.specialties-filters__pill')
-          .forEach(p => p.classList.remove('specialties-filters__pill--active'));
-
-        // forçar "Geral"
-        document.querySelectorAll('[data-ranking-type]')
-          .forEach(btn => btn.classList.remove('specialties-filters__toggle-btn--active'));
-
-        document.querySelector('[data-ranking-type="Geral"]')
-          ?.classList.add('specialties-filters__toggle-btn--active');
-      }
-      if (e.target.dataset.scopeType === 'Associados') {
-        // reativar especialidade default
-        const defaultSpecialty = SpecialtiesData.activeSpecialty;
-
-        document.querySelectorAll('.specialties-filters__pill')
-          .forEach(p => {
-            p.classList.toggle(
-              'specialties-filters__pill--active',
-              p.dataset.specialty === defaultSpecialty
-            );
-          });
+        if (scopeType === 'Empresas') {
+          disableFiltersForCompanies();
+        } else {
+          enableFiltersForAssociates();
+          document.querySelectorAll('.specialties-filters__pill')
+            .forEach(p => {
+              p.classList.toggle(
+                'specialties-filters__pill--active',
+                p.dataset.specialty === SpecialtiesData.activeSpecialty
+              );
+            });
+        }
       }
       const selectedSpecialty = getSelectedSpecialty();
       renderRanking(selectedSpecialty);
@@ -134,3 +125,41 @@ function initRankingsEvents() {
     });
   }
 }
+
+function disableFiltersForCompanies() {
+  // ❌ desativa especialidades
+  document.querySelectorAll('.specialties-filters__pill').forEach(p => {
+    p.classList.remove('specialties-filters__pill--active');
+    p.disabled = true;
+  });
+
+  // ❌ desativa toggle Geral/Equipe
+  document.querySelectorAll('[data-ranking-type]').forEach(btn => {
+    btn.disabled = true;
+    btn.classList.remove('specialties-filters__toggle-btn--active');
+  });
+
+  // ✔ força "Geral" como ativo (visualmente)
+  document.querySelector('[data-ranking-type="Geral"]')
+    ?.classList.add('specialties-filters__toggle-btn--active');
+}
+
+function enableFiltersForAssociates() {
+  // ✔ ativa especialidades
+  const defaultSpecialty = SpecialtiesData.defaultSpecialty;
+
+  document.querySelectorAll('.specialties-filters__pill').forEach(p => {
+    p.disabled = false;
+
+    p.classList.toggle(
+      'specialties-filters__pill--active',
+      p.dataset.specialty === defaultSpecialty
+    );
+  });
+
+  // ✔ ativa toggle Geral/Equipe
+  document.querySelectorAll('[data-ranking-type]').forEach(btn => {
+    btn.disabled = false;
+  });
+}
+

@@ -1322,3 +1322,9 @@ a {
   border: 2px dashed var(--color-accent);
   background-color: rgba(255, 212, 95, 0.15);
 }
+
+.specialties-filters__pill:disabled,
+.specialties-filters__toggle-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
