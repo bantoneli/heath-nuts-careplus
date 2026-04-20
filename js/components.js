@@ -295,19 +295,19 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
     const searchInput = document.querySelector('#ranking-search-input');
     const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-    // 🔥 1. FILTRO POR ESPECIALIDADE
+    //  1. FILTRO POR ESPECIALIDADE
     let filteredData = data.filter(item =>
         item.specialty === selectedSpecialty
     );
 
-    // 🔥 2. FILTRO POR CATEGORIA (opcional)
+    //  2. FILTRO POR CATEGORIA (opcional)
     if (category) {
         filteredData = filteredData.filter(item =>
             item.category === category
         );
     }
 
-    // 🔥 3. FILTRO POR BUSCA
+    //  3. FILTRO POR BUSCA
     if (query) {
         filteredData = filteredData.filter(item =>
             item.title.toLowerCase().includes(query) ||
@@ -315,15 +315,15 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
         );
     }
 
-    // 🔥 4. ORDENAÇÃO POR PONTOS
+    //  4. ORDENAÇÃO POR PONTOS
     filteredData.sort((a, b) => b.pts - a.pts);
 
-    // 🔥 5. LIMITE
+    //  5. LIMITE
     if (limit !== null) {
         filteredData = filteredData.slice(0, limit);
     }
 
-    // 🔥 6. EMPTY STATE
+    //  6. EMPTY STATE
     if (filteredData.length === 0) {
         container.innerHTML = `
             <div class="notification-list__end">
@@ -334,7 +334,7 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
         return;
     }
 
-    // 🔥 7. RENDER
+    //  7. RENDER
     const itemsHtml = filteredData.map(item => `
         <div class="actions__item">
             <span class="icon-circle icon-circle--primary">
