@@ -323,7 +323,7 @@ const UsersRanking = [
       },
       "Endocrinologia": {
         "pts": null,
-        "monthlyGain": 277
+        "monthlyGain": null
       },
       "Nutrição": {
         "pts": null,

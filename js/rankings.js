@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRankingsPage() {
   renderSpecialtiesFilters(SpecialtiesData);
-  renderPodium(RankingsData.topRanking);
   updatePerformanceCard(RankingsData.userPerformance);
   renderActions(RankingsData.pointsHistory, true);
   renderRanking(SpecialtiesData.activeSpecialty);
@@ -174,13 +173,11 @@ function updateRankingTitle() {
 
   if (!titleEl) return;
 
-  // 🏢 Empresas
   if (scopeType === 'Empresas') {
     titleEl.textContent = 'Ranking de Empresas';
     return;
   }
 
-  // 👤 Associados
   const specialtyLabel = selectedSpecialty || '';
 
   if (rankingType === 'Equipe') {
@@ -188,4 +185,18 @@ function updateRankingTitle() {
   } else {
     titleEl.textContent = `Ranking de Associados • ${specialtyLabel}`;
   }
+}
+
+function updateMonthlyPerformance(monthlyGain) {
+  const msgEl = document.querySelector('.priority-msg');
+  if (!msgEl) return;
+
+  msgEl.innerHTML = `
+    <span class="priority-msg__dot"></span>
+    Você ganhou <strong>${monthlyGain >= 0 ? '+' : ''}${monthlyGain} pontos</strong> este mês
+  `;
+  
+  const dotEl = msgEl.querySelector('.priority-msg__dot');
+
+  if (!dotEl) return;
 }

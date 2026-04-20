@@ -157,7 +157,11 @@ function renderPodium(data) {
     <div class="ranking-podium__item ranking-podium__item--${item.tier}">
       <span class="ranking-podium__avatar"><i class="bi ${item.avatarIcon}"></i></span>
       <span class="ranking-podium__name">${item.name}</span>
-      <span class="ranking-podium__pts">${item.pts.toLocaleString('pt-BR')} pts</span>
+      <span class="ranking-podium__pts">
+        ${typeof item.pts === 'number'
+          ? item.pts.toLocaleString('pt-BR') + ' pts'
+          : item.pts + '%'}
+      </span>
     </div>
   `).join('');
 }
@@ -199,19 +203,19 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
     const searchInput = document.querySelector('#ranking-search-input');
     const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-    // 🔥 1. FILTRO POR ESPECIALIDADE
+    //  1. FILTRO POR ESPECIALIDADE
     let filteredData = data.filter(item =>
         item.specialty === selectedSpecialty
     );
 
-    // 🔥 2. FILTRO POR CATEGORIA (opcional)
+    //  2. FILTRO POR CATEGORIA (opcional)
     if (category) {
         filteredData = filteredData.filter(item =>
             item.category === category
         );
     }
 
-    // 🔥 3. FILTRO POR BUSCA
+    //  3. FILTRO POR BUSCA
     if (query) {
         filteredData = filteredData.filter(item =>
             item.title.toLowerCase().includes(query) ||
@@ -219,15 +223,15 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
         );
     }
 
-    // 🔥 4. ORDENAÇÃO POR PONTOS
+    //  4. ORDENAÇÃO POR PONTOS
     filteredData.sort((a, b) => b.pts - a.pts);
 
-    // 🔥 5. LIMITE
+    //  5. LIMITE
     if (limit !== null) {
         filteredData = filteredData.slice(0, limit);
     }
 
-    // 🔥 6. EMPTY STATE
+    //  6. EMPTY STATE
     if (filteredData.length === 0) {
         container.innerHTML = `
             <div class="notification-list__end">
@@ -238,7 +242,7 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
         return;
     }
 
-    // 🔥 7. RENDER
+    //  7. RENDER
     const itemsHtml = filteredData.map(item => `
         <div class="actions__item">
             <span class="icon-circle icon-circle--primary">
@@ -296,11 +300,26 @@ function renderRanking(selectedSpecialty) {
   // 2. Ordenar
   ranking.sort((a, b) => b.points - a.points);
 
+
+
   // 3. Rank
   ranking = ranking.map((user, index) => ({
     ...user,
     rank: index + 1
   }));
+
+    // 3.5 Criar podium
+  const podiumData = ranking.slice(0, 3).map((user, index) => {
+    const tiers = ['gold', 'silver', 'bronze'];
+
+    return {
+      name: user.name,
+      pts: user.points,
+      avatarIcon: user.avatarIcon || 'bi-person',
+      tier: tiers[index]
+    };
+  });
+  renderPodium(podiumData);
 
   // 4. Encontrar usuário atual
   let currentUser = ranking.find(u => u.isCurrentUser);
@@ -311,7 +330,7 @@ function renderRanking(selectedSpecialty) {
     const baseUser = UsersRanking.find(u => u.isCurrentUser);
 
     const sameCompanyUsers = UsersRanking.filter(
-      u => u.companyId === baseUser.companyId
+      u => u.company === baseUser.company
     );
 
     const validPoints = sameCompanyUsers
@@ -334,6 +353,40 @@ function renderRanking(selectedSpecialty) {
 
   // 6. Índice do usuário
   let index = ranking.findIndex(u => u.isCurrentUser);
+
+  const position = index + 1;
+  const totalUsers = ranking.length;
+  const percentile = 1 - (position - 1) / totalUsers;
+  const levels = [0.1, 0.3, 0.5, 0.7, 0.9, 1];
+
+  let currentLevelIndex = levels.findIndex(l => percentile <= l);
+
+  // se estiver no último nível
+  let pointsToNext = 0;
+
+  if (currentLevelIndex < levels.length - 1) {
+    const nextLevelThreshold = levels[currentLevelIndex];
+    const targetPosition = Math.ceil((1 - nextLevelThreshold) * totalUsers);
+    const targetIndex = targetPosition - 1;
+
+    if (ranking[targetIndex]) {
+      const targetPoints = ranking[targetIndex].points;
+
+      pointsToNext = Math.max(
+        0,
+        targetPoints - currentUser.points + 1
+      );
+    }
+  }
+
+  //  atualizar card
+  updatePerformanceCard({
+    position,
+    points: currentUser.points,
+    pointsToNext
+  });
+  
+  updateMonthlyPerformance(currentUser.monthlyGain);
 
   // 7. Sempre 5 usuários
   let visibleUsers = [];
@@ -486,12 +539,25 @@ function renderCompanyRanking() {
     rank: i + 1
   }));
 
-  // 🔥 7. encontrar empresa do usuário
+  const podiumData = companies.slice(0, 3).map((company, index) => {
+    const tiers = ['gold', 'silver', 'bronze'];
+
+    return {
+      name: company.company,
+      pts: (company.score * 100).toFixed(1),
+      avatarIcon: 'bi-building',
+      tier: tiers[index]
+    };
+  });
+
+  renderPodium(podiumData);
+
+  //  7. encontrar empresa do usuário
   const currentCompany = baseUser.company;
 
   const index = companies.findIndex(c => c.company === currentCompany);
 
-  // 🔥 8. pegar 2 acima + 2 abaixo
+  //  8. pegar 2 acima + 2 abaixo
   const start = Math.max(0, index - 2);
   const visibleCompanies = companies.slice(start, start + 5);
 
