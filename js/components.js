@@ -148,24 +148,33 @@ function renderHeader(options = {}) {
     </div>
   </div>`;
 }
-
 function renderPodium(data) {
   const container = document.querySelector('#ranking-podium');
   if (!container) return;
 
-  container.innerHTML = data.map(item => `
-    <div class="ranking-podium__item ranking-podium__item--${item.tier}">
-      <span class="ranking-podium__avatar"><i class="bi ${item.avatarIcon}"></i></span>
-      <span class="ranking-podium__name">${item.name}</span>
-      <span class="ranking-podium__pts">
-        ${typeof item.pts === 'number'
-          ? item.pts.toLocaleString('pt-BR') + ' pts'
-          : item.pts + '%'}
-      </span>
-    </div>
-  `).join('');
-}
+  const tiers = ['gold', 'silver', 'bronze'];
 
+  tiers.forEach((tier, index) => {
+    const item = data[index];
+    if (!item) return;
+
+    const el = container.querySelector(`.ranking-podium__item--${tier}`);
+    if (!el) return;
+
+    const avatar = el.querySelector('.ranking-podium__avatar i');
+    const name = el.querySelector('.ranking-podium__name');
+    const pts = el.querySelector('.ranking-podium__pts');
+
+    // Atualizar dados
+    avatar.className = `bi ${item.avatarIcon}`;
+    name.textContent = item.name;
+
+    pts.textContent =
+      typeof item.pts === 'number'
+        ? item.pts.toLocaleString('pt-BR') + ' pts'
+        : item.pts + '%';
+  });
+}
 function renderFooter() {
   const placeholder = document.querySelector('#footer-placeholder');
   if (!placeholder) return;
@@ -272,6 +281,7 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
 
 function renderRanking(selectedSpecialty) {
   // 1. Mapear dados por especialidade
+  
   const { rankingType, scopeType } = getFiltersState();
   
   if (scopeType === 'Empresas') {
@@ -293,6 +303,14 @@ function renderRanking(selectedSpecialty) {
     })
     .filter(user => user.points !== null);
 
+  const query = getSearchQuery();
+
+  if (query) {
+    ranking = ranking.filter(user =>
+      user.name.toLowerCase().includes(query) ||
+      user.company.toLowerCase().includes(query)
+    );
+  }
 
   if (rankingType?.trim() === 'Equipe') {
     ranking = ranking.filter(user => user.company === baseUser.company);
@@ -530,6 +548,14 @@ function renderCompanyRanking() {
     };
   });
 
+  const query = getSearchQuery();
+
+  if (query) {
+    companies = companies.filter(c =>
+      c.company.toLowerCase().includes(query)
+    );
+  }
+
   // 5. ordenar
   companies.sort((a, b) => b.score - a.score);
 
@@ -556,6 +582,40 @@ function renderCompanyRanking() {
   const currentCompany = baseUser.company;
 
   const index = companies.findIndex(c => c.company === currentCompany);
+  if (index === -1) return;
+  // 7.5 Fazer update do dashboard
+  let companyPointsToNext = 0;
+
+  if (index > 0) {
+    const currentCompanyData = companies[index];
+    const nextCompany = companies[index - 1];
+
+    companyPointsToNext = Math.max(
+      0,
+      nextCompany.score - currentCompanyData.score
+    );
+  }
+
+  // ATUALIZAR DASHBOARD COMPLETO
+  const posEl = document.querySelector('#perf-position');
+  const ptsEl = document.querySelector('#perf-points');
+  const nextEl = document.querySelector('#perf-next');
+
+  const currentCompanyData = companies[index];
+
+  if (posEl) posEl.textContent = currentCompanyData.rank + 'º';
+
+  if (ptsEl) {
+    ptsEl.textContent = (currentCompanyData.score * 100).toFixed(1) + '%';
+  }
+
+  if (nextEl) {
+    if (companyPointsToNext > 0) {
+      nextEl.textContent = `Faltam ${(companyPointsToNext * 100).toFixed(1)}%`;
+    } else {
+      nextEl.textContent = 'Você está no topo 🚀';
+    }
+  }
 
   //  8. pegar 2 acima + 2 abaixo
   const start = Math.max(0, index - 2);

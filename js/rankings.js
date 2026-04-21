@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRankingsPage() {
   renderSpecialtiesFilters(SpecialtiesData);
-  updatePerformanceCard(RankingsData.userPerformance);
   renderActions(RankingsData.pointsHistory, true);
   renderRanking(SpecialtiesData.activeSpecialty);
   updateRankingTitle();
@@ -27,6 +26,7 @@ function updatePerformanceCard(perf) {
   if (posEl) posEl.textContent = perf.position + 'º';
   if (ptsEl) ptsEl.textContent = perf.points.toLocaleString('pt-BR') + ' pts';
   if (nextEl) nextEl.textContent = 'Faltam ' + perf.pointsToNext + ' pts';
+  
 }
 
 function getFiltersState() {
@@ -98,13 +98,11 @@ function initRankingsEvents() {
 
   // Search
   const searchInput = document.querySelector('#ranking-search-input');
+
   if (searchInput) {
     searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase().trim();
-      const filtered = RankingsData.generalRanking.filter(item =>
-        item.name.toLowerCase().includes(query)
-      );
-      renderGeneralRanking(filtered);
+      const specialty = getSelectedSpecialty();
+      renderRanking(specialty);
     });
   }
 

@@ -98,31 +98,29 @@ const NotificationsData = {
 const RankingsData = {
   lastUpdated: 'Atualizado hoje, 08:00',
 
-  userPerformance: {
-    position: 167,
-    points: 1250,
-    pointsToNext: 150,
-    monthlyGain: 120
-  },
-
-  topRanking: [
-    { name: 'Ana Primeira', pts: 1950, avatarIcon: 'bi-person-fill', tier: 'gold' },
-    { name: 'João Segundo', pts: 1820, avatarIcon: 'bi-person-fill', tier: 'silver' },
-    { name: 'Maria Tercia', pts: 1520, avatarIcon: 'bi-person-fill', tier: 'bronze' }
-  ],
-
-  generalRanking: [
-    { position: 165, name: 'Maria Silva', pts: 1450, monthlyGain: 60, avatarIcon: 'bi-person-fill', isCurrentUser: false },
-    { position: 166, name: 'Carlos Souza', pts: 1320, monthlyGain: 40, avatarIcon: 'bi-person-fill', isCurrentUser: false },
-    { position: 167, name: 'Você', pts: 1250, monthlyGain: 120, avatarIcon: 'bi-person-fill', isCurrentUser: true },
-    { position: 168, name: 'Jane Doe', pts: 1240, monthlyGain: 30, avatarIcon: 'bi-person-fill', isCurrentUser: false },
-    { position: 169, name: 'Ana Campos', pts: 1210, monthlyGain: 20, avatarIcon: 'bi-person-fill', isCurrentUser: false }
-  ],
-
   pointsHistory: [
-    { id: 1, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Avaliação de Saúde', subtitle: 'Avaliação hormonal completa', nuts: 100, pts: 100 , expiry: '05/set/2026' },
-    { id: 2, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Bioimpedância', subtitle: 'Realizar exame de bioimpedância', nuts: 50, pts: 50 , expiry: '05/set/2026' },
-    { id: 3, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Calorimetria', subtitle: 'Realizar exame de calorimetria', nuts: 50, pts: 50 , expiry: '05/set/2026' }
+    { id: 1, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Avaliação de Saúde', subtitle: 'Avaliação hormonal completa', nuts: 100, pts: 100, expiry: '05/set/2026' },
+    { id: 2, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Bioimpedância', subtitle: 'Realizar exame de bioimpedância', nuts: 50, pts: 50, expiry: '05/set/2026' },
+    { id: 3, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-heart-pulse', title: 'Calorimetria', subtitle: 'Realizar exame de calorimetria', nuts: 50, pts: 50, expiry: '05/set/2026' },
+    { id: 4, specialty: 'Nutrição', category: 'Exames', icon: 'bi-file-earmark-medical', title: 'Exames realizados', subtitle: 'Realizar exames e enviar resultados', nuts: 500, pts: 500, expiry: '05/set/2026' },
+    { id: 5, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-heart-pulse', title: 'Monitoramento cardíaco', subtitle: 'Registrar batimentos diariamente', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 6, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-heart', title: 'Pressão arterial', subtitle: 'Registrar pressão diariamente', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 7, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-activity', title: 'Passos diários', subtitle: 'Atingir 10.000 passos', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 8, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-lightning-charge', title: 'Treino HIIT', subtitle: 'Realizar treino HIIT', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 9, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-speedometer', title: 'Pesagem diária', subtitle: 'Registrar peso diariamente', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 10, specialty: 'Odontologia', category: 'Prevenção', icon: 'bi-emoji-smile', title: 'Limpeza dentária', subtitle: 'Realizar limpeza semestral', nuts: 1000, pts: 1000, expiry: '05/set/2026' },
+    { id: 18, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15, expiry: '05/set/2026' },
+    { id: 19, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 11, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000, expiry: '05/set/2026' },
+    { id: 17, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15, expiry: '05/set/2026' },
+    { id: 12, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20, expiry: '05/set/2026' },
+    { id: 22, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up', title: 'Colesterol controlado', subtitle: 'Manter níveis ideais', nuts: 100, pts: 100, expiry: '05/set/2026' },
+    { id: 13, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up-arrow', title: 'Melhora do colesterol', subtitle: 'Melhorar níveis entre exames', nuts: 100, pts: 100, expiry: '05/set/2026' },
+    { id: 14, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-cup-straw', title: 'Hidratação adequada', subtitle: 'Registrar consumo ideal de água no dia', nuts: 10, pts: 10, expiry: '05/set/2026' },
+    { id: 15, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-egg-fried', title: 'Plano alimentar seguido', subtitle: 'Seguir plano alimentar prescrito no dia', nuts: 20, pts: 20, expiry: '05/set/2026' },
+    { id: 16, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-capsule', title: 'Adesão medicamentosa', subtitle: 'Tomar medicação conforme prescrição', nuts: 20, pts: 20, expiry: '05/set/2026' },
+    { id: 20, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-moon', title: 'Sono adequado', subtitle: 'Dormir pelo menos 7h', nuts: 20, pts: 20, expiry: '05/set/2026' },
+    { id: 21, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-moon', title: 'Qualidade do sono', subtitle: 'Registrar sono adequado', nuts: 20, pts: 20 }
   ]
 };
 
