@@ -108,7 +108,6 @@ const RankingsData = {
     { id: 7, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-activity', title: 'Passos diários', subtitle: 'Atingir 10.000 passos', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 8, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-lightning-charge', title: 'Treino HIIT', subtitle: 'Realizar treino HIIT', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 9, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-speedometer', title: 'Pesagem diária', subtitle: 'Registrar peso diariamente', nuts: 10, pts: 10, expiry: '05/set/2026' },
-    { id: 10, specialty: 'Odontologia', category: 'Prevenção', icon: 'bi-emoji-smile', title: 'Limpeza dentária', subtitle: 'Realizar limpeza semestral', nuts: 1000, pts: 1000, expiry: '05/set/2026' },
     { id: 18, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15, expiry: '05/set/2026' },
     { id: 19, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 11, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000, expiry: '05/set/2026' },
@@ -320,16 +319,16 @@ const UsersRanking = [
         "monthlyGain": 130
       },
       "Endocrinologia": {
-        "pts": null,
-        "monthlyGain": null
-      },
-      "Nutrição": {
-        "pts": null,
-        "monthlyGain": null
-      },
-      "Odontologia": {
         "pts": 2809,
         "monthlyGain": 191
+      },
+      "Nutrição": {
+        "pts": 5001,
+        "monthlyGain": 200
+      },
+      "Odontologia": {
+        "pts": null,
+        "monthlyGain": null
       },
       "Psicologia": {
         "pts": 4718,

@@ -148,6 +148,7 @@ function renderHeader(options = {}) {
     </div>
   </div>`;
 }
+
 function renderPodium(data) {
   const container = document.querySelector('#ranking-podium');
   if (!container) return;
@@ -175,6 +176,7 @@ function renderPodium(data) {
         : item.pts + '%';
   });
 }
+
 function renderFooter() {
   const placeholder = document.querySelector('#footer-placeholder');
   if (!placeholder) return;
@@ -279,171 +281,15 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
     container.innerHTML = itemsHtml;
 }
 
-function renderRanking(selectedSpecialty) {
-  // 1. Mapear dados por especialidade
-  
-  const { rankingType, scopeType } = getFiltersState();
-  
-  if (scopeType === 'Empresas') {
-    renderCompanyRanking();
-    return;
-  }
-
-  const baseUser = UsersRanking.find(u => u.isCurrentUser);
-
-  let ranking = UsersRanking
-    .map(user => {
-      const specialtyData = user.specialties?.[selectedSpecialty];
-
-      return {
-        ...user,
-        points: specialtyData?.pts ?? null,
-        monthlyGain: specialtyData?.monthlyGain ?? 0
-      };
-    })
-    .filter(user => user.points !== null);
-
-  const query = getSearchQuery();
-
-  if (query) {
-    ranking = ranking.filter(user =>
-      user.name.toLowerCase().includes(query) ||
-      user.company.toLowerCase().includes(query)
-    );
-  }
-
-  if (rankingType?.trim() === 'Equipe') {
-    ranking = ranking.filter(user => user.company === baseUser.company);
-  }
-  // 2. Ordenar
-  ranking.sort((a, b) => b.points - a.points);
-
-
-
-  // 3. Rank
-  ranking = ranking.map((user, index) => ({
-    ...user,
-    rank: index + 1
-  }));
-
-    // 3.5 Criar podium
-  const podiumData = ranking.slice(0, 3).map((user, index) => {
-    const tiers = ['gold', 'silver', 'bronze'];
-
-    return {
-      name: user.name,
-      pts: user.points,
-      avatarIcon: user.avatarIcon || 'bi-person',
-      tier: tiers[index]
-    };
-  });
-  renderPodium(podiumData);
-
-  // 4. Encontrar usuário atual
-  let currentUser = ranking.find(u => u.isCurrentUser);
-  let isEstimated = false;
-
-  // 5. Se não tiver pontos → média da empresa
-  if (!currentUser) {
-    const baseUser = UsersRanking.find(u => u.isCurrentUser);
-
-    const sameCompanyUsers = UsersRanking.filter(
-      u => u.company === baseUser.company
-    );
-
-    const validPoints = sameCompanyUsers
-      .map(u => u.specialties?.[selectedSpecialty]?.pts)
-      .filter(p => p !== null && p !== undefined);
-
-    const avg =
-      validPoints.reduce((acc, val) => acc + val, 0) / validPoints.length || 0;
-
-    currentUser = {
-      ...baseUser,
-      points: Math.round(avg),
-      monthlyGain: 0,
-      rank: null,
-      isCurrentUser: true
-    };
-
-    isEstimated = true;
-  }
-
-  // 6. Índice do usuário
-  let index = ranking.findIndex(u => u.isCurrentUser);
-
-  const position = index + 1;
-  const totalUsers = ranking.length;
-  const percentile = 1 - (position - 1) / totalUsers;
-  const levels = [0.1, 0.3, 0.5, 0.7, 0.9, 1];
-
-  let currentLevelIndex = levels.findIndex(l => percentile <= l);
-
-  // se estiver no último nível
-  let pointsToNext = 0;
-
-  if (currentLevelIndex < levels.length - 1) {
-    const nextLevelThreshold = levels[currentLevelIndex];
-    const targetPosition = Math.ceil((1 - nextLevelThreshold) * totalUsers);
-    const targetIndex = targetPosition - 1;
-
-    if (ranking[targetIndex]) {
-      const targetPoints = ranking[targetIndex].points;
-
-      pointsToNext = Math.max(
-        0,
-        targetPoints - currentUser.points + 1
-      );
-    }
-  }
-
-  //  atualizar card
-  updatePerformanceCard({
-    position,
-    points: currentUser.points,
-    pointsToNext
-  });
-  
-  updateMonthlyPerformance(currentUser.monthlyGain);
-
-  // 7. Sempre 5 usuários
-  let visibleUsers = [];
-
-  if (isEstimated) {
-    // descobrir onde ele ficaria no ranking
-    let estimatedIndex = ranking.findIndex(u => u.points < currentUser.points);
-
-    if (estimatedIndex === -1) {
-      estimatedIndex = ranking.length;
-    }
-
-    // inserir ele na posição correta (simulação)
-    const rankingWithEstimated = [...ranking];
-    rankingWithEstimated.splice(estimatedIndex, 0, currentUser);
-
-    // recalcular posições
-    const rankedList = rankingWithEstimated.map((user, index) => ({
-      ...user,
-      rank: user.rank ?? index + 1
-    }));
-
-    // pegar 2 acima e 2 abaixo
-    const start = Math.max(0, estimatedIndex - 2);
-    visibleUsers = rankedList.slice(start, start + 5);
-
-  } else {
-    const start = Math.max(0, index - 2);
-    visibleUsers = ranking.slice(start, start + 5);
-  }
-
-  // 8. Render
+function renderUserList(users, { isEstimated, hideCurrentUser = false }) {
   const container = document.getElementById("ranking-list");
   container.innerHTML = "";
 
-  visibleUsers.forEach(user => {
-    const isCurrent = user.isCurrentUser;
+  users.forEach(user => {
+    const isCurrent = !hideCurrentUser && user.isCurrentUser;
 
     const div = document.createElement("div");
+
     div.className = `
       ranking-general__item
       ${isCurrent ? "ranking-general__item--current" : ""}
@@ -479,153 +325,11 @@ function renderRanking(selectedSpecialty) {
   });
 }
 
-function renderCompanyRanking() {
-  const baseUser = UsersRanking.find(u => u.isCurrentUser);
-
-  // 1. descobrir líderes por especialidade
-  const specialties = Object.keys(UsersRanking[0].specialties);
-
-  const leaders = {};
-
-  specialties.forEach(spec => {
-    let max = 0;
-
-    UsersRanking.forEach(user => {
-      const pts = user.specialties?.[spec]?.pts;
-      if (pts && pts > max) max = pts;
-    });
-
-    leaders[spec] = max;
-  });
-
-  // 2. calcular score normalizado por usuário
-  const usersWithScore = UsersRanking.map(user => {
-    let values = [];
-
-    Object.entries(user.specialties || {}).forEach(([spec, data]) => {
-      const pts = data?.pts;
-      const leader = leaders[spec];
-
-      if (
-        pts !== null &&
-        pts !== undefined &&
-        leader > 0
-      ) {
-        const ratio = pts / leader;
-
-        values.push(ratio);
-      }
-    });
-
-    const avg =
-      values.length > 0
-        ? values.reduce((a, b) => a + b, 0) / values.length
-        : null;
-
-    return {
-      ...user,
-      generalizedScore: avg
-    };
-  }).filter(u => u.generalizedScore !== null);
-
-  // 3. agrupar por empresa
-  const companiesMap = {};
-
-  usersWithScore.forEach(user => {
-    if (!companiesMap[user.company]) {
-      companiesMap[user.company] = [];
-    }
-    companiesMap[user.company].push(user.generalizedScore);
-  });
-
-  // 4. média por empresa
-  let companies = Object.entries(companiesMap).map(([company, scores]) => {
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-
-    return {
-      company,
-      score: avg
-    };
-  });
-
-  const query = getSearchQuery();
-
-  if (query) {
-    companies = companies.filter(c =>
-      c.company.toLowerCase().includes(query)
-    );
-  }
-
-  // 5. ordenar
-  companies.sort((a, b) => b.score - a.score);
-
-  // 6. rank
-  companies = companies.map((c, i) => ({
-    ...c,
-    rank: i + 1
-  }));
-
-  const podiumData = companies.slice(0, 3).map((company, index) => {
-    const tiers = ['gold', 'silver', 'bronze'];
-
-    return {
-      name: company.company,
-      pts: (company.score * 100).toFixed(1),
-      avatarIcon: 'bi-building',
-      tier: tiers[index]
-    };
-  });
-
-  renderPodium(podiumData);
-
-  //  7. encontrar empresa do usuário
-  const currentCompany = baseUser.company;
-
-  const index = companies.findIndex(c => c.company === currentCompany);
-  if (index === -1) return;
-  // 7.5 Fazer update do dashboard
-  let companyPointsToNext = 0;
-
-  if (index > 0) {
-    const currentCompanyData = companies[index];
-    const nextCompany = companies[index - 1];
-
-    companyPointsToNext = Math.max(
-      0,
-      nextCompany.score - currentCompanyData.score
-    );
-  }
-
-  // ATUALIZAR DASHBOARD COMPLETO
-  const posEl = document.querySelector('#perf-position');
-  const ptsEl = document.querySelector('#perf-points');
-  const nextEl = document.querySelector('#perf-next');
-
-  const currentCompanyData = companies[index];
-
-  if (posEl) posEl.textContent = currentCompanyData.rank + 'º';
-
-  if (ptsEl) {
-    ptsEl.textContent = (currentCompanyData.score * 100).toFixed(1) + '%';
-  }
-
-  if (nextEl) {
-    if (companyPointsToNext > 0) {
-      nextEl.textContent = `Faltam ${(companyPointsToNext * 100).toFixed(1)}%`;
-    } else {
-      nextEl.textContent = 'Você está no topo 🚀';
-    }
-  }
-
-  //  8. pegar 2 acima + 2 abaixo
-  const start = Math.max(0, index - 2);
-  const visibleCompanies = companies.slice(start, start + 5);
-
-  // 9. render
+function renderCompanyList(companies, currentCompany) {
   const container = document.getElementById("ranking-list");
   container.innerHTML = "";
 
-  visibleCompanies.forEach(company => {
+  companies.forEach(company => {
     const isCurrent = company.company === currentCompany;
 
     const div = document.createElement("div");
@@ -649,6 +353,7 @@ function renderCompanyRanking() {
           ${company.company}
         </span>
       </div>
+
       <span class="ranking-general__pts">
         Score: ${(company.score * 100).toFixed(1)}%
       </span>
@@ -656,4 +361,223 @@ function renderCompanyRanking() {
 
     container.appendChild(div);
   });
+}
+
+function renderRanking(selectedSpecialty) {
+  // 1. Mapear dados por especialidade
+  
+  const { rankingType, scopeType } = getFiltersState();
+  
+  if (scopeType === 'Empresas') {
+    renderCompanyRanking();
+    return;
+  }
+
+  const baseUser = UsersRanking.find(u => u.isCurrentUser);
+
+  let ranking = UsersRanking
+    .map(user => {
+      const specialtyData = user.specialties?.[selectedSpecialty];
+
+      return {
+        ...user,
+        points: specialtyData?.pts ?? null,
+        monthlyGain: specialtyData?.monthlyGain ?? 0
+      };
+    })
+    .filter(user => user.points !== null);
+
+  const query = getSearchQuery();
+
+  if (rankingType?.trim() === 'Equipe') {
+    ranking = ranking.filter(user => user.company === baseUser.company);
+  }
+  // 2. Ordenar
+  // aplica ranking primeiro
+  ranking = applyRanking(ranking);
+
+  //  guarda versão ORIGINAL (sem search)
+  const fullRanking = [...ranking];
+
+  // aplica busca só na lista
+  ranking = applySearch(ranking, query, ['name', 'company']);
+
+  //  podium usa ranking completo
+  const podiumData = buildPodium(fullRanking, user => ({
+    name: user.name,
+    pts: user.points,
+    avatarIcon: user.avatarIcon || 'bi-person'
+  }));
+
+    // 3.5 Criar podium
+  renderPodium(podiumData);
+
+  // 4. Encontrar usuário atual
+  let currentUser = ranking.find(u => u.isCurrentUser);
+  let isEstimated = false;
+
+  // 5. Se não tiver pontos → média da empresa
+
+  const isSearching = !!query;
+
+  if (!currentUser && !isSearching) {
+    const baseUser = UsersRanking.find(u => u.isCurrentUser);
+
+    const sameCompanyUsers = UsersRanking.filter(
+      u => u.company === baseUser.company
+    );
+
+    const validPoints = sameCompanyUsers
+      .map(u => u.specialties?.[selectedSpecialty]?.pts)
+      .filter(p => p !== null && p !== undefined);
+
+    const avg =
+      validPoints.reduce((acc, val) => acc + val, 0) / validPoints.length || 0;
+
+    currentUser = {
+      ...baseUser,
+      points: Math.round(avg),
+      monthlyGain: 0,
+      rank: null,
+      isCurrentUser: true
+    };
+
+    isEstimated = true;
+  }
+
+  // 6. Índice do usuário
+  let index = ranking.findIndex(u => u.isCurrentUser);
+  const userNotInList = index === -1;
+
+  // 🔥 sempre pega do ranking completo
+  let realUser = fullRanking.find(u => u.isCurrentUser);
+
+  // fallback estimado (somente fora de search)
+  if (!realUser && isEstimated) {
+    realUser = currentUser; // usa o estimado
+  }
+
+  if (realUser) {
+    let fullIndex = fullRanking.findIndex(u => u.isCurrentUser);
+
+    // caso estimado
+    if (fullIndex === -1 && isEstimated) {
+      fullIndex = fullRanking.findIndex(u => u.points < realUser.points);
+
+      if (fullIndex === -1) {
+        fullIndex = fullRanking.length;
+      }
+    }
+
+    const performance = calculateUserPerformance({
+      ranking: fullRanking,
+      currentUserIndex: fullIndex,
+      currentUser: realUser
+    });
+
+    updateUserPerformance(performance);
+  }
+  
+  // 7. Sempre 5 usuários
+  let visibleUsers = [];
+
+  if (isEstimated) {
+    // descobrir onde ele ficaria no ranking
+    let estimatedIndex = ranking.findIndex(u => u.points < currentUser.points);
+
+    if (estimatedIndex === -1) {
+      estimatedIndex = ranking.length;
+    }
+
+    // inserir ele na posição correta (simulação)
+    const rankingWithEstimated = [...ranking];
+    rankingWithEstimated.splice(estimatedIndex, 0, currentUser);
+
+    // recalcular posições
+    const rankedList = rankingWithEstimated.map((user, index) => ({
+      ...user,
+      rank: user.rank ?? index + 1
+    }));
+
+    // pegar 2 acima e 2 abaixo
+    visibleUsers = getVisibleSlice(rankedList, estimatedIndex);
+
+  } else {
+    visibleUsers =
+      userNotInList
+        ? ranking.slice(0, 5)
+        : getVisibleSlice(ranking, index);
+  }
+
+  // 8. Render
+  renderUserList(visibleUsers, {
+    isEstimated,
+    hideCurrentUser: userNotInList
+  });
+}
+
+function renderCompanyRanking() {
+  const baseUser = UsersRanking.find(u => u.isCurrentUser);
+
+  // 1. calcular
+  let companies = calculateCompanyScores(UsersRanking);
+
+  // 2. ranking
+  companies = applyRanking(companies, 'score');
+
+  // 3. snapshot global
+  const fullCompanies = [...companies];
+
+  // 4. podium (sempre global)
+  const podiumData = buildPodium(fullCompanies, company => ({
+    name: company.company,
+    pts: (company.score * 100).toFixed(1),
+    avatarIcon: 'bi-building'
+  }));
+
+  renderPodium(podiumData);
+
+  // 5. filtro (apenas lista)
+  const query = getSearchQuery();
+  companies = applySearch(companies, query, ['company']);
+
+  // 6. empresa atual
+  const currentCompany = baseUser.company;
+
+  // 👉 índice no ranking global (para dashboard)
+  const fullIndex = fullCompanies.findIndex(c => c.company === currentCompany);
+  if (fullIndex === -1) return;
+
+  const currentCompanyData = fullCompanies[fullIndex];
+
+  // 7. cálculo do progresso
+  let companyPointsToNext = 0;
+
+  if (fullIndex > 0) {
+    const nextCompany = fullCompanies[fullIndex - 1];
+
+    companyPointsToNext = Math.max(
+      0,
+      nextCompany.score - currentCompanyData.score
+    );
+  }
+
+  // 8. render dashboard
+  renderCompanyPerformance({
+    rank: currentCompanyData.rank,
+    score: currentCompanyData.score,
+    pointsToNext: companyPointsToNext
+  });
+
+  // 9. lista (respeita search)
+  const index = companies.findIndex(c => c.company === currentCompany);
+
+  // se não estiver na busca, não tenta centralizar
+  const visibleCompanies =
+    index === -1
+      ? companies.slice(0, 5)
+      : getVisibleSlice(companies, index);
+
+  // 10. render lista
+  renderCompanyList(visibleCompanies, currentCompany);
 }
