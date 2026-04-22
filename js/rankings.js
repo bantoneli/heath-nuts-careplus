@@ -4,6 +4,8 @@
  * Depende de mocks/data/mock-data.js e js/components.js (carregar antes via HTML).
  */
 
+let currentSpecialty = null;
+
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader({ activePage: 'rankings', isSubpage: true });
   renderFooter();
@@ -16,6 +18,7 @@ function initRankingsPage() {
   renderActions(RankingsData.pointsHistory, true);
   renderRanking(SpecialtiesData.activeSpecialty);
   updateRankingTitle();
+  currentSpecialty = SpecialtiesData.activeSpecialty;
 }
 
 function getFiltersState() {
@@ -43,9 +46,9 @@ function initRankingsEvents() {
       );
       e.target.classList.add('specialties-filters__pill--active');
 
-      const selectedSpecialty = getSelectedSpecialty();
+      currentSpecialty = getSelectedSpecialty();
 
-      renderRanking(selectedSpecialty);
+      renderRanking(currentSpecialty);
       updateRankingTitle();
       renderActions(RankingsData.pointsHistory, true);
     }
@@ -67,6 +70,7 @@ function initRankingsEvents() {
         const { scopeType } = getFiltersState();
 
         if (scopeType === 'Empresas') {
+          hideRankingActions();
           disableFiltersForCompanies();
         } else {
           enableFiltersForAssociates();
@@ -74,13 +78,15 @@ function initRankingsEvents() {
             .forEach(p => {
               p.classList.toggle(
                 'specialties-filters__pill--active',
-                p.dataset.specialty === SpecialtiesData.activeSpecialty
+                p.dataset.specialty === currentSpecialty
               );
             });
+          
+          showRankingActions();
+          renderActions(RankingsData.pointsHistory, true);
         }
       }
-      const selectedSpecialty = getSelectedSpecialty();
-      renderRanking(selectedSpecialty);
+      renderRanking(currentSpecialty);
       updateRankingTitle();
     }
   });
@@ -365,4 +371,14 @@ function renderCompanyPerformance({ rank, score, pointsToNext }) {
       nextEl.textContent = 'Você está no topo 🚀';
     }
   }
+}
+
+function hideRankingActions() {
+  const el = document.querySelector('#points-history');
+  if (el) el.style.display = 'none';
+}
+
+function showRankingActions() {
+  const el = document.querySelector('#points-history');
+  if (el) el.style.display = '';
 }

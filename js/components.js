@@ -286,13 +286,14 @@ function renderUserList(users, { isEstimated, hideCurrentUser = false }) {
   container.innerHTML = "";
 
   users.forEach(user => {
-    const isCurrent = !hideCurrentUser && user.isCurrentUser;
+    const isCurrent = user.isCurrentUser;
+    const shouldHighlight = isCurrent && !hideCurrentUser;
 
     const div = document.createElement("div");
 
     div.className = `
       ranking-general__item
-      ${isCurrent ? "ranking-general__item--current" : ""}
+      ${shouldHighlight ? "ranking-general__item--current" : ""}
       ${isEstimated && isCurrent ? "ranking-general__item--estimated" : ""}
     `;
 
@@ -387,6 +388,9 @@ function renderRanking(selectedSpecialty) {
     })
     .filter(user => user.points !== null);
 
+  // 🔥 cria ranking global ANTES de qualquer filtro
+  let fullRanking = applyRanking([...ranking]);
+
   const query = getSearchQuery();
 
   if (rankingType?.trim() === 'Equipe') {
@@ -395,9 +399,6 @@ function renderRanking(selectedSpecialty) {
   // 2. Ordenar
   // aplica ranking primeiro
   ranking = applyRanking(ranking);
-
-  //  guarda versão ORIGINAL (sem search)
-  const fullRanking = [...ranking];
 
   // aplica busca só na lista
   ranking = applySearch(ranking, query, ['name', 'company']);
@@ -475,6 +476,14 @@ function renderRanking(selectedSpecialty) {
       currentUser: realUser
     });
 
+    if (rankingType?.trim() === 'Equipe') {
+      const teamIndex = ranking.findIndex(u => u.isCurrentUser);
+
+      if (teamIndex !== -1) {
+        performance.position = teamIndex + 1;
+      }
+    }
+    
     updateUserPerformance(performance);
   }
   
