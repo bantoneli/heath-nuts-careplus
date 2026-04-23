@@ -14752,3 +14752,45 @@ const UsersRanking = [
     "isCurrentUser": false
   }
 ];
+
+const DoctorsData = {
+  Endocrinologia: [
+    { id: 1, name: "Dra. Cora Coralina" },
+    { id: 2, name: "Dr. Paulo Mendes" },
+    { id: 3, name: "Dra. Fernanda Alves" },
+    { id: 4, name: "Dr. Ricardo Nunes" },
+    { id: 5, name: "Dra. Juliana Castro" }
+  ],
+
+  Nutrição: [
+    { id: 6, name: "Dr. João Silva" },
+    { id: 7, name: "Dra. Marina Rocha" },
+    { id: 8, name: "Dr. Eduardo Teixeira" },
+    { id: 9, name: "Dra. Patrícia Gomes" },
+    { id: 10, name: "Dr. Felipe Barros" }
+  ],
+
+  Dermatologia: [
+    { id: 11, name: "Dra. Maria Souza" },
+    { id: 12, name: "Dr. Lucas Ferreira" },
+    { id: 13, name: "Dra. Renata Pires" },
+    { id: 14, name: "Dr. Bruno Carvalho" },
+    { id: 15, name: "Dra. Camila Duarte" }
+  ],
+
+  Odontologia: [
+    { id: 16, name: "Dr. Pedro Santos" },
+    { id: 17, name: "Dr. André Ribeiro" },
+    { id: 18, name: "Dra. Vanessa Martins" },
+    { id: 19, name: "Dr. Guilherme Lopes" },
+    { id: 20, name: "Dra. Aline Freitas" }
+  ],
+
+  Psicologia: [
+    { id: 21, name: "Dra. Ana Lima" },
+    { id: 22, name: "Dra. Beatriz Moraes" },
+    { id: 23, name: "Dra. Carla Farias" },
+    { id: 24, name: "Dra. Denise Albuquerque" },
+    { id: 25, name: "Dra. Tatiane Rezende" }
+  ]
+};

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   syncSummaryFromState();
   wireScheduleInteractions();
   initSchedulePage();
+  initDoctorSearchDropdown();
 });
 
 function initSchedulePage() {
@@ -41,8 +42,6 @@ function getSelectedSlotLabel() {
   const active = document.querySelector('#schedule-slots .ranking-filters__pill--accent-active');
   return active ? active.dataset.slotLabel || active.textContent.trim() : '—';
 }
-
-
 
 function syncSummaryFromState() {
   const specialty = getSelectedSpecialty();
@@ -190,4 +189,63 @@ function wireScheduleInteractions() {
       alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');
     });
   }
+}
+
+function initDoctorSearchDropdown() {
+  const input = document.querySelector('#schedule-doctor-search');
+  const dropdown = document.querySelector('#doctor-dropdown');
+
+  if (!input || !dropdown) return;
+
+  function renderList(list) {
+    if (list.length === 0) {
+      dropdown.innerHTML = `<div class="doctor-dropdown__item">Nenhum médico encontrado</div>`;
+    } else {
+      dropdown.innerHTML = list.map(doc => `
+        <div class="doctor-dropdown__item" data-id="${doc.id}">
+          ${doc.name} — ${doc.specialty}
+        </div>
+      `).join('');
+    }
+
+    dropdown.classList.remove('d-none');
+  }
+
+  // 🔥 MOSTRAR TODOS AO CLICAR / FOCUS
+  input.addEventListener('focus', () => {
+    renderList(DoctorsData);
+  });
+
+  input.addEventListener('click', () => {
+    renderList(DoctorsData);
+  });
+
+  // 🔎 FILTRO
+  input.addEventListener('input', () => {
+    const value = input.value.toLowerCase();
+
+    const filtered = DoctorsData.filter(doc =>
+      doc.name.toLowerCase().includes(value)
+    );
+
+    renderList(filtered);
+  });
+
+  // 👆 SELEÇÃO
+  dropdown.addEventListener('click', (e) => {
+    const item = e.target.closest('.doctor-dropdown__item');
+    if (!item) return;
+
+    input.value = item.textContent.trim();
+    dropdown.classList.add('d-none');
+
+    document.querySelector('#summary-doctor').textContent = item.textContent;
+  });
+
+  // FECHAR AO CLICAR FORA
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.ranking-search')) {
+      dropdown.classList.add('d-none');
+    }
+  });
 }
