@@ -75,7 +75,7 @@
             </div>
             <p class="priority-msg mb-0">
               <span class="priority-msg__dot"></span>
-              Você ganhou <strong>+120 pontos</strong> este mês
+              <span id="perf-monthly"></span>
             </p>
           </section>
         </div>
@@ -89,33 +89,49 @@
                 <span class="points-history__subtitle" id="ranking-updated">Atualizado hoje, 08:00</span>
               </div>
             </div>
-            <div id="ranking-podium" class="ranking-podium"></div>
+            <div id="ranking-podium" class="ranking-podium">
+              <div class="ranking-podium__item ranking-podium__item--gold">
+                <span class="ranking-podium__avatar"><i></i></span>
+                <span class="ranking-podium__name"></span>
+                <span class="ranking-podium__pts"></span>
+              </div>
+              <div class="ranking-podium__item ranking-podium__item--silver">
+                <span class="ranking-podium__avatar"><i></i></span>
+                <span class="ranking-podium__name"></span>
+                <span class="ranking-podium__pts"></span>
+              </div>
+              <div class="ranking-podium__item ranking-podium__item--bronze">
+                <span class="ranking-podium__avatar"><i></i></span>
+                <span class="ranking-podium__name"></span>
+                <span class="ranking-podium__pts"></span>
+              </div>
+            </div>
           </section>
         </div>
       </div>
 
       <!-- Ranking Geral -->
       <section class="dashboard-card mb-4" aria-label="Ranking geral">
-        <h2 class="dashboard-card__title mb-3">Ranking Geral</h2>
+        <h2 class="dashboard-card__title mb-3 ranking-title">Ranking Geral</h2>
         <div class="d-flex gap-2 align-items-center mb-3">
           <div class="ranking-search flex-grow-1">
             <i class="bi bi-search ranking-search__icon"></i>
             <input type="text" class="ranking-search__input" id="ranking-search-input" placeholder="Buscar colegas" aria-label="Buscar colegas">
           </div>
+        </div>
+        <div id="ranking-list"></div>
+      </section>
+
+
+      <!-- Historico de pontos -->
+      <section class="dashboard-card mb-4" id = "points-history" aria-label="Histórico de pontos">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="dashboard-card__title">Histórico de pontos</h2>
           <button class="btn btn-accent" id="btn-ranking-filters" aria-label="Filtros">
             <i class="bi bi-funnel-fill"></i> Filtros
           </button>
         </div>
-        <div id="general-ranking-list"></div>
-      </section>
-
-      <!-- Historico de pontos -->
-      <section class="dashboard-card mb-4" aria-label="Histórico de pontos">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="dashboard-card__title">Histórico de pontos</h2>
-          <button class="btn btn-accent" id="btn-ver-mais-historico">Ver mais</button>
-        </div>
-        <div id="points-history-list"></div>
+        <div id="actions-list"></div>
       </section>
 
     </div>
@@ -133,5 +149,7 @@
   <!-- JavaScript -->
   <script src="../js/components.js"></script>
   <script src="../js/rankings.js"></script>
+  <script src="../js/functions.js"></script>
+
 </body>
 </html>
