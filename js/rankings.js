@@ -122,25 +122,25 @@ function initRankingsEvents() {
 }
 
 function disableFiltersForCompanies() {
-  // ❌ desativa especialidades
+  //  desativa especialidades
   document.querySelectorAll('.specialties-filters__pill').forEach(p => {
     p.classList.remove('specialties-filters__pill--active');
     p.disabled = true;
   });
 
-  // ❌ desativa toggle Geral/Equipe
+  //  desativa toggle Geral/Equipe
   document.querySelectorAll('[data-ranking-type]').forEach(btn => {
     btn.disabled = true;
     btn.classList.remove('specialties-filters__toggle-btn--active');
   });
 
-  // ✔ força "Geral" como ativo (visualmente)
+  //  força "Geral" como ativo (visualmente)
   document.querySelector('[data-ranking-type="Geral"]')
     ?.classList.add('specialties-filters__toggle-btn--active');
 }
 
 function enableFiltersForAssociates() {
-  // ✔ ativa especialidades
+  //  ativa especialidades
   const defaultSpecialty = SpecialtiesData.defaultSpecialty;
 
   document.querySelectorAll('.specialties-filters__pill').forEach(p => {
@@ -152,7 +152,7 @@ function enableFiltersForAssociates() {
     );
   });
 
-  // ✔ ativa toggle Geral/Equipe
+  //  ativa toggle Geral/Equipe
   document.querySelectorAll('[data-ranking-type]').forEach(btn => {
     btn.disabled = false;
   });
