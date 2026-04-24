@@ -178,20 +178,25 @@ const SchedulingData = {
     {
       id: 'campo-belo',
       name: 'Care Plus Clinic - Campo Belo',
-      detail: '500 m • Av. Ver. José Diniz, 3843'
+      detail: '500 m • Av. Ver. José Diniz, 3843',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.670010071031!2d-46.67928595623112!3d-23.616164824169186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce51ab8b43e18d%3A0x2aaf5ed566847b88!2sCare%20Plus%20Clinic%20-%20Campo%20Belo!5e0!3m2!1spt-BR!2sbr!4v1777065020355!5m2!1spt-BR!2sbr'
     },
     {
       id: 'brooklin',
       name: 'Care Plus Clinic - Brooklin',
-      detail: '3,5 km • Av. das Nações Unidas, 12.901'
+      detail: '3,5 km • Av. das Nações Unidas, 12.901',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.8472069233103!2d-46.699995789409364!3d-23.60981207867806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce573e934b44f1%3A0xc552bd962d85b095!2sCare%20Plus%20Clinic%20-%20Brooklin!5e0!3m2!1spt-BR!2sbr!4v1777063989555!5m2!1spt-BR!2sbr'
     },
     {
       id: 'morumbi',
       name: 'Care Plus Clinic - Morumbi',
-      detail: '4,4 km • Av. Roque Petroni Júnior, 1089'
+      detail: '4,4 km • Av. Roque Petroni Júnior, 1089',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.4986292719723!2d-46.70371375622964!3d-23.622307524154195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce51fb46bb19f7%3A0x5a1afd88cb62d7aa!2sCare%20Plus%20Clinic%20-%20Morumbi!5e0!3m2!1spt-BR!2sbr!4v1777064072306!5m2!1spt-BR!2sbr'
     }
   ],
   defaultClinicId: null,
+  defaultLocationSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1213657543467!2d-46.65725205624265!3d-23.564084224296913!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c7dbf9ff57%3A0x4ca8eb5c4f7ecca9!2sFIAP%20-%20Paulista!5e0!3m2!1spt-BR!2sbr!4v1777063893471!5m2!1spt-BR!2sbr',
+
   benefits: [
     { label: 'Chegue no horário', pts: 20 },
     { label: 'Adicione no Google Calendar', pts: 30 },
