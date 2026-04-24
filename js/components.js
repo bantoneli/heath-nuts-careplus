@@ -189,20 +189,29 @@ function renderFooter() {
   </footer>`;
 }
 
-function renderSpecialtiesFilters(data) {
-    const container = document.querySelector('#specialties-filters');
-    if (!container) return;
+function renderSpecialtiesFilters(data, activeSpecialty = null) {
+  const container = document.querySelector('#specialties-filters');
+  if (!container) return;
 
-    const pillsHtml = data.specialties.map(s => {
-        const activeClass = s === data.activeSpecialty ? ' specialties-filters__pill--active' : '';
-        return `<button class="specialties-filters__pill${activeClass}" data-specialty="${s}">${s}</button>`;
-    }).join('');
+  const pillsHtml = data.specialties.map(s => {
+    const isActive = activeSpecialty && s === activeSpecialty;
+    const activeClass = isActive ? ' specialties-filters__pill--active' : '';
 
+    return `
+      <button 
+        type="button"
+        class="specialties-filters__pill${activeClass}" 
+        data-specialty="${s}">
+        ${s}
+      </button>
+    `;
+  }).join('');
 
-
-    container.innerHTML = `
-        <div class="flex-nowrap specialties-filters__pills">${pillsHtml}</div>
-        `;
+  container.innerHTML = `
+    <div class="flex-nowrap specialties-filters__pills">
+      ${pillsHtml}
+    </div>
+  `;
 }
 
 function renderActions(data, showExpiry = true, category = null, limit = null) {
@@ -590,3 +599,22 @@ function renderCompanyRanking() {
   // 10. render lista
   renderCompanyList(visibleCompanies, currentCompany);
 }
+
+function renderDoctorDropdown(list) {
+  const dropdown = document.querySelector('#doctor-dropdown');
+  if (!dropdown) return;
+
+  if (list.length === 0) {
+    dropdown.innerHTML = `<div class="doctor-dropdown__item">Nenhum médico encontrado</div>`;
+  } else {
+    dropdown.innerHTML = list.map(doc => `
+      <div class="doctor-dropdown__item" data-id="${doc.id}">
+        <strong>${doc.name} - ${doc.specialty}</strong><br>
+        <small>${doc.clinic}</small>
+      </div>
+    `).join('');
+  }
+
+  dropdown.classList.remove('d-none');
+}
+

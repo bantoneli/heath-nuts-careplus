@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initRegulamentoPage() {
-    renderSpecialtiesFilters(SpecialtiesData);
+    renderSpecialtiesFilters(SpecialtiesData, SpecialtiesData.defaultSpecialty);
     renderActions(ActionsData.actions, false);
 }
 
