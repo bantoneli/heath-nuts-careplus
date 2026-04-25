@@ -275,10 +275,56 @@ function wireScheduleInteractions() {
     });
   });
 
-  document.querySelector('#schedule-reminder')?.addEventListener('click', e => {
+  document.querySelector('#schedule-reminder')?.addEventListener('click', (e) => {
     const btn = e.target.closest('.ranking-filters__toggle-btn');
     if (!btn) return;
-    setExclusiveAccent('#schedule-reminder', '.ranking-filters__toggle-btn', btn);
+
+    const value = btn.dataset.reminder;
+
+    let selected = SchedulingData.selectedReminders || [];
+
+    const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
+
+    // 🔥 CASO: "none"
+    if (value === 'none') {
+      selected = ['none'];
+
+      // desativa todos
+      document.querySelectorAll('#schedule-reminder .ranking-filters__toggle-btn')
+        .forEach(b => b.classList.remove('ranking-filters__toggle-btn--accent-active'));
+
+      btn.classList.add('ranking-filters__toggle-btn--accent-active');
+
+    } else {
+      // remove "none" se estiver ativo
+      selected = selected.filter(r => r !== 'none');
+
+      if (isActive) {
+        // desativa
+        selected = selected.filter(r => r !== value);
+        btn.classList.remove('ranking-filters__toggle-btn--accent-active');
+      } else {
+        // ativa
+        selected.push(value);
+        btn.classList.add('ranking-filters__toggle-btn--accent-active');
+      }
+
+      // garante que botão "none" fique desativado
+      const noneBtn = document.querySelector('[data-reminder="none"]');
+      noneBtn?.classList.remove('ranking-filters__toggle-btn--accent-active');
+    }
+
+    SchedulingData.selectedReminders = selected;
+
+    // calcular pontos
+    const points = calculateReminderPoints(selected);
+
+    const badge = document.querySelector('.badge-pts');
+
+    if (badge) {
+      badge.style.display = 'inline-block';
+      badge.textContent = `+${points} pts`;
+    }
   });
 
   document.querySelector('#schedule-clinic-list')?.addEventListener('click', e => {
@@ -325,8 +371,6 @@ function wireScheduleInteractions() {
 
     renderScheduleClinic();
   });
-
-
 
   const confirmBtn = document.querySelector('#btn-confirm-schedule');
 
@@ -805,4 +849,17 @@ function toggleInvalid(selector, isInvalid) {
   if (!isInvalid) {
     el.classList.remove('is-invalid');
   }
+}
+
+function calculateReminderPoints(reminders) {
+  if (reminders.includes('none')) return 0;
+
+  if (reminders.includes('24h') && reminders.includes('2h')) {
+    return 120;
+  }
+
+  if (reminders.includes('24h')) return 80;
+  if (reminders.includes('2h')) return 40;
+
+  return 0;
 }

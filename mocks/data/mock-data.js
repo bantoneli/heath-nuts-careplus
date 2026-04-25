@@ -162,7 +162,7 @@ const SchedulingData = {
     { id: 33, label: '23:00', period: 'noite' },
     { id: 34, label: '23:30', period: 'noite' },
   ],
-  
+
   defaultSlotId: null,
 
   clinics: [
@@ -193,7 +193,9 @@ const SchedulingData = {
     { label: 'Adicione no Google Calendar', pts: 30 },
     { label: 'Confirme a presença', pts: 15 },
     { label: 'Responda este questionário', pts: 25 }
-  ]
+  ],
+
+  selectedReminders: ['24h', '2h']
 };
 
 const SpecialtiesData = {
