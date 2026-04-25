@@ -13,10 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initScheduleDateDefault();
   window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
-  syncSummaryFromState();
+  updateSchedulingUI();
   renderScheduleBenefits();
-  renderScheduleClinic();
-  renderScheduleSlots();
   wireScheduleInteractions();
   initSchedulePage();
   initDoctorSearchDropdown();
@@ -50,7 +48,6 @@ function getSelectedSlotLabel() {
 function syncSummaryFromState() {
   const specialty = getSelectedSpecialty() || 'Selecione';
   const doctor = getSelectedDoctor();
-  const dateInput = document.querySelector('#schedule-date');
   const iso = SchedulingData.selectedDate || '';
   const slotLabel = getSelectedSlotLabel();
 
@@ -68,11 +65,10 @@ function syncSummaryFromState() {
   }
 
   const clinicId = SchedulingData.selectedClinicId;
+  const clinic = SchedulingData.clinics.find(c => c.id == clinicId);
 
-  if (clinicEl && clinicId) {
-    const clinic = SchedulingData.clinics.find(c => c.id == clinicId);
-
-    clinicEl.textContent = clinic?.name || '—';
+  if (clinicEl) {
+    clinicEl.textContent = clinic?.name || 'Selecione';
   }
 }
 
@@ -88,8 +84,7 @@ function renderScheduleSlots() {
     return;
   }
 
-  const date = document.querySelector('#schedule-date')?.value;
-
+  const date = SchedulingData.selectedDate;
   const filteredSlots = getAvailableSlots(date);
 
   if (filteredSlots.length === 0) {
@@ -97,9 +92,15 @@ function renderScheduleSlots() {
     return;
   }
 
+  const selectedSlotId = SchedulingData.selectedSlotId;
+
   slots.innerHTML = filteredSlots.map(slot => {
+    const isActive = String(slot.id) === String(selectedSlotId)
+      ? ' ranking-filters__pill--accent-active'
+      : '';
+
     return `<button type="button"
-      class="ranking-filters__pill"
+      class="ranking-filters__pill${isActive}"
       data-slot-id="${slot.id}"
       data-slot-label="${slot.label}">
       ${slot.label}
@@ -192,19 +193,51 @@ function wireScheduleInteractions() {
 
       // reset do médico ao trocar / limpar especialidade
       resetDoctorSelection();
-      syncSummaryFromState();
-      renderScheduleSlots();
+      updateSchedulingUI();
     }
   });
 
   document.querySelector('#schedule-slots')?.addEventListener('click', e => {
     const btn = e.target.closest('.ranking-filters__pill');
     if (!btn) return;
-    setExclusiveAccent('#schedule-slots', '.ranking-filters__pill', btn);
-    SchedulingData.selectedSlotLabel = btn.dataset.slotLabel;
-    SchedulingData.selectedSlotId = btn.dataset.slotId;
 
-    syncSummaryFromState(); 
+    setExclusiveAccent('#schedule-slots', '.ranking-filters__pill', btn);
+
+    const slotId = btn.dataset.slotId;
+    const date = SchedulingData.selectedDate;
+
+    const isSameSlot = String(SchedulingData.selectedSlotId) === String(slotId);
+
+    // TOGGLE
+    if (isSameSlot) {
+      resetSlotSelection(); // remove highlight
+      syncSummaryFromState();
+      return;
+    }
+
+    SchedulingData.selectedSlotId = slotId;
+    SchedulingData.selectedSlotLabel = btn.dataset.slotLabel;
+
+    const doctors = getDoctorsBySlot(slotId, date);
+
+    const input = document.querySelector('#schedule-doctor-search');
+    const dropdown = document.querySelector('#doctor-dropdown');
+
+    if (doctors.length === 1) {
+      applyDoctorSelection(doctors[0]); //  CASO 1: só 1 médico → auto seleciona
+    } else if (doctors.length > 1) {
+      //  CASO 2: vários médicos → abre dropdown filtrado
+      SchedulingData.selectedDoctorId = null;
+
+      if (input) input.value = '';
+
+      if (dropdown) {
+        renderDoctorDropdown(doctors);
+        dropdown.classList.remove('d-none');
+      }
+    }
+
+    syncSummaryFromState();
   });
 
   document.querySelectorAll('#schedule-period button').forEach(btn => {
@@ -259,24 +292,19 @@ function wireScheduleInteractions() {
       btn.setAttribute('aria-pressed', 'true');
       SchedulingData.selectedClinicId = newClinicId;
       resetDoctorSelection();
-      renderScheduleSlots();
       updateMapByClinicId(newClinicId);
     } else {
       SchedulingData.selectedClinicId = null;
       mapIframe.src = SchedulingData.defaultLocationSrc;
     }
 
+    updateSchedulingUI();
   });
 
   document.querySelector('#schedule-date')?.addEventListener('change', (e) => {
-    const doctorId = SchedulingData.selectedDoctorId;
-    if (!doctorId) return;
-
     SchedulingData.selectedDate = e.target.value;
 
-    resetSlotSelection();
-    renderScheduleSlots();
-    syncSummaryFromState();
+    updateSchedulingUI();
   });
 
   const confirmBtn = document.querySelector('#btn-confirm-schedule');
@@ -328,44 +356,21 @@ function initDoctorSearchDropdown() {
 
     if (!doctor) return;
 
-    // preenche input
-    input.value = doctor.name;
-
-    // fecha dropdown
     dropdown.classList.add('d-none');
-    
-    // salva estado
-    SchedulingData.selectedDoctorId = doctor.id;
-    
-    const specialty = doctor.specialty;
 
-    document.querySelectorAll('.specialties-filters__pill').forEach(btn => {
-      btn.classList.remove('specialties-filters__pill--active');
-    });
+    applyDoctorSelection(doctor);
 
-    const targetBtn = [...document.querySelectorAll('.specialties-filters__pill')]
-      .find(btn => btn.textContent.trim() === specialty);
-
-    if (targetBtn) {
-      targetBtn.classList.add('specialties-filters__pill--active');
-    }
-
-
-    const clinic = SchedulingData.clinics.find(c => c.name === doctor.clinic);
-    if (clinic) {
-      SchedulingData.selectedClinicId = clinic.id;
-      updateMapByClinicId(clinic.id);
-    }
-    syncSummaryFromState();
-    renderScheduleSlots();
-    renderScheduleClinic();
+    updateSchedulingUI();
   });
 
   //  Fechar ao clicar fora
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.ranking-search')) {
-      dropdown.classList.add('d-none');
-    }
+    if (
+    !e.target.closest('.ranking-search') &&
+    !e.target.closest('#schedule-slots') 
+  ) {
+    dropdown.classList.add('d-none');
+  }
   });
 
   input.addEventListener('blur', () => { 
@@ -379,22 +384,19 @@ function initDoctorSearchDropdown() {
       //  limpa tudo se não for válido
       input.value = '';
       SchedulingData.selectedDoctorId = null;
-      renderScheduleSlots();
     } else {
       //  garante consistência
       input.value = doctor.name;
       SchedulingData.selectedDoctorId = doctor.id;
     }
-    syncSummaryFromState();
+    updateSchedulingUI();
   });
 
 }
 
-
-
 function getDoctorsBySpecialty() {
   const specialty = getSelectedSpecialty();
-  const date = document.querySelector('#schedule-date')?.value;
+  const date = SchedulingData.selectedDate;
 
   if (!date) return [];
 
@@ -647,4 +649,57 @@ function resetSlotSelection() {
   document
     .querySelectorAll('#schedule-slots .ranking-filters__pill')
     .forEach(btn => btn.classList.remove('ranking-filters__pill--accent-active'));
+}
+
+function getDoctorsBySlot(slotId, date) {
+  const slotIdNum = Number(slotId);
+  if (!date || isNaN(slotIdNum)) return [];
+
+  const slot = SchedulingData.timeSlots.find(s => s.id === slotIdNum);
+  if (!slot) return [];
+
+  const dayKey = getDayKeyFromDate(date);
+
+  const baseDoctors = getDoctorsBySpecialty();
+
+  return baseDoctors.filter(doctor => {
+    const worksDay = doctor.workDays.includes(dayKey);
+    const worksPeriod = doctor.periods.includes(slot.period);
+
+    if (!worksDay || !worksPeriod) return false;
+
+    return !isSlotBooked(doctor.id, date, slotIdNum);
+  });
+}
+
+function applyDoctorSelection(doctor) {
+  SchedulingData.selectedDoctorId = doctor.id;
+
+  // input
+  const input = document.querySelector('#schedule-doctor-search');
+  if (input) input.value = doctor.name;
+
+  // especialidade
+  document.querySelectorAll('.specialties-filters__pill').forEach(btn =>
+    btn.classList.remove('specialties-filters__pill--active')
+  );
+
+  const targetBtn = [...document.querySelectorAll('.specialties-filters__pill')]
+    .find(btn => btn.dataset.specialty === doctor.specialty);
+
+  if (targetBtn) targetBtn.classList.add('specialties-filters__pill--active');
+
+  // clínica
+  const clinic = SchedulingData.clinics.find(c => c.name === doctor.clinic);
+  if (clinic) {
+    SchedulingData.selectedClinicId = clinic.id;
+    updateMapByClinicId(clinic.id);
+    updateSchedulingUI();
+  }
+}
+
+function updateSchedulingUI() {
+  renderScheduleSlots();
+  renderScheduleClinic();
+  syncSummaryFromState();
 }
