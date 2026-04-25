@@ -124,15 +124,9 @@ const RankingsData = {
 };
 
 const SchedulingData = {
-  doctorBySpecialty: {
-    Dermatologia: 'Dr. João Pelin',
-    Endocrinologia: 'Dra. Cora Coralina',
-    Nutrição: 'Nutricionista José Pereira',
-    Odontologia: 'Dra. Mariana Lopes',
-    Psicologia: 'Psicóloga Ana Prado'
-  },
+  locationQuery: '',
+
   timeSlots: [
-    // MANHÃ
     { id: 1, label: '07:00', period: 'manha' },
     { id: 2, label: '07:30', period: 'manha' },
     { id: 3, label: '08:00', period: 'manha' },
@@ -143,8 +137,6 @@ const SchedulingData = {
     { id: 8, label: '10:30', period: 'manha' },
     { id: 9, label: '11:00', period: 'manha' },
     { id: 10, label: '11:30', period: 'manha' },
-
-    // TARDE
     { id: 11, label: '12:00', period: 'tarde' },
     { id: 12, label: '12:30', period: 'tarde' },
     { id: 13, label: '13:00', period: 'tarde' },
@@ -157,8 +149,6 @@ const SchedulingData = {
     { id: 20, label: '16:30', period: 'tarde' },
     { id: 21, label: '17:00', period: 'tarde' },
     { id: 22, label: '17:30', period: 'tarde' },
-
-    // NOITE
     { id: 23, label: '18:00', period: 'noite' },
     { id: 24, label: '18:30', period: 'noite' },
     { id: 25, label: '19:00', period: 'noite' },
@@ -172,6 +162,7 @@ const SchedulingData = {
     { id: 33, label: '23:00', period: 'noite' },
     { id: 34, label: '23:30', period: 'noite' },
   ],
+  
   defaultSlotId: null,
 
   clinics: [
