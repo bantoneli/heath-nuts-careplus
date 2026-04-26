@@ -123,13 +123,13 @@ function initRankingsEvents() {
 }
 
 function disableFiltersForCompanies() {
-  // desativa especialidades
+  //  desativa especialidades
   document.querySelectorAll('.specialties-filters__pill').forEach(p => {
     p.classList.remove('specialties-filters__pill--active');
     p.disabled = true;
   });
 
-  // desativa toggle Geral/Equipe
+  //  desativa toggle Geral/Equipe
   document.querySelectorAll('[data-ranking-type]').forEach(btn => {
     btn.disabled = true;
     btn.classList.remove('specialties-filters__toggle-btn--active');
