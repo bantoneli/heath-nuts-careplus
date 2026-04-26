@@ -285,7 +285,7 @@ function wireScheduleInteractions() {
 
     const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
 
-    // 🔥 CASO: "none"
+    //  CASO: "none"
     if (value === 'none') {
       selected = ['none'];
 
