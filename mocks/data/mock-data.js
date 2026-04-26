@@ -124,51 +124,83 @@ const RankingsData = {
 };
 
 const SchedulingData = {
-  doctorBySpecialty: {
-    Dermatologia: 'Dr. João Pelin',
-    Endocrinologia: 'Dra. Cora Coralina',
-    Nutrição: 'Nutricionista José Pereira',
-    Odontologia: 'Dra. Mariana Lopes',
-    Psicologia: 'Psicóloga Ana Prado'
-  },
+  locationQuery: '',
+
   timeSlots: [
-    { id: '08:00', label: '08:00' },
-    { id: '09:00', label: '09:00' },
-    { id: '09:30', label: '09:30' },
-    { id: '10:30', label: '10:30' },
-    { id: 'encaixe', label: 'Encaixe' }
+    { id: 1, label: '07:00', period: 'manha' },
+    { id: 2, label: '07:30', period: 'manha' },
+    { id: 3, label: '08:00', period: 'manha' },
+    { id: 4, label: '08:30', period: 'manha' },
+    { id: 5, label: '09:00', period: 'manha' },
+    { id: 6, label: '09:30', period: 'manha' },
+    { id: 7, label: '10:00', period: 'manha' },
+    { id: 8, label: '10:30', period: 'manha' },
+    { id: 9, label: '11:00', period: 'manha' },
+    { id: 10, label: '11:30', period: 'manha' },
+    { id: 11, label: '12:00', period: 'tarde' },
+    { id: 12, label: '12:30', period: 'tarde' },
+    { id: 13, label: '13:00', period: 'tarde' },
+    { id: 14, label: '13:30', period: 'tarde' },
+    { id: 15, label: '14:00', period: 'tarde' },
+    { id: 16, label: '14:30', period: 'tarde' },
+    { id: 17, label: '15:00', period: 'tarde' },
+    { id: 18, label: '15:30', period: 'tarde' },
+    { id: 19, label: '16:00', period: 'tarde' },
+    { id: 20, label: '16:30', period: 'tarde' },
+    { id: 21, label: '17:00', period: 'tarde' },
+    { id: 22, label: '17:30', period: 'tarde' },
+    { id: 23, label: '18:00', period: 'noite' },
+    { id: 24, label: '18:30', period: 'noite' },
+    { id: 25, label: '19:00', period: 'noite' },
+    { id: 26, label: '19:30', period: 'noite' },
+    { id: 27, label: '20:00', period: 'noite' },
+    { id: 28, label: '20:30', period: 'noite' },
+    { id: 29, label: '21:00', period: 'noite' },
+    { id: 30, label: '21:30', period: 'noite' },
+    { id: 31, label: '22:00', period: 'noite' },
+    { id: 32, label: '22:30', period: 'noite' },
+    { id: 33, label: '23:00', period: 'noite' },
+    { id: 34, label: '23:30', period: 'noite' },
   ],
-  defaultSlotId: '09:00',
-  defaultDateIso: '2025-10-03',
+
+  defaultSlotId: null,
+
   clinics: [
     {
       id: 'campo-belo',
       name: 'Care Plus Clinic - Campo Belo',
-      detail: '500 m • Av. Ver. José Diniz, 3843'
+      detail: '500 m • Av. Ver. José Diniz, 3843',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.670010071031!2d-46.67928595623112!3d-23.616164824169186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce51ab8b43e18d%3A0x2aaf5ed566847b88!2sCare%20Plus%20Clinic%20-%20Campo%20Belo!5e0!3m2!1spt-BR!2sbr!4v1777065020355!5m2!1spt-BR!2sbr'
     },
     {
       id: 'brooklin',
       name: 'Care Plus Clinic - Brooklin',
-      detail: '3,5 km • Av. das Nações Unidas, 12.901'
+      detail: '3,5 km • Av. das Nações Unidas, 12.901',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.8472069233103!2d-46.699995789409364!3d-23.60981207867806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce573e934b44f1%3A0xc552bd962d85b095!2sCare%20Plus%20Clinic%20-%20Brooklin!5e0!3m2!1spt-BR!2sbr!4v1777063989555!5m2!1spt-BR!2sbr'
     },
     {
       id: 'morumbi',
       name: 'Care Plus Clinic - Morumbi',
-      detail: '4,4 km • Av. Roque Petroni Júnior, 1089'
+      detail: '4,4 km • Av. Roque Petroni Júnior, 1089',
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.4986292719723!2d-46.70371375622964!3d-23.622307524154195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce51fb46bb19f7%3A0x5a1afd88cb62d7aa!2sCare%20Plus%20Clinic%20-%20Morumbi!5e0!3m2!1spt-BR!2sbr!4v1777064072306!5m2!1spt-BR!2sbr'
     }
   ],
-  defaultClinicId: 'campo-belo',
+  defaultClinicId: null,
+  defaultLocationSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1213657543467!2d-46.65725205624265!3d-23.564084224296913!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c7dbf9ff57%3A0x4ca8eb5c4f7ecca9!2sFIAP%20-%20Paulista!5e0!3m2!1spt-BR!2sbr!4v1777063893471!5m2!1spt-BR!2sbr',
+
   benefits: [
     { label: 'Chegue no horário', pts: 20 },
     { label: 'Adicione no Google Calendar', pts: 30 },
     { label: 'Confirme a presença', pts: 15 },
     { label: 'Responda este questionário', pts: 25 }
-  ]
+  ],
+
+  selectedReminders: ['24h', '2h']
 };
 
 const SpecialtiesData = {
   specialties: ['Dermatologia', 'Endocrinologia', 'Nutrição', 'Odontologia', 'Psicologia'],
-  activeSpecialty: 'Endocrinologia',
+  defaultSpecialty: 'Endocrinologia',
 }
 
 const ActionsData = {
@@ -14752,3 +14784,96 @@ const UsersRanking = [
     "isCurrentUser": false
   }
 ];
+
+const DoctorsData = [
+  { id: 1, name: "Cora Coralina", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 2, name: "Paulo Mendes", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui'], periods: ['tarde'] },
+  { id: 3, name: "Fernanda Alves", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 4, name: "Ricardo Nunes", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 5, name: "Juliana Castro", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 6, name: "João Silva", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 7, name: "Marina Rocha", specialty: "Nutrição", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde','noite'] },
+  { id: 8, name: "Eduardo Teixeira", specialty: "Nutrição", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 9, name: "Patrícia Gomes", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['tarde'] },
+  { id: 10, name: "Felipe Barros", specialty: "Nutrição", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['noite'] },
+
+  { id: 11, name: "Maria Souza", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 12, name: "Lucas Ferreira", specialty: "Dermatologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 13, name: "Renata Pires", specialty: "Dermatologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['ter','qua','qui','sex'], periods: ['manha','tarde'] },
+  { id: 14, name: "Bruno Carvalho", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 15, name: "Camila Duarte", specialty: "Dermatologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 16, name: "Pedro Santos", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 17, name: "André Ribeiro", specialty: "Odontologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui'], periods: ['tarde'] },
+  { id: 18, name: "Vanessa Martins", specialty: "Odontologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 19, name: "Guilherme Lopes", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 20, name: "Aline Freitas", specialty: "Odontologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 21, name: "Ana Lima", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 22, name: "Beatriz Moraes", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 23, name: "Carla Farias", specialty: "Psicologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 24, name: "Denise Albuquerque", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 25, name: "Tatiane Rezende", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 26, name: "Rafael Nunes", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha','tarde'] },
+  { id: 27, name: "Sabrina Lopes", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 28, name: "Thiago Vieira", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 29, name: "Vanessa Rocha", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 30, name: "Walter Cruz", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 31, name: "Yara Melo", specialty: "Nutrição", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 32, name: "André Farias", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 33, name: "Beatriz Ramos", specialty: "Nutrição", clinic: "Care Plus Clinic - Campo Belo", workDays: ['ter','qua','qui','sex'], periods: ['manha','tarde'] },
+  { id: 34, name: "Caio Batista", specialty: "Nutrição", clinic: "Care Plus Clinic - Brooklin", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 35, name: "Daniela Moura", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 36, name: "Eduardo Pacheco", specialty: "Dermatologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 37, name: "Fernanda Rezende", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 38, name: "Gustavo Tavares", specialty: "Dermatologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 39, name: "Helena Campos", specialty: "Dermatologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 40, name: "Igor Santana", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 41, name: "Joana Ribeiro", specialty: "Odontologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 42, name: "Kleber Macedo", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 43, name: "Larissa Prado", specialty: "Odontologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 44, name: "Marcelo Diniz", specialty: "Odontologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 45, name: "Natália Queiroz", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 46, name: "Otávio Lacerda", specialty: "Psicologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha','tarde'] },
+  { id: 47, name: "Paula Monteiro", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 48, name: "Rodrigo Peixoto", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 49, name: "Simone Braga", specialty: "Psicologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 50, name: "Tiago Falcão", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 51, name: "Úrsula Pires", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 52, name: "Victor Neves", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 53, name: "Wendy Torres", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 54, name: "Xavier Mota", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 55, name: "Yasmin Coelho", specialty: "Endocrinologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 56, name: "Zeca Andrade", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 57, name: "Amanda Torres", specialty: "Nutrição", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 58, name: "Bernardo Costa", specialty: "Nutrição", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 59, name: "Camila Dias", specialty: "Nutrição", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 60, name: "Daniel Freire", specialty: "Nutrição", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 61, name: "Elaine Matos", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 62, name: "Fábio Brito", specialty: "Dermatologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 63, name: "Gisele Duarte", specialty: "Dermatologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 64, name: "Hugo Melo", specialty: "Dermatologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 65, name: "Ingrid Lopes", specialty: "Dermatologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 66, name: "Jonas Ribeiro", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 67, name: "Karina Alves", specialty: "Odontologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 68, name: "Leandro Nogueira", specialty: "Odontologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 69, name: "Mirela Pinto", specialty: "Odontologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 70, name: "Norberto Sá", specialty: "Odontologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['seg','ter','qua'], periods: ['tarde'] },
+
+  { id: 71, name: "Patrícia Cunha", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['seg','ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 72, name: "Renato Guedes", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qui','sex'], periods: ['tarde'] },
+  { id: 73, name: "Silvia Porto", specialty: "Psicologia", clinic: "Care Plus Clinic - Brooklin", workDays: ['ter','qua','qui','sex'], periods: ['manha'] },
+  { id: 74, name: "Tadeu Barros", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
+  { id: 75, name: "Ulyana Freitas", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] }
+];
+

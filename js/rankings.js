@@ -14,11 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initRankingsPage() {
-  renderSpecialtiesFilters(SpecialtiesData);
+  const activeSpecialty = SpecialtiesData.defaultSpecialty
+  renderSpecialtiesFilters(SpecialtiesData, activeSpecialty);
   renderActions(RankingsData.pointsHistory, true);
-  renderRanking(SpecialtiesData.activeSpecialty);
+  renderRanking(SpecialtiesData.defaultSpecialty);
   updateRankingTitle();
-  currentSpecialty = SpecialtiesData.activeSpecialty;
+  currentSpecialty = SpecialtiesData.defaultSpecialty;
 }
 
 function getFiltersState() {
