@@ -95,6 +95,93 @@ const NotificationsData = {
   ]
 };
 
+const BeneficiosData = {
+  wallet: {
+    balanceFormatted: '3.456',
+    weeklyGain: 120
+  },
+  earnMore: [
+    {
+      title: 'Retorno preventivo',
+      nuts: 120,
+      linkLabel: 'Ver calendário',
+      linkHref: 'agendamento.html'
+    },
+    {
+      title: 'Missão de passos diários',
+      nuts: 20,
+      linkLabel: 'Ver regulamento',
+      linkHref: 'regulamento.html'
+    }
+  ],
+  rewardCategories: ['Todos', 'Saúde', 'Bem-estar', 'Produtos'],
+  rewards: [
+    {
+      id: 'r1',
+      title: 'Voucher Alimentação',
+      description: 'R$30 em parceiros',
+      costNuts: 250,
+      category: 'Bem-estar',
+      cta: 'resgatar',
+      meta: 'Entrega imediata',
+      redeemed: false
+    },
+    {
+      id: 'r2',
+      title: 'Sessão de massagem',
+      description: '30 min em rede credenciada',
+      costNuts: 400,
+      category: 'Bem-estar',
+      cta: 'detalhes',
+      meta: 'Limitado',
+      redeemed: true
+    },
+    {
+      id: 'r3',
+      title: 'Check-up laboratorial',
+      description: 'Painel básico de exames',
+      costNuts: 600,
+      category: 'Saúde',
+      cta: 'resgatar',
+      meta: '3 restantes',
+      redeemed: false
+    },
+    {
+      id: 'r4',
+      title: 'Kit bem-estar',
+      description: 'Produtos selecionados',
+      costNuts: 180,
+      category: 'Produtos',
+      cta: 'detalhes',
+      meta: 'Entrega imediata',
+      redeemed: true
+    },
+    {
+      id: 'r5',
+      title: 'Consulta nutricional',
+      description: '1 sessão online',
+      costNuts: 320,
+      category: 'Saúde',
+      cta: 'resgatar',
+      redeemed: false
+    },
+    {
+      id: 'r6',
+      title: 'Cashback parceiro',
+      description: '10% em farmácias',
+      costNuts: 150,
+      category: 'Produtos',
+      cta: 'detalhes',
+      redeemed: true
+    }
+  ],
+  redemptionHistory: [
+    { title: 'Sessão de massagem', redeemedAtLabel: 'Resgatado em 3 Set 2025', nutsDelta: -400 },
+    { title: 'Kit bem-estar', redeemedAtLabel: 'Resgatado em 28 Ago 2025', nutsDelta: -180 },
+    { title: 'Cashback parceiro', redeemedAtLabel: 'Resgatado em 2 Ago 2025', nutsDelta: -150 }
+  ]
+};
+
 const RankingsData = {
   lastUpdated: 'Atualizado hoje, 08:00',
 

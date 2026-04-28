@@ -39,7 +39,7 @@ function handleNovoAgendamento() {
 }
 
 function handleVerBeneficios() {
-  alert('Página de benefícios será implementada em breve!');
+  window.location.href = 'pages/beneficios.html';
 }
 
 function handleVerRanking() {
