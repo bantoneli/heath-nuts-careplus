@@ -66,8 +66,9 @@ Project developed by:
 
 - Guilherme Karkoski
 - Lucas Falcone de Rezende
-- [Collaborator Name]
-- [Collaborator Name]
+- Chrisman Gabriel Coimbra Campos
+- Sara Pires Alves Silva
+- Bruno Antoneli
 
 ## Academic Context
 
