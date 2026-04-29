@@ -36,23 +36,6 @@
 				</iframe>
 			</div>
 
-			<!-- Lista de ações de pontuáveis -->
-			<section class="dashboard-card mb-4" aria-label="Ganhando pontos">
-				<div class="d-flex justify-content-between align-items-center mb-3">
-					<h2 class="dashboard-card__title">Ganhando pontos</h2>
-					<button class="btn btn-accent" id="btn-ver-mais-historico">Ver mais</button>
-				</div>
-				<div class="mb-3 d-flex flex-column flex-lg-row justify-content-between" id="vertical-responsive">
-					<h6 class = "p-2 small" >Selecione a especialidade para ver as ações pontuáveis</h6>
-					<div id="specialties-filters"></div>
-				</div>
-				<div class="ranking-search flex-grow-1 mb-3">
-					<i class="bi bi-search ranking-search__icon"></i>
-					<input type="text" class="ranking-search__input" id="ranking-search-input" placeholder="Buscar ações" aria-label="Buscar ações">
-				</div>
-				<div id="actions-list"></div>
-			</section>
-
 			<!-- Lista dos badges -->
 			<section class="dashboard-card mb-4" aria-label="Ranking dos badges">
 				<h2 class="dashboard-card__title mb-3">Lista de badges</h2>
@@ -113,6 +96,21 @@
 				</div>
 			</section>
 
+			<!-- Lista de ações de pontuáveis -->
+			<section class="dashboard-card mb-4" aria-label="Ganhando pontos">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="dashboard-card__title">Ganhando pontos</h2>
+				</div>
+				<div class="mb-3 d-flex flex-column flex-lg-row justify-content-between" id="vertical-responsive">
+					<h6 class = "p-2 small" >Selecione a especialidade para ver as ações pontuáveis</h6>
+					<div id="specialties-filters"></div>
+				</div>
+				<div class="ranking-search flex-grow-1 mb-3">
+					<i class="bi bi-search ranking-search__icon"></i>
+					<input type="text" class="ranking-search__input" id="ranking-search-input" placeholder="Buscar ações" aria-label="Buscar ações">
+				</div>
+				<div id="actions-list"></div>
+			</section>
 
 		</div>
 	</main>
@@ -128,7 +126,8 @@
 
 	<!-- JavaScript -->
 	<script src="../js/components.js"></script>
-	<script src="../js/componentsTemp.js"></script>
 	<script src="../js/regulamento.js"></script>
+	<script src="../js/functions.js"></script>
+
 </body>
 </html>
