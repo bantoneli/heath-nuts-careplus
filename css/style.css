@@ -1181,6 +1181,7 @@ a {
   padding: 0.5rem 1rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
@@ -1291,11 +1292,6 @@ a {
 }
 
 /* ===== Agendamento: benefícios (card lateral) ===== */
-.schedule-benefits-tag {
-  cursor: default;
-  pointer-events: none;
-}
-
 .schedule-benefits-list__row {
   display: flex;
   align-items: center;
