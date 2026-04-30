@@ -197,7 +197,7 @@
 }
 
 /* Agendamento: período em telas estreitas */
-@media (max-width: 575.98px) {
+@media (max-width: 360px) {
   #schedule-period.ranking-filters__toggle {
     flex-direction: column;
   }
@@ -205,7 +205,4 @@
   #schedule-period .ranking-filters__toggle-btn {
     width: 100%;
   }
-
-
-
 }
