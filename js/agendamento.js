@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScheduleDateDefault();
   window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
   updateSchedulingUI();
-  renderScheduleBenefits();
+  renderActions(ActionsData.actions, false,'Engajamento', 4);
   wireScheduleInteractions();
   initSchedulePage();
   initDoctorSearchDropdown();
@@ -147,20 +147,6 @@ function renderScheduleClinic() {
       </li>`;
     })
     .join('');
-}
-
-function renderScheduleBenefits() {
-  const benefits = document.querySelector('#schedule-benefits-list');
-  if (benefits) {
-    benefits.innerHTML = SchedulingData.benefits
-      .map(
-        b => `<li class="schedule-benefits-list__row">
-        <span class="schedule-benefits-list__label">${b.label}</span>
-        <span class="badge-pts badge-pts--yellow">+${b.pts} pts</span>
-      </li>`
-      )
-      .join('');
-  }
 }
 
 function initScheduleDateDefault() {
@@ -771,6 +757,7 @@ function updateSchedulingUI() {
   renderScheduleSlots();
   renderScheduleClinic();
   syncSummaryFromState();
+  renderActions(ActionsData.actions, false,'Engajamento', 4);
 }
 
 function setSpecialty(specialty) {

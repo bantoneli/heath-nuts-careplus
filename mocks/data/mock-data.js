@@ -350,22 +350,35 @@ const ActionsData = {
 
     // Prevenção
     { id: 40, specialty: 'Odontologia', category: 'Prevenção', icon: 'bi-emoji-smile', title: 'Limpeza dentária', subtitle: 'Realizar limpeza semestral', nuts: 1000, pts: 1000 },
-    { id: 48, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15 },
-    { id: 49, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10 },
+    { id: 41, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15 },
+    { id: 42, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10 },
 
     // Saúde mental
-    { id: 41, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000 },
-    { id: 47, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15 },
-    { id: 52, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20 },
+    { id: 43, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000 },
+    { id: 44, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15 },
+    { id: 45, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20 },
 
     // Extras hábitos / clínico
-    { id: 42, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up', title: 'Colesterol controlado', subtitle: 'Manter níveis ideais', nuts: 100, pts: 100 },
-    { id: 43, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up-arrow', title: 'Melhora do colesterol', subtitle: 'Melhorar níveis entre exames', nuts: 100, pts: 100 },
-    { id: 44, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-cup-straw', title: 'Hidratação adequada', subtitle: 'Registrar consumo ideal de água no dia', nuts: 10, pts: 10 },
-    { id: 45, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-egg-fried', title: 'Plano alimentar seguido', subtitle: 'Seguir plano alimentar prescrito no dia', nuts: 20, pts: 20 },
-    { id: 46, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-capsule', title: 'Adesão medicamentosa', subtitle: 'Tomar medicação conforme prescrição', nuts: 20, pts: 20 },
-    { id: 50, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-moon', title: 'Sono adequado', subtitle: 'Dormir pelo menos 7h', nuts: 20, pts: 20 },
-    { id: 51, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-moon', title: 'Qualidade do sono', subtitle: 'Registrar sono adequado', nuts: 20, pts: 20 }
+    { id: 46, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up', title: 'Colesterol controlado', subtitle: 'Manter níveis ideais', nuts: 100, pts: 100 },
+    { id: 47, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up-arrow', title: 'Melhora do colesterol', subtitle: 'Melhorar níveis entre exames', nuts: 100, pts: 100 },
+    { id: 48, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-cup-straw', title: 'Hidratação adequada', subtitle: 'Registrar consumo ideal de água no dia', nuts: 10, pts: 10 },
+    { id: 49, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-egg-fried', title: 'Plano alimentar seguido', subtitle: 'Seguir plano alimentar prescrito no dia', nuts: 20, pts: 20 },
+    { id: 50, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-capsule', title: 'Adesão medicamentosa', subtitle: 'Tomar medicação conforme prescrição', nuts: 20, pts: 20 },
+    { id: 51, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-moon', title: 'Sono adequado', subtitle: 'Dormir pelo menos 7h', nuts: 20, pts: 20 },
+    { id: 52, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-moon', title: 'Qualidade do sono', subtitle: 'Registrar sono adequado', nuts: 20, pts: 20 },
+    // Mais ações para exemplificar pontos
+    { id: 53, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-check2-circle', title: 'Confirmar consulta', subtitle: 'Confirmar consulta no aplicativo', nuts: 50, pts: 50 },
+    { id: 54, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-ui-checks', title: 'Questionário pré-consulta', subtitle: 'Preencher questionário pré-consulta', nuts: 50, pts: 50 },
+    { id: 55, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-calendar-plus', title: 'Adicionar ao calendário', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 56, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-check2-circle', title: 'Confirmar consulta', subtitle: 'Confirmar consulta no aplicativo', nuts: 50, pts: 50 },
+    { id: 57, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-ui-checks', title: 'Questionário pré-consulta', subtitle: 'Preencher questionário pré-consulta', nuts: 50, pts: 50 },
+    { id: 58, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-calendar-plus', title: 'Adicionar ao calendário', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 59, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 60, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 61, specialty: 'Nutrição', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 62, specialty: 'Endocrinologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 63, specialty: 'Psicologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+
   ]
 }
 
