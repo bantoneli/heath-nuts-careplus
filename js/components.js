@@ -220,7 +220,7 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
 
     const selectedSpecialty = getSelectedSpecialty();
 
-    const searchInput = document.querySelector('#ranking-search-input');
+    const searchInput = document.querySelector('#actions-search-input');
     const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
     //  1. FILTRO POR ESPECIALIDADE
@@ -274,7 +274,7 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
                 <span class="actions__subtitle">${item.subtitle}</span>
             </div>
 
-            <div class="actions__meta">
+            <div class="actions__meta flex-sm-row">
                 <span class="actions__nuts">+${item.nuts} nuts</span>
                 <span class="actions__pts">+${item.pts} pts</span>
 

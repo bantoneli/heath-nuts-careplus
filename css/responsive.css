@@ -168,9 +168,7 @@
     font-size: 0.82rem;
   }
 
-  .ranking-general__item {
-    flex-wrap: nowrap;
-  }
+
 }
 
 /* Large devices (>= 992px) — Rankings filters inline */
@@ -219,3 +217,4 @@
     border-bottom: none;
   }
 }
+

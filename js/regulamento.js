@@ -32,7 +32,7 @@ function initRegulamentoEvents() {
 
 
     // Search   
-    const searchInput = document.querySelector('#ranking-search-input');
+    const searchInput = document.querySelector('#actions-search-input');
 
     if (searchInput) {
         searchInput.addEventListener('input', () => {

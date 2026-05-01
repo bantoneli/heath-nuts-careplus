@@ -838,8 +838,7 @@ a {
 }
 
 .ranking-general__info {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 150px;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -860,8 +859,7 @@ a {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-success);
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-wrap: wrap;
 }
 
 /* ===== Rankings: Historico de Pontos ===== */
@@ -991,7 +989,7 @@ a {
 
 .actions__info {
   flex: 1;
-  min-width: 0;
+  min-width: 120px;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -1012,7 +1010,8 @@ a {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  flex-shrink: 0;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .actions__nuts,
