@@ -182,12 +182,12 @@ function initScheduleDateDefault() {
 function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
   document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(btn => {
     btn.classList.remove('ranking-filters__pill--accent-active');
-    btn.classList.remove('ranking-filters__toggle-btn--accent-active');
+    btn.classList.remove('scheduling-filters__toggle-btn--accent-active');
   });
   if (activeBtn.classList.contains('ranking-filters__pill')) {
     activeBtn.classList.add('ranking-filters__pill--accent-active');
   } else {
-    activeBtn.classList.add('ranking-filters__toggle-btn--accent-active');
+    activeBtn.classList.add('scheduling-filters__toggle-btn--accent-active');
   }
 }
 
@@ -256,18 +256,18 @@ function wireScheduleInteractions() {
   document.querySelectorAll('#schedule-period button').forEach(btn => {
     btn.addEventListener('click', () => {
 
-      const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
+      const isActive = btn.classList.contains('scheduling-filters__toggle-btn--accent-active');
 
       //  limpa todos
       document.querySelectorAll('#schedule-period button')
-        .forEach(b => b.classList.remove('ranking-filters__toggle-btn--accent-active'));
+        .forEach(b => b.classList.remove('scheduling-filters__toggle-btn--accent-active'));
 
       if (isActive) {
         //  desativar (toggle off)
         SchedulingData.selectedPeriod = null;
       } else {
         //  ativar novo
-        btn.classList.add('ranking-filters__toggle-btn--accent-active');
+        btn.classList.add('scheduling-filters__toggle-btn--accent-active');
         SchedulingData.selectedPeriod = btn.dataset.period;
       }
 
@@ -276,24 +276,24 @@ function wireScheduleInteractions() {
   });
 
   document.querySelector('#schedule-reminder')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.ranking-filters__toggle-btn');
+    const btn = e.target.closest('.scheduling-filters__toggle-btn');
     if (!btn) return;
 
     const value = btn.dataset.reminder;
 
     let selected = SchedulingData.selectedReminders || [];
 
-    const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
+    const isActive = btn.classList.contains('scheduling-filters__toggle-btn--accent-active');
 
     //  CASO: "none"
     if (value === 'none') {
       selected = ['none'];
 
       // desativa todos
-      document.querySelectorAll('#schedule-reminder .ranking-filters__toggle-btn')
-        .forEach(b => b.classList.remove('ranking-filters__toggle-btn--accent-active'));
+      document.querySelectorAll('#schedule-reminder .scheduling-filters__toggle-btn')
+        .forEach(b => b.classList.remove('scheduling-filters__toggle-btn--accent-active'));
 
-      btn.classList.add('ranking-filters__toggle-btn--accent-active');
+      btn.classList.add('scheduling-filters__toggle-btn--accent-active');
 
     } else {
       // remove "none" se estiver ativo
@@ -302,16 +302,16 @@ function wireScheduleInteractions() {
       if (isActive) {
         // desativa
         selected = selected.filter(r => r !== value);
-        btn.classList.remove('ranking-filters__toggle-btn--accent-active');
+        btn.classList.remove('scheduling-filters__toggle-btn--accent-active');
       } else {
         // ativa
         selected.push(value);
-        btn.classList.add('ranking-filters__toggle-btn--accent-active');
+        btn.classList.add('scheduling-filters__toggle-btn--accent-active');
       }
 
       // garante que botão "none" fique desativado
       const noneBtn = document.querySelector('[data-reminder="none"]');
-      noneBtn?.classList.remove('ranking-filters__toggle-btn--accent-active');
+      noneBtn?.classList.remove('scheduling-filters__toggle-btn--accent-active');
     }
 
     SchedulingData.selectedReminders = selected;
