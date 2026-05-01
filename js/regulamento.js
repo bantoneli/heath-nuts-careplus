@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRegulamentoPage() {
     renderSpecialtiesFilters(SpecialtiesData, SpecialtiesData.defaultSpecialty);
-    renderActions(ActionsData.actions, false);
+    renderActions(ActionsData.actions, {showExpiry: false});
 }
 
 
@@ -26,7 +26,7 @@ function initRegulamentoEvents() {
             );
             e.target.classList.add('specialties-filters__pill--active');
 
-            renderActions(ActionsData.actions, false);
+            renderActions(ActionsData.actions, {showExpiry: false});
         }
     });
 
@@ -36,7 +36,7 @@ function initRegulamentoEvents() {
 
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            renderActions(ActionsData.actions, false);
+            renderActions(ActionsData.actions, {showExpiry: false});
         });
     }
 

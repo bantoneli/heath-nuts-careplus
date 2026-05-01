@@ -213,7 +213,7 @@ function renderSpecialtiesFilters(data, activeSpecialty = null) {
     </div>
   `;
 }
-
+/*
 function renderActions(data, showExpiry = true, category = null, limit = null) {
     const container = document.querySelector('#actions-list');
     if (!container) return;
@@ -288,6 +288,46 @@ function renderActions(data, showExpiry = true, category = null, limit = null) {
     `).join('');
 
     container.innerHTML = itemsHtml;
+}
+*/
+function renderActionsList(container, data, { showExpiry = true } = {}) {
+  if (!container) return;
+
+  if (data.length === 0) {
+      container.innerHTML = `
+          <div class="notification-list__end">
+              <i class="bi bi-search"></i>
+              <span>Nenhuma ação encontrada</span>
+          </div>
+      `;
+      return;
+  }
+
+  const html = data.map(item => `
+      <div class="actions__item">
+          <span class="icon-circle icon-circle--primary">
+              <i class="bi ${item.icon}"></i>
+          </span>
+
+          <div class="actions__info">
+              <span class="actions__title">${item.title}</span>
+              <span class="actions__subtitle">${item.subtitle}</span>
+          </div>
+
+          <div class="actions__meta flex-sm-row">
+              <span class="actions__nuts">+${item.nuts} nuts</span>
+              <span class="actions__pts">+${item.pts} pts</span>
+
+              ${showExpiry ? `
+                  <span class="actions__expiry">
+                      Expira em<br>${item.expiry}
+                  </span>
+              ` : ''}
+          </div>
+      </div>
+  `).join('');
+
+  container.innerHTML = html;
 }
 
 function renderUserList(users, { isEstimated, hideCurrentUser = false }) {

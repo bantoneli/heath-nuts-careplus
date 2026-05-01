@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initScheduleDateDefault();
   window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
   updateSchedulingUI();
-  renderActions(ActionsData.actions, false,'Engajamento', 4);
   wireScheduleInteractions();
   initSchedulePage();
   initDoctorSearchDropdown();
@@ -757,7 +756,11 @@ function updateSchedulingUI() {
   renderScheduleSlots();
   renderScheduleClinic();
   syncSummaryFromState();
-  renderActions(ActionsData.actions, false,'Engajamento', 4);
+  renderActions(ActionsData.actions, {
+    showExpiry: false, 
+    category:'Engajamento', 
+    limit: 4
+  });
 }
 
 function setSpecialty(specialty) {

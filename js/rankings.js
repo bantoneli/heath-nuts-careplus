@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initRankingsPage() {
   const activeSpecialty = SpecialtiesData.defaultSpecialty
   renderSpecialtiesFilters(SpecialtiesData, activeSpecialty);
-  renderActions(RankingsData.pointsHistory, true);
+  renderActions(RankingsData.pointsHistory);
   renderRanking(SpecialtiesData.defaultSpecialty);
   updateRankingTitle();
   currentSpecialty = SpecialtiesData.defaultSpecialty;
@@ -51,7 +51,7 @@ function initRankingsEvents() {
 
       renderRanking(currentSpecialty);
       updateRankingTitle();
-      renderActions(RankingsData.pointsHistory, true);
+      renderActions(RankingsData.pointsHistory);
     }
   });
 
@@ -84,7 +84,7 @@ function initRankingsEvents() {
             });
           
           showRankingActions();
-          renderActions(RankingsData.pointsHistory, true);
+          renderActions(RankingsData.pointsHistory);
         }
       }
       renderRanking(currentSpecialty);
