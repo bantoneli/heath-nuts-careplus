@@ -116,9 +116,6 @@
   flex-wrap: wrap;
 }
 
-.specialties-filters__pills {
-  flex-wrap: wrap;
-}
 
 .points-history__item {
   flex-wrap: wrap;
@@ -155,10 +152,6 @@
   }
 
   .ranking-filters__pills {
-    flex-wrap: nowrap;
-  }
-
-  .specialties-filters__pills {
     flex-wrap: nowrap;
   }
 
@@ -204,5 +197,25 @@
 
   #schedule-period .ranking-filters__toggle-btn {
     width: 100%;
+  }
+}
+
+/* Filtro de especialidades empilhando quando ele fica maior que a largura da tela */
+@media (max-width: 510px) {
+  .specialties-filters__pills {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .specialties-filters__pill {
+    width: 100%;
+    border-right: none; 
+    border-bottom: 1px solid var(--color-border);
+    text-align: center; 
+  }
+
+  .specialties-filters__pill:last-child {
+    border-bottom: none;
   }
 }

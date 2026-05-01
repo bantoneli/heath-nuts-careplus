@@ -915,7 +915,8 @@ a {
 
 /* ===== Regulamento: Filtros ===== */
 .specialties-filters__pills {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   gap: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -931,6 +932,7 @@ a {
 }
 
 .specialties-filters__pill {
+  flex: 1;
   background: var(--color-card);
   color: var(--bs-gray-500);
   border: none;
