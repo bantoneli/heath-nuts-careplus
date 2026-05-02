@@ -98,11 +98,31 @@ function renderEncaixeButton(isActive = false) {
 function canShowEncaixe() {
   const doctorId = SchedulingData.selectedDoctorId;
   const period = SchedulingData.selectedPeriod;
+  const date = SchedulingData.selectedDate;
 
-  if (!doctorId || !period) return true;
+  // sem médico → sempre pode mostrar encaixe
+  if (!doctorId) return true;
 
   const doctor = DoctorsData.find(d => d.id === doctorId);
-  return doctor?.periods.includes(period);
+  if (!doctor) return false;
+
+  // valida dia
+  if (date) {
+    const dayKey = getDayKeyFromDate(date);
+
+    if (!doctor.workDays.includes(dayKey)) {
+      return false;
+    }
+  }
+
+  // valida período (se houver)
+  if (period) {
+    if (!doctor.periods.includes(period)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function renderScheduleSlots(showEncaixe = false) {
@@ -118,7 +138,7 @@ function renderScheduleSlots(showEncaixe = false) {
     const weekday = getDayKeyFromDate(date);
 
     if (weekday === 'sab' || weekday === 'dom') {
-      slots.innerHTML = '<p class="text-muted">Nenhum médico atendendo neste dia</p>';
+      slots.innerHTML = '<p class="text-muted">Nenhum médico atendendo neste periodo/dia</p>';
       return;
     }
   }
@@ -135,10 +155,10 @@ function renderScheduleSlots(showEncaixe = false) {
 
   if (filteredSlots.length === 0) {
     if (showEncaixe && canShowEncaixe()) {
-      buttons.push(renderEncaixeButton(isEncaixeSelected));
+      slots.innerHTML = renderEncaixeButton(isEncaixeSelected);
+    } else {
+      slots.innerHTML = '<p class="text-muted">Sem horários disponíveis este dia</p>';
     }
-
-    slots.innerHTML = '<p class="text-muted">Sem horários disponíveis este dia</p>';
     return;
   }
 
@@ -317,6 +337,12 @@ function wireScheduleInteractions() {
         SchedulingData.selectedPeriod = btn.dataset.period;
       }
 
+      const isEncaixeSelected = SchedulingData.selectedSlotId === 'encaixe';
+
+      if (isEncaixeSelected && !canShowEncaixe()) {
+        resetSlotSelection();
+      }
+      
       renderScheduleSlots(true);
       syncSummaryFromState();
     });
@@ -579,7 +605,10 @@ function getDoctorsBySpecialty() {
   );
 }
 
-
+function getWeekdayKey(date) {
+  const map = ['dom','seg','ter','qua','qui','sex','sab'];
+  return map[date.getDay()];
+}
 
 function generateAppointmentsData(doctors, timeSlots) {
   const AppointmentsData = [];
