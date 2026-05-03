@@ -619,17 +619,18 @@ a {
   color: var(--color-white);
 }
 
-.ranking-filters__toggle {
+.scheduling-filters__toggle {
   display: inline-flex;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-btn);
   overflow: hidden;
 }
 
-.ranking-filters__toggle-btn {
+.scheduling-filters__toggle-btn {
   background: var(--color-card);
   color: var(--color-text);
   border: none;
+  border-right: 1px solid var(--color-border); 
   font-size: 0.82rem;
   font-weight: 600;
   padding: 0.4rem 1rem;
@@ -637,16 +638,20 @@ a {
   transition: all var(--transition-base);
 }
 
-.ranking-filters__toggle-btn:hover {
+.scheduling-filters__toggle-btn:last-child {
+  border-right: none;
+}
+
+.scheduling-filters__toggle-btn:hover {
   color: var(--color-primary);
 }
 
-.ranking-filters__toggle-btn--active {
+.scheduling-filters__toggle-btn--active {
   background-color: var(--color-primary);
   color: var(--color-white);
 }
 
-.ranking-filters__toggle-btn--active:hover {
+.scheduling-filters__toggle-btn--active:hover {
   color: var(--color-white);
 }
 
@@ -675,6 +680,7 @@ a {
 
 .specialties-filters__toggle-btn:hover {
   color: var(--color-accent-hover);
+  
 }
 
 .specialties-filters__toggle-btn--active {
@@ -832,8 +838,7 @@ a {
 }
 
 .ranking-general__info {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 150px;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -854,8 +859,7 @@ a {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-success);
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-wrap: wrap;
 }
 
 /* ===== Rankings: Historico de Pontos ===== */
@@ -915,7 +919,8 @@ a {
 
 /* ===== Regulamento: Filtros ===== */
 .specialties-filters__pills {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   gap: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -931,6 +936,7 @@ a {
 }
 
 .specialties-filters__pill {
+  flex: 1;
   background: var(--color-card);
   color: var(--bs-gray-500);
   border: none;
@@ -949,7 +955,6 @@ a {
 }
 
 .specialties-filters__pill:hover {
-  border-color: var(--color-accent-hover);
   color: var(--color-accent-hover);
 }
 
@@ -984,7 +989,7 @@ a {
 
 .actions__info {
   flex: 1;
-  min-width: 0;
+  min-width: 120px;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -1005,7 +1010,8 @@ a {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  flex-shrink: 0;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .actions__nuts,
@@ -1103,12 +1109,12 @@ a {
   border-color: var(--color-accent-hover);
 }
 
-.ranking-filters__toggle-btn--accent-active {
+.scheduling-filters__toggle-btn--accent-active {
   background-color: var(--color-accent);
   color: var(--color-text);
 }
 
-.ranking-filters__toggle-btn--accent-active:hover {
+.scheduling-filters__toggle-btn--accent-active:hover {
   background-color: var(--color-accent-hover);
   color: var(--color-text);
 }
@@ -1158,7 +1164,6 @@ a {
   .schedule-summary-field--datetime {
     width: auto;
     min-width: 11rem;
-    max-width: 19rem;
   }
 }
 
@@ -1182,6 +1187,7 @@ a {
   padding: 0.5rem 1rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
@@ -1289,32 +1295,6 @@ a {
   height: 100%;
   border: 0;
   display: block;
-}
-
-/* ===== Agendamento: benefícios (card lateral) ===== */
-.schedule-benefits-tag {
-  cursor: default;
-  pointer-events: none;
-}
-
-.schedule-benefits-list__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.65rem 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.schedule-benefits-list__row:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.schedule-benefits-list__label {
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--color-text);
 }
 
 .schedule-legal {

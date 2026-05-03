@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRegulamentoPage() {
     renderSpecialtiesFilters(SpecialtiesData, SpecialtiesData.defaultSpecialty);
-    renderActions(ActionsData.actions, false);
+    renderActions(ActionsData.actions, {showExpiry: false});
 }
 
 
@@ -26,17 +26,17 @@ function initRegulamentoEvents() {
             );
             e.target.classList.add('specialties-filters__pill--active');
 
-            renderActions(ActionsData.actions, false);
+            renderActions(ActionsData.actions, {showExpiry: false});
         }
     });
 
 
     // Search   
-    const searchInput = document.querySelector('#ranking-search-input');
+    const searchInput = document.querySelector('#actions-search-input');
 
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            renderActions(ActionsData.actions, false);
+            renderActions(ActionsData.actions, {showExpiry: false});
         });
     }
 

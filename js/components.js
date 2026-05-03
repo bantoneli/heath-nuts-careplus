@@ -214,80 +214,44 @@ function renderSpecialtiesFilters(data, activeSpecialty = null) {
   `;
 }
 
-function renderActions(data, showExpiry = true, category = null, limit = null) {
-    const container = document.querySelector('#actions-list');
-    if (!container) return;
+function renderActionsList(container, data, { showExpiry = true } = {}) {
+  if (!container) return;
 
-    const selectedSpecialty = getSelectedSpecialty();
+  if (data.length === 0) {
+      container.innerHTML = `
+          <div class="notification-list__end">
+              <i class="bi bi-search"></i>
+              <span>Nenhuma ação encontrada</span>
+          </div>
+      `;
+      return;
+  }
 
-    const searchInput = document.querySelector('#ranking-search-input');
-    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const html = data.map(item => `
+      <div class="actions__item">
+          <span class="icon-circle icon-circle--primary">
+              <i class="bi ${item.icon}"></i>
+          </span>
 
-    //  1. FILTRO POR ESPECIALIDADE
-    let filteredData = data.filter(item =>
-        item.specialty === selectedSpecialty
-    );
+          <div class="actions__info">
+              <span class="actions__title">${item.title}</span>
+              <span class="actions__subtitle">${item.subtitle}</span>
+          </div>
 
-    //  2. FILTRO POR CATEGORIA (opcional)
-    if (category) {
-        filteredData = filteredData.filter(item =>
-            item.category === category
-        );
-    }
+          <div class="actions__meta flex-sm-row">
+              <span class="actions__nuts">+${item.nuts} nuts</span>
+              <span class="actions__pts">+${item.pts} pts</span>
 
-    //  3. FILTRO POR BUSCA
-    if (query) {
-        filteredData = filteredData.filter(item =>
-            item.title.toLowerCase().includes(query) ||
-            item.subtitle.toLowerCase().includes(query)
-        );
-    }
+              ${showExpiry ? `
+                  <span class="actions__expiry">
+                      Expira em<br>${item.expiry}
+                  </span>
+              ` : ''}
+          </div>
+      </div>
+  `).join('');
 
-    //  4. ORDENAÇÃO POR PONTOS
-    filteredData.sort((a, b) => b.pts - a.pts);
-
-    //  5. LIMITE
-    if (limit !== null) {
-        filteredData = filteredData.slice(0, limit);
-    }
-
-    //  6. EMPTY STATE
-    if (filteredData.length === 0) {
-        container.innerHTML = `
-            <div class="notification-list__end">
-                <i class="bi bi-search"></i>
-                <span>Nenhuma ação encontrada</span>
-            </div>
-        `;
-        return;
-    }
-
-    //  7. RENDER
-    const itemsHtml = filteredData.map(item => `
-        <div class="actions__item">
-            <span class="icon-circle icon-circle--primary">
-                <i class="bi ${item.icon}"></i>
-            </span>
-
-            <div class="actions__info">
-                <span class="actions__title">${item.title}</span>
-                <span class="actions__subtitle">${item.subtitle}</span>
-            </div>
-
-            <div class="actions__meta">
-                <span class="actions__nuts">+${item.nuts} nuts</span>
-                <span class="actions__pts">+${item.pts} pts</span>
-
-                ${showExpiry ? `
-                    <span class="actions__expiry">
-                        Expira em<br>${item.expiry}
-                    </span>
-                ` : ''}
-            </div>
-        </div>
-    `).join('');
-
-    container.innerHTML = itemsHtml;
+  container.innerHTML = html;
 }
 
 function renderUserList(users, { isEstimated, hideCurrentUser = false }) {
