@@ -1,4 +1,4 @@
- // Toggle senha
+
     document.getElementById('toggle-senha').addEventListener('click', () => {
       const input = document.getElementById('senha');
       const icon  = document.getElementById('toggle-icon');
@@ -7,7 +7,7 @@
       icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
     });
 
-    // Feedback
+    
     function showFeedback(msg, type = 'error') {
       const box  = document.getElementById('feedback-msg');
       const text = document.getElementById('feedback-text');
@@ -17,10 +17,8 @@
       text.textContent = msg;
     }
 
-    // Formulário
+
     document.addEventListener('DOMContentLoaded', () => {
-      // renderHeader({ activePage: 'login', isSubpage: true });
-      // renderFooter();
 
       const form = document.getElementById('login-form');
       const btn  = document.getElementById('btn-submit');
@@ -46,7 +44,6 @@
 
           if (response.ok) {
             showFeedback('Login realizado! Redirecionando…', 'success');
-            // setTimeout(() => window.location.href = '/dashboard', 1200);
           } else {
             const data = await response.json().catch(() => ({}));
             showFeedback(data.message || 'Apólice ou senha incorretos.');
