@@ -1,19 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Nuts Benefícios</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="../css/style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Nuts — Benefícios</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-	<script src="../js/script.js"></script>
+  <div id="header-placeholder"></div>
 
+  <main class="py-4">
+    <div class="container">
+
+      <p class="text-secondary small mb-3">Benefícios</p>
+
+      <!-- Carteira + Ganhe mais nuts -->
+      <section class="mb-4" aria-label="Carteira e formas de ganhar nuts">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="dashboard-card h-100">
+              <h2 class="dashboard-card__title mb-3">Sua carteira</h2>
+              <div id="benefits-wallet-placeholder"></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="dashboard-card h-100">
+              <h2 class="dashboard-card__title mb-3">Ganhe mais nuts</h2>
+              <div id="benefits-earn-placeholder" class="d-flex flex-column gap-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recompensas -->
+      <section class="dashboard-card mb-4" aria-label="Recompensas">
+        <div class="benefits-rewards-toolbar d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 gap-lg-3 mb-3">
+          <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <span class="fw-semibold text-secondary small text-uppercase mb-0 text-nowrap">Recompensas</span>
+            <div class="specialties-filters__toggle" role="group" aria-label="Filtrar por situação">
+              <button type="button" class="specialties-filters__toggle-btn specialties-filters__toggle-btn--active" data-benefits-tab="todos">Todos</button>
+              <button type="button" class="specialties-filters__toggle-btn" data-benefits-tab="disponiveis">Disponíveis</button>
+              <button type="button" class="specialties-filters__toggle-btn" data-benefits-tab="resgatadas">Resgatadas</button>
+            </div>
+          </div>
+          <div class="ranking-search benefits-rewards-toolbar__search flex-grow-1 min-w-0">
+            <i class="bi bi-search ranking-search__icon" aria-hidden="true"></i>
+            <input type="search" class="ranking-search__input" id="benefits-search-input" placeholder="Buscar recompensas" aria-label="Buscar recompensas" autocomplete="off">
+          </div>
+          <div class="d-flex justify-content-end flex-shrink-0 ms-auto">
+            <div id="benefits-category-pills" class="benefits-category-pills"></div>
+          </div>
+        </div>
+
+        <div id="benefits-rewards-grid" class="row g-3"></div>
+      </section>
+
+      <!-- Histórico -->
+      <section class="dashboard-card" aria-label="Histórico de resgates">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+          <h2 class="dashboard-card__title mb-0">Histórico de resgates</h2>
+          <button type="button" class="btn btn-accent btn-sm" id="btn-exportar-beneficios">
+            <i class="bi bi-download"></i> Exportar
+          </button>
+        </div>
+        <div id="benefits-redemption-list"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../mocks/data/mock-data.js"></script>
+  <script src="../mocks/behaviors/mock-behaviors.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/beneficios.js"></script>
 </body>
 </html>

@@ -166,6 +166,8 @@ a {
   flex-direction: column;
   gap: 0.15rem;
   transition: transform var(--transition-base);
+  width: 100%;
+  height: 100%;
 }
 
 .stat-box:hover {
@@ -185,7 +187,9 @@ a {
   color: var(--color-text);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
 }
 
 .stat-box__icon {
@@ -498,4 +502,1018 @@ a {
   width: 1rem;
   height: 1rem;
   border-width: 0.15em;
+}
+
+/* ===== Sidebar Menu (Offcanvas) ===== */
+#mainMenu {
+  max-width: 280px;
+}
+
+#mainMenu .offcanvas-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+#mainMenu .offcanvas-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.sidebar-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.sidebar-menu__item:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+}
+
+.sidebar-menu__item--active {
+  color: var(--color-primary);
+  background-color: var(--color-bg);
+  border-left: 3px solid var(--color-primary);
+  padding-left: calc(1.5rem - 3px);
+}
+
+.sidebar-menu__item i {
+  font-size: 1.15rem;
+  width: 1.25rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-menu__divider {
+  margin: 0.35rem 1.5rem;
+  border-color: var(--color-border);
+  opacity: 1;
+}
+
+/* ===== Rankings: Filtros ===== */
+.ranking-filters__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-style: italic;
+}
+
+.ranking-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.ranking-filters__pills {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+}
+
+.ranking-filters__pills::-webkit-scrollbar {
+  display: none;
+}
+
+.ranking-filters__pill {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.ranking-filters__pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.ranking-filters__pill--active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.ranking-filters__pill--active:hover {
+  color: var(--color-white);
+}
+
+.scheduling-filters__toggle {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+}
+
+.scheduling-filters__toggle-btn {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: none;
+  border-right: 1px solid var(--color-border); 
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.scheduling-filters__toggle-btn:last-child {
+  border-right: none;
+}
+
+.scheduling-filters__toggle-btn:hover {
+  color: var(--color-primary);
+}
+
+.scheduling-filters__toggle-btn--active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.scheduling-filters__toggle-btn--active:hover {
+  color: var(--color-white);
+}
+
+.specialties-filters__toggle {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+}
+
+.specialties-filters__toggle-btn {
+  background: var(--color-card);
+  color: var(--bs-gray-500);
+  border: none;
+  border-radius: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.specialties-filters__toggle-btn:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.specialties-filters__toggle-btn:hover {
+  color: var(--color-accent-hover);
+  
+}
+
+.specialties-filters__toggle-btn--active {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.specialties-filters__toggle-btn--active:hover {
+  color: var(--color-white);
+}
+
+
+/* ===== Rankings: Podio Top 3 ===== */
+.ranking-podium {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.ranking-podium__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-stat);
+  min-width: 110px;
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+}
+
+.ranking-podium__item--gold {
+  background: linear-gradient(135deg, #D4A843, #E8C860);
+  color: var(--color-white);
+}
+
+.ranking-podium__item--silver {
+  background: linear-gradient(135deg, #9E9E9E, #BDBDBD);
+  color: var(--color-white);
+}
+
+.ranking-podium__item--bronze {
+  background: linear-gradient(135deg, #CD7F32, #D4944A);
+  color: var(--color-white);
+}
+
+.ranking-podium__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.ranking-podium__name {
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.ranking-podium__pts {
+  font-size: 0.78rem;
+  opacity: 0.9;
+}
+
+/* ===== Rankings: Busca ===== */
+.ranking-search {
+  position: relative;
+}
+
+.ranking-search__icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+.ranking-search__input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  padding: 0.5rem 1rem 0.5rem 2.4rem;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-card);
+  transition: border-color var(--transition-base);
+}
+
+.ranking-search__input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.ranking-search__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(30, 80, 160, 0.12);
+}
+
+/* ===== Rankings: Lista Geral ===== */
+.ranking-general__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  margin-bottom: 0.5rem;
+  background: var(--color-card);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.ranking-general__item:hover {
+  box-shadow: 0 2px 10px rgba(52, 18, 18, 0.06);
+  border-color: var(--color-primary);
+}
+
+.ranking-general__item--current {
+  border-left: 3px solid var(--color-primary);
+  background-color: rgba(30, 80, 160, 0.04);
+}
+
+.ranking-general__position {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.78rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ranking-general__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.ranking-general__info {
+  flex: 1 1 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.ranking-general__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.ranking-general__pts {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.ranking-general__gain {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-success);
+  text-wrap: wrap;
+}
+
+/* ===== Rankings: Historico de Pontos ===== */
+.points-history__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.points-history__item:last-child {
+  border-bottom: none;
+}
+
+.points-history__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.points-history__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.points-history__subtitle {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.points-history__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.points-history__nuts,
+.points-history__pts {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-success);
+  white-space: nowrap;
+}
+
+.points-history__expiry {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  text-align: right;
+  line-height: 1.3;
+}
+
+/* ===== Regulamento: Filtros ===== */
+.specialties-filters__pills {
+  display: flex;
+  width: 100%;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+  border: 1px solid var(--color-border); 
+  border-radius: var(--radius-btn);      
+  overflow: hidden;     
+}
+
+.specialties-filters__pills::-webkit-scrollbar {
+  display: none;
+}
+
+.specialties-filters__pill {
+  flex: 1;
+  background: var(--color-card);
+  color: var(--bs-gray-500);
+  border: none;
+  border-right: 1px solid var(--color-border);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.35rem 0.45rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border-radius: 0;
+}
+
+.specialties-filters__pill:last-child {
+  border-right: none;
+}
+
+.specialties-filters__pill:hover {
+  color: var(--color-accent-hover);
+}
+
+.specialties-filters__pill--active {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.specialties-filters__pill--active:hover {
+  color: var(--color-white);
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 70vh;
+  border: none;
+}
+
+.actions__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  margin-bottom: 0.5rem;
+  background: var(--color-card);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+
+}
+
+.actions__info {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.actions__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.actions__subtitle {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.actions__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.actions__nuts,
+.actions__pts {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-success);
+  white-space: nowrap;
+}
+
+.actions__expiry {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  text-align: right;
+  line-height: 1.3;
+}
+
+.badge__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  margin-bottom: 0.5rem;
+  background: var(--color-card);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.badge__item:hover {
+  box-shadow: 0 2px 10px rgba(52, 18, 18, 0.06);
+  border-color: var(--color-primary);
+}
+
+.badge__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.badge__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.badge__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.badge__level {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+
+.badge__gain {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--bs-gray-500);
+  white-space: nowrap;
+  flex-shrink: 0;
+  white-space: normal;       /* permite quebra de linha */
+  word-wrap: break-word;     /* quebra palavras longas */
+  text-align: center;    
+  width: 300px;    
+}
+
+.badge__summary {  
+  width: 250px;    
+}
+
+/* ===== Agendamento: variantes (ativo amarelo, sem alterar Rankings) ===== */
+.ranking-filters__pill--accent-active {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.ranking-filters__pill--accent-active:hover {
+  background-color: var(--color-accent-hover);
+  color: var(--color-text);
+  border-color: var(--color-accent-hover);
+}
+
+.scheduling-filters__toggle-btn--accent-active {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.scheduling-filters__toggle-btn--accent-active:hover {
+  background-color: var(--color-accent-hover);
+  color: var(--color-text);
+}
+/* ===== Agendamento: página e formulário ===== */
+
+.schedule-page__eyebrow {
+  letter-spacing: 0.02em;
+}
+
+.schedule-field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+}
+
+.schedule-summary-card .schedule-summary-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(30, 80, 160, 0.72);
+  margin-bottom: 0.35rem;
+}
+
+.schedule-summary-field {
+  width: 100%;
+  border: 1px solid rgba(30, 80, 160, 0.12);
+  border-radius: var(--radius-stat);
+  padding: 0.55rem 0.85rem;
+  background-color: rgba(30, 80, 160, 0.06);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.schedule-summary-field__icon {
+  color: var(--color-primary);
+  opacity: 0.75;
+  font-size: 1rem;
+}
+
+/* Data/horário: largura média como no Figma */
+.schedule-summary-field--datetime {
+  width: 100%;
+}
+
+@media (min-width: 400px) {
+  .schedule-summary-field--datetime {
+    width: auto;
+    min-width: 11rem;
+  }
+}
+
+.schedule-summary-footer {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.schedule-summary-footer__actions {
+  margin-bottom: 0.85rem;
+}
+
+.schedule-summary-btn-outline {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-card);
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+}
+
+.schedule-summary-btn-outline:hover {
+  background-color: rgba(30, 80, 160, 0.08);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.schedule-summary-btn-confirm {
+  min-width: 0;
+  justify-content: center;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+.schedule-summary-observation-input {
+  border-color: rgba(30, 80, 160, 0.2);
+  border-radius: var(--radius-stat);
+  font-size: 0.88rem;
+}
+
+.schedule-summary-observation-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(30, 80, 160, 0.12);
+}
+
+.schedule-date-input {
+  min-height: 2.5rem;
+  color-scheme: light;
+}
+
+/* ===== Agendamento: lista de clínicas ===== */
+.clinic-list {
+  margin-bottom: 0;
+}
+
+.clinic-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 0.75rem;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  background: var(--color-card);
+  cursor: pointer;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  font-family: inherit;
+  color: inherit;
+}
+
+.clinic-list__item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(30, 80, 160, 0.08);
+}
+
+.clinic-list__item--active {
+  border-color: var(--color-primary);
+  background-color: rgba(30, 80, 160, 0.04);
+}
+
+.clinic-list__icon {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+.clinic-list__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.clinic-list__title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.clinic-list__detail {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.15rem;
+}
+
+/* ===== Agendamento: mapa embed ===== */
+.schedule-map {
+  border: 1px solid var(--color-border);
+}
+
+.schedule-map__iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.schedule-legal {
+  line-height: 1.35;
+}
+
+.ranking-general__item--estimated {
+  border: 2px dashed var(--color-accent);
+  background-color: rgba(255, 212, 95, 0.15);
+}
+
+.specialties-filters__pill:disabled,
+.specialties-filters__toggle-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.doctor-dropdown {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.doctor-dropdown__item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.doctor-dropdown__item:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #999;
+  pointer-events: none; /* não atrapalha o clique */
+  transition: transform 0.2s ease;
+}
+
+.is-invalid {
+  border: 2px solid #dc3545 !important;
+  border-radius: 6px;
+}
+
+/* ===== Página Benefícios ===== */
+.benefits-category-pills {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Pills de categoria na toolbar de benefícios: um pouco maiores que o padrão do ranking */
+.benefits-category-pills .specialties-filters__pill {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+}
+
+.benefits-rewards-toolbar__search {
+  flex: 1 1 10rem;
+  min-width: 0;
+  max-width: none;
+}
+
+@media (min-width: 992px) {
+  .benefits-rewards-toolbar .specialties-filters__pills {
+    flex-shrink: 0;
+  }
+}
+
+.benefits-wallet {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+  border-radius: var(--radius-card);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--shadow-btn);
+}
+
+.benefits-wallet__icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefits-wallet__icon {
+  font-size: 1.35rem;
+  color: var(--color-text);
+}
+
+.benefits-wallet__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+}
+
+.benefits-wallet__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
+.benefits-wallet__balance {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.benefits-wallet__weekly {
+  align-self: flex-end;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+.benefits-earn__row {
+  background-color: rgba(255, 212, 95, 0.28);
+  border: 1px solid rgba(255, 201, 50, 0.5);
+  border-radius: var(--radius-stat);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.benefits-earn__row:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-accent-hover);
+}
+
+.benefits-earn__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.benefits-earn__link {
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: color var(--transition-base);
+}
+
+.benefits-earn__link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.benefit-reward-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  padding: 1rem 1.1rem;
+  background: var(--color-card);
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.benefit-reward-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-primary);
+}
+
+.benefit-reward-card__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.benefit-reward-card__desc {
+  color: var(--color-text-secondary);
+}
+
+.benefit-reward-card__tag-cat {
+  background-color: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.72rem;
+  border: 1px solid var(--color-border);
+}
+
+.benefit-reward-card__cta {
+  white-space: nowrap;
+}
+
+.benefit-reward-card__foot {
+  border-top: 1px solid var(--color-border);
+}
+
+.redemption-history__row {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.redemption-history__row:last-of-type {
+  border-bottom: none;
+}
+
+.redemption-history__title {
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.redemption-history__nuts {
+  font-size: 0.88rem;
 }

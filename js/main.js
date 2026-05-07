@@ -29,6 +29,12 @@ function initEventListeners() {
  * Renderiza dados iniciais do dashboard via mock data.
  */
 async function initDashboard() {
-  renderRanking(DashboardData.ranking);
+  //renderRanking(DashboardData.ranking);
   renderAppointments(DashboardData.appointments);
+  renderActions(ActionsData.actions, {
+    showExpiry:false, 
+    category:'Hábitos', 
+    limit: 1, 
+    specialty: 'Endocrinologia'
+  });
 }
