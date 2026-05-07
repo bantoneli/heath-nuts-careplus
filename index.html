@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Health Nuts — Dashboard</title>
+  <script>
+    (function () {
+      try {
+        if (!localStorage.getItem('healthnuts_mock_entrada')) {
+          location.replace('pages/login.html');
+        }
+      } catch (e) {
+        location.replace('pages/login.html');
+      }
+    })();
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

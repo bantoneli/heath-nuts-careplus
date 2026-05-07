@@ -22,27 +22,35 @@
       flex-direction: column;
     }
 
-    /* ── HEADER ── */
+    /* ── HEADER (mesmo padrão visual do app: ícone SVG + nome) ── */
     .site-header {
       background: var(--white);
       border-bottom: 1px solid #e5edf5;
-      padding: 0.7rem 2rem;
+      padding: 0.65rem 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .site-header__brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       gap: 0.55rem;
+      text-decoration: none;
+      color: inherit;
     }
-    .logo-icon {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 2.5px solid var(--blue-dark);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--blue-dark);
+    .site-header__mark {
+      display: block;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
     }
-    .logo-name {
+    .site-header__name {
       font-size: 1.18rem;
       font-weight: 800;
       color: var(--blue-dark);
+      letter-spacing: -0.02em;
+      line-height: 1;
     }
 
     /* ── MAIN ── */
@@ -58,9 +66,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5rem;
+      gap: clamp(1.75rem, 5vw, 4rem);
       width: 100%;
       max-width: 960px;
+      flex-wrap: wrap;
     }
 
     /* ── CARD ── */
@@ -95,17 +104,27 @@
     /* ícones de especialidade */
     .specialty-icons {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
     .spec-icon {
-      width: 42px; height: 42px;
-      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       background: var(--yellow);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      color: var(--blue-dark);
-      box-shadow: 0 2px 8px rgba(245,166,35,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(245, 166, 35, 0.45);
+      flex-shrink: 0;
+    }
+    .spec-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      display: block;
     }
 
     /* inputs */
@@ -147,6 +166,10 @@
     }
     .input-wrap input::placeholder { color: #b0c4d8; }
 
+    .input-wrap--with-eye input {
+      padding-right: 2.85rem;
+    }
+
     .btn-eye {
       position: absolute; right: 0.75rem;
       background: none; border: none;
@@ -162,12 +185,30 @@
       margin-top: 0.3rem;
     }
 
-    /* ações */
+    /* ações — duas colunas iguais, gap pequeno entre botão e link */
     .login-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
+      gap: 0.55rem;
+      margin-top: 1.35rem;
+      width: 100%;
+    }
+    .login-actions .btn-entrar {
+      width: 100%;
+      min-height: 2.75rem;
+      padding: 0.65rem 0.75rem;
+      justify-content: center;
+    }
+    .login-actions .link-esqueceu {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-top: 1.4rem;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.25rem;
+      min-width: 0;
     }
     .btn-entrar {
       background: var(--blue-dark);
@@ -250,33 +291,61 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.8rem;
-      animation: mascotIn 0.6s cubic-bezier(.22,1,.36,1) 0.1s both;
+      justify-content: center;
+      flex: 0 0 auto;
+      gap: 0.5rem;
+      max-width: min(400px, 42vw);
+      animation: mascotIn 0.6s cubic-bezier(.22, 1, .36, 1) 0.1s both;
+      align-self: center;
     }
     @keyframes mascotIn {
-      from { opacity:0; transform:translateX(20px); }
-      to   { opacity:1; transform:translateX(0); }
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
     }
-   .mascot-img {
-  width: 0%;
-  max-width: 260px;
-  filter: drop-shadow(0 5px 20px rgba(30,58,110,0.18));
-  animation: flutuar 10s ease-in-out infinite;
-}
-    .mascot-title {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--blue-dark);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      line-height: 1.15;
+
+    .mascot-progress {
+      width: min(240px, 70%);
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3ecf8e 0%, #3ecf8e 70%, #d4e5f7 70%);
+      border: 2px solid var(--blue-btn);
+      box-shadow: 0 2px 6px rgba(30, 58, 110, 0.12);
     }
-    .mascot-title span {
+
+    .mascot-visual {
+      position: relative;
       display: block;
-      font-size: 1.1rem;
-      letter-spacing: 0.1em;
+      line-height: 0;
     }
+
+    .mascot-img {
+      width: 100%;
+      max-width: min(380px, 38vw);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(30, 58, 110, 0.2));
+      animation: flutuar 10s ease-in-out infinite;
+    }
+
+    @keyframes flutuar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .mascot-floaties {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .mascot-floaties i {
+      position: absolute;
+      color: rgba(91, 163, 212, 0.55);
+      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+    }
+    .mascot-floaties i:nth-child(1) { top: 10%; left: 4%; }
+    .mascot-floaties i:nth-child(2) { top: 18%; right: 2%; }
+    .mascot-floaties i:nth-child(3) { bottom: 32%; left: 0; }
+    .mascot-floaties i:nth-child(4) { bottom: 12%; right: 8%; }
 
     /* ── FOOTER ── */
     .site-footer {
@@ -290,4 +359,22 @@
 
     @media (max-width: 768px) {
       .mascot-side { display: none; }
+      .login-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .login-card {
+        max-width: 100%;
+      }
+      .login-actions {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+      }
+      .login-actions .btn-entrar {
+        width: 100%;
+      }
+      .login-actions .link-esqueceu {
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
+      }
     }

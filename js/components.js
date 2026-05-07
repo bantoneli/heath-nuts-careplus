@@ -93,7 +93,7 @@ function renderHeader(options = {}) {
     { label: 'Regulamento',   icon: 'bi-file-earmark-text', href: prefix + 'pages/regulamento.html',         pageKey: 'regulamento' },
     { divider: true },
     { label: 'Perfil',        icon: 'bi-person-circle',     href: '#',                                       pageKey: 'perfil' },
-    { label: 'Sair',          icon: 'bi-box-arrow-right',   href: prefix + 'pages/login.html',               pageKey: 'login' },
+    { label: 'Sair',          icon: 'bi-box-arrow-right',   href: prefix + 'pages/login.html',               pageKey: 'login', mockClearEntrada: true },
   ];
 
   const activeMenuItem = menuItems.find(m => m.pageKey === activePage) || menuItems[0];
@@ -103,7 +103,8 @@ function renderHeader(options = {}) {
   const menuItemsHtml = menuItems.map(item => {
     if (item.divider) return '<hr class="sidebar-menu__divider">';
     const activeClass = item.pageKey === activePage ? ' sidebar-menu__item--active' : '';
-    return `<a href="${item.href}" class="sidebar-menu__item${activeClass}">
+    const mockEntradaClear = item.mockClearEntrada ? ' data-mock-entrada-clear="1"' : '';
+    return `<a href="${item.href}" class="sidebar-menu__item${activeClass}"${mockEntradaClear}>
         <i class="bi ${item.icon}"></i>${item.label}
       </a>`;
   }).join('');
@@ -742,3 +743,16 @@ function renderBenefitsRedemptionHistory(items) {
   root.innerHTML = rows + endHtml;
 }
 
+/** Mock: “Sair” zera o flag para a próxima abertura da raiz exibir o login de novo. */
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[data-mock-entrada-clear="1"]');
+  if (!link) return;
+  event.preventDefault();
+  try {
+    localStorage.removeItem('healthnuts_mock_entrada');
+  } catch (e) {
+    /* ignore */
+  }
+  const href = link.getAttribute('href');
+  if (href) window.location.href = href;
+});
