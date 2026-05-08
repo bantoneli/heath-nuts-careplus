@@ -1,19 +1,116 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Nuts Login</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Nuts Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-	<script src="../js/script.js"></script>
+  <header class="site-header">
+    <a href="../index.html" class="site-header__brand" aria-label="Health Nuts — início">
+      <img src="../assets/svg/health_nuts_icon.svg" alt="" class="site-header__mark" width="36" height="36">
+      <span class="site-header__name">Health Nuts</span>
+    </a>
+  </header>
+
+  <main class="login-main">
+    <div class="login-container">
+
+      <div class="login-card">
+        <h2>Bem-vindo(a)</h2>
+        <p class="subtitle">Acesse sua conta para manejar sua saúde e ser o mais saudável que você pode ser!</p>
+
+        <div class="specialty-icons">
+          <div class="spec-icon" title="Dermatologia">
+            <img src="../assets/svg/specialties/Dermatologia.svg" alt="" width="28" height="28" loading="lazy">
+          </div>
+          <div class="spec-icon" title="Nutrição">
+            <img src="../assets/img/nutricao.png" alt="" width="28" height="28" loading="lazy">
+          </div>
+          <div class="spec-icon" title="Odontologia">
+            <img src="../assets/svg/specialties/Odontologia.svg" alt="" width="28" height="28" loading="lazy">
+          </div>
+          <div class="spec-icon" title="Psicologia">
+            <img src="../assets/img/psicologia.png" alt="" width="28" height="28" loading="lazy">
+          </div>
+          <div class="spec-icon" title="Endocrinologia">
+            <img src="../assets/img/endocrinologia.png" alt="" width="28" height="28" loading="lazy">
+          </div>
+        </div>
+
+        <div class="feedback-msg" id="feedback-msg" aria-live="polite">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <span id="feedback-text"></span>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="mb-3">
+            <label for="apolice" class="form-label">Número da apólice</label>
+            <div class="input-wrap">
+              <i class="bi bi-shield-check input-icon"></i>
+              <input type="text" id="apolice" name="apolice" value="112331" inputmode="numeric" autocomplete="username">
+            </div>
+            <p class="field-hint">Exemplo para demonstração (editável).</p>
+          </div>
+
+          <div class="mb-0">
+            <label for="senha" class="form-label">Senha</label>
+            <div class="input-wrap input-wrap--with-eye">
+              <i class="bi bi-lock-fill input-icon"></i>
+              <input type="password" id="senha" name="senha" value="1234567" autocomplete="current-password">
+              <button type="button" class="btn-eye" id="toggle-senha" aria-label="Mostrar ou ocultar senha">
+                <i class="bi bi-eye" id="toggle-icon"></i>
+              </button>
+            </div>
+            <p class="field-hint">Exemplo para demonstração (editável).</p>
+          </div>
+
+          <div class="login-actions">
+            <button type="submit" class="btn-entrar" id="btn-submit">
+              <div class="spinner-sm"></div>
+              <span class="btn-label">Entrar</span>
+            </button>
+            <a href="#" class="link-esqueceu">Esqueci minha senha</a>
+          </div>
+        </form>
+
+        <div class="terms-box">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>Ao acessar, você concorda com os <a href="#">termos de uso</a> e <a href="#">política de privacidade</a>.</span>
+        </div>
+      </div>
+
+      <div class="mascot-side">
+        <div class="mascot-progress" aria-hidden="true"></div>
+        <div class="mascot-visual">
+          <img src="../assets/img/mascote.png" alt="Mascote Health Nuts, esquilo médico" class="mascot-img" width="380" height="440" loading="lazy">
+          <div class="mascot-floaties" aria-hidden="true">
+            <i class="bi bi-heart-fill"></i>
+            <i class="bi bi-plus-lg"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-heart-fill"></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Feito com <span class="heart">♥</span> por Care Plus. Todos os direitos reservados
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="../js/login.js"></script>
 
 </body>
 </html>
