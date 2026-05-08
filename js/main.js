@@ -25,11 +25,8 @@ function initEventListeners() {
   if (btnVerRegulamento) btnVerRegulamento.addEventListener('click', handleVerRegulamento);
 }
 
-/**
- * Renderiza dados iniciais do dashboard via mock data.
- */
+//Renderiza dados iniciais do dashboard via mock data.
 async function initDashboard() {
-  //renderRanking(DashboardData.ranking);
   renderAppointments(DashboardData.appointments);
   renderActions(ActionsData.actions, {
     showExpiry:false, 
@@ -37,4 +34,16 @@ async function initDashboard() {
     limit: 1, 
     specialty: 'Endocrinologia'
   });
+}
+
+function renderAppointments(data) {
+  const container = document.querySelector('#appointments-list');
+  if (!container) return;
+
+  container.innerHTML = data.map(item => `
+    <div class="appointment-item">
+      <span class="appointment-item__specialty">${item.specialty}</span>
+      <p class="appointment-item__detail mb-0">${item.date} &bull; ${item.time} &bull; ${item.doctor}</p>
+    </div>
+  `).join('');
 }

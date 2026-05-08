@@ -95,3 +95,17 @@ function renderActions(data, {
 
     renderActionsList(container, filteredData, { showExpiry });
 }
+
+/** Mock: “Sair” zera o flag para a próxima abertura da raiz exibir o login de novo. */
+document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[data-mock-entrada-clear="1"]');
+    if (!link) return;
+    event.preventDefault();
+    try {
+        localStorage.removeItem('healthnuts_mock_entrada');
+    } catch (e) {
+        /* ignore */
+    }
+    const href = link.getAttribute('href');
+    if (href) window.location.href = href;
+});

@@ -1,6 +1,4 @@
-/**
- * Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
- */
+//Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
 
 const mapIframe = document.querySelector('.schedule-map__iframe');
 
@@ -38,6 +36,7 @@ function formatScheduleDateDisplay(isoDate) {
   const rest = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
   return `${weekday}, ${rest}`;
 }
+
 function syncSummaryFromState() {
   const specialty = getSelectedSpecialty() || 'Selecione';
   const doctor = getSelectedDoctor();
@@ -941,4 +940,22 @@ function calculateReminderPoints(reminders) {
   if (reminders.includes('2h')) return 40;
 
   return 0;
+}
+
+function renderDoctorDropdown(list) {
+  const dropdown = document.querySelector('#doctor-dropdown');
+  if (!dropdown) return;
+
+  if (list.length === 0) {
+    dropdown.innerHTML = `<div class="doctor-dropdown__item">Nenhum médico encontrado</div>`;
+  } else {
+    dropdown.innerHTML = list.map(doc => `
+      <div class="doctor-dropdown__item" data-id="${doc.id}">
+        <strong>${doc.name} - ${doc.specialty}</strong><br>
+        <small>${doc.clinic}</small>
+      </div>
+    `).join('');
+  }
+
+  dropdown.classList.remove('d-none');
 }
