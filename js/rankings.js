@@ -221,7 +221,7 @@ function calculateUserPerformance({ ranking, currentUserIndex, currentUser }) {
   const totalUsers = ranking.length;
 
   const percentile = 1 - (position - 1) / totalUsers;
-  const levels = [0.1, 0.3, 0.5, 0.7, 0.9, 1];
+  const levels = [0.2, 0.4, 0.6, 0.8, 1];
 
   const currentLevelIndex = levels.findIndex(l => percentile <= l);
 
@@ -242,11 +242,30 @@ function calculateUserPerformance({ ranking, currentUserIndex, currentUser }) {
     }
   }
 
+  let badge = null;
+
+
+
+  // level visual (1 → 6)
+  const level = currentLevelIndex + 1;
+
+  const badgeMap = {
+    1: '../assets/svg/badges/Adormecida.svg',
+    2: '../assets/svg/badges/Energia.svg',
+    3: '../assets/svg/badges/Juvenil.svg',
+    4: '../assets/svg/badges/Serena.svg',
+    5: '../assets/svg/badges/Produtiva.svg',
+  };
+
+  badge = badgeMap[level];
+  
+
   return {
     position,
     points: currentUser.points,
     pointsToNext,
-    monthlyGain: currentUser.monthlyGain
+    monthlyGain: currentUser.monthlyGain,
+    badge
   };
 }
 
@@ -254,12 +273,14 @@ function updateUserPerformance({
   position,
   points,
   pointsToNext,
-  monthlyGain
+  monthlyGain,
+  badge
 }) {
   const posEl = document.querySelector('#perf-position');
   const ptsEl = document.querySelector('#perf-points');
   const nextEl = document.querySelector('#perf-next');
   const gainEl = document.querySelector('#perf-monthly');
+  const badgeEl = document.querySelector('#perf-badge');
 
   if (posEl) posEl.textContent = position + 'º';
 
@@ -274,6 +295,22 @@ function updateUserPerformance({
   if (gainEl) {
     gainEl.textContent = `Você ganhou ${monthlyGain} pts no último mês!`;
   }
+
+  if (badgeEl) {
+
+    if (badge) {
+      badgeEl.innerHTML = `
+        <img
+          src="${badge}"
+          alt="Badge de performance"
+          class="perf-badge__img"
+        >
+      `;
+    } else {
+      badgeEl.innerHTML = '';
+    }
+  }
+
 }
 
 function updateCompanyPerformance({ rank, score, pointsToNext }) {
@@ -532,7 +569,21 @@ function renderRanking(selectedSpecialty) {
       }
     }
     
-    updateUserPerformance(performance);
+    if (isEstimated) {
+
+      updateUserPerformance({
+        position: 0,
+        points: 0,
+        pointsToNext: 0,
+        monthlyGain: 0,
+        badge: null
+      });
+
+    } else {
+
+      updateUserPerformance(performance);
+
+    }
   }
   
   // 7. Sempre 5 usuários

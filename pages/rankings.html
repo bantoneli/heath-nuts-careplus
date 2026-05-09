@@ -50,63 +50,84 @@
       <div class="row g-4 mb-4">
 
         <!-- Seu desempenho -->
-        <div class="col-lg-5">
-          <section class="dashboard-card h-100" aria-label="Seu desempenho">
-            <h2 class="dashboard-card__title mb-3">Seu desempenho</h2>
-            <div class="row g-2 mb-3" id="performance-stats">
-              <div class="col-4">
-                <div class="stat-box">
-                  <span class="stat-box__label">Sua posição</span>
-                  <span class="stat-box__value" id="perf-position">167º</span>
-                </div>
+      <div class="col-lg-5">
+        <section class="dashboard-card h-100" aria-label="Seu desempenho">
+          <h2 class="dashboard-card__title mb-3">Seu desempenho</h2>
+
+          <div class="row g-2 mb-3 align-items-stretch" id="performance-stats">
+
+            <div class="col-6 d-flex">
+              <div class="stat-box w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                <span class="stat-box__label">Sua posição</span>
+                <span class="stat-box__value" id="perf-position">#</span>
               </div>
-              <div class="col-4">
-                <div class="stat-box">
-                  <span class="stat-box__label">Pontuação atual</span>
-                  <span class="stat-box__value" id="perf-points">1.250 pts</span>
-                </div>
+            </div>
+
+            <div class="col-6 d-flex">
+              <div class="stat-box w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                <span class="stat-box__label">Pontuação atual</span>
+                <span class="stat-box__value" id="perf-points"># pts</span>
               </div>
-              <div class="col-4">
-                <div class="stat-box">
-                  <span class="stat-box__label">Próxima conquista</span>
-                  <span class="stat-box__value" id="perf-next">Faltam 150 pts</span>
+            </div>
+
+            <div class="col-6 d-flex">
+              <div class="stat-box w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                <span class="stat-box__label">Próxima conquista</span>
+                <span class="stat-box__value" id="perf-next">#</span>
+              </div>
+            </div>
+
+            <div class="col-6 d-flex">
+              <div class="stat-box w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                <span class="stat-box__label">Badge atual</span>
+
+                <div
+                  class="stat-box__value d-flex justify-content-center align-items-center"
+                  id="perf-badge"
+                >
+                  #
                 </div>
               </div>
             </div>
-            <p class="priority-msg mb-0">
-              <span class="priority-msg__dot"></span>
-              <span id="perf-monthly"></span>
-            </p>
-          </section>
-        </div>
+
+          </div>
+
+          <p class="priority-msg mb-0">
+            <span class="priority-msg__dot"></span>
+            <span id="perf-monthly"></span>
+          </p>
+        </section>
+      </div>
 
         <!-- Top 3 do ranking -->
-        <div class="col-lg-7">
-          <section class="dashboard-card h-100" aria-label="Os melhores do ranking">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h2 class="dashboard-card__title">Os melhores do ranking</h2>
-                <span class="points-history__subtitle" id="ranking-updated">Atualizado hoje, 08:00</span>
-              </div>
+      <div class="col-lg-7">
+        <div class="dashboard-card h-100" aria-label="Os melhores do ranking">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h2 class="dashboard-card__title">Os melhores do ranking</h2>
+              <span class="points-history__subtitle" id="ranking-updated">Atualizado hoje, 08:00</span>
             </div>
-            <div id="ranking-podium" class="ranking-podium">
-              <div class="ranking-podium__item ranking-podium__item--gold">
-                <span class="ranking-podium__avatar"><i></i></span>
-                <span class="ranking-podium__name"></span>
-                <span class="ranking-podium__pts"></span>
-              </div>
-              <div class="ranking-podium__item ranking-podium__item--silver">
-                <span class="ranking-podium__avatar"><i></i></span>
-                <span class="ranking-podium__name"></span>
-                <span class="ranking-podium__pts"></span>
-              </div>
-              <div class="ranking-podium__item ranking-podium__item--bronze">
-                <span class="ranking-podium__avatar"><i></i></span>
-                <span class="ranking-podium__name"></span>
-                <span class="ranking-podium__pts"></span>
-              </div>
+          </div>
+          <div id="ranking-podium" class="ranking-podium d-flex align-items-stretch gap-2">
+            <div class="ranking-podium__item ranking-podium__item--gold flex-fill d-flex flex-column justify-content-center align-items-center text-center">
+              <span class="ranking-podium__avatar"><i></i></span>
+              <span class="ranking-podium__name"></span>
+              <span class="ranking-podium__pts"></span>
             </div>
-          </section>
+
+            <div class="ranking-podium__item ranking-podium__item--silver flex-fill d-flex flex-column justify-content-center align-items-center text-center">
+              <span class="ranking-podium__avatar"><i></i></span>
+              <span class="ranking-podium__name"></span>
+              <span class="ranking-podium__pts"></span>
+            </div>
+
+            <div class="ranking-podium__item ranking-podium__item--bronze flex-fill d-flex flex-column justify-content-center align-items-center text-center">
+              <span class="ranking-podium__avatar"><i></i></span>
+              <span class="ranking-podium__name"></span>
+              <span class="ranking-podium__pts"></span>
+            </div>
+
+          </div>
         </div>
       </div>
 
