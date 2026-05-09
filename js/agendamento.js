@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   initScheduleDateDefault();
-  window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
+  window.AppointmentsData = getAppointmentsData();
   updateSchedulingUI();
   wireScheduleInteractions();
   initSchedulePage();
@@ -489,6 +489,7 @@ function wireScheduleInteractions() {
         slotId: SchedulingData.selectedSlotId
       });
 
+      window.AppointmentsData = getAppointmentsData();
 
       alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');    
     });
