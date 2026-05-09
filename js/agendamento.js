@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof SchedulingData === 'undefined') {
     return;
   }
-  initScheduleDateDefault();
   window.AppointmentsData = getAppointmentsData();
   updateSchedulingUI();
   wireScheduleInteractions();
@@ -222,20 +221,56 @@ function renderScheduleClinic() {
     .join('');
 }
 
-function initScheduleDateDefault() {
+function getMinimumDaysByLevel(level) {
+  if (level >= 4) return 0;
+  if (level >= 2) return 7;
+  return 14;
+}
+
+function getSpecialtyLevel(specialtyName) {
+  const specialty = UserRanking.specialties.find(function (item) {
+    return item.name === specialtyName;
+  });
+
+  return specialty ? specialty.level : 0;
+}
+
+function renderScheduleDate(specialtyName = null) {
   const input = document.querySelector('#schedule-date');
-  if (input) {
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoje.getDate()).padStart(2, '0');
+  const message = document.querySelector('#schedule-date-message');
 
-    const hojeFormatado = `${ano}-${mes}-${dia}`;
+  if (!input || !message) return;
 
-    input.value = hojeFormatado; // já seta hoje
-    SchedulingData.selectedDate = hojeFormatado;
-    input.min = hojeFormatado;   // bloqueia datas anteriores
+  let minimumDays = 14;
+
+  // Estado inicial
+  if (!specialtyName) {
+    message.innerText =
+      'Selecione a especialidade para poder escolher a data';
+  } else {
+    const level = getSpecialtyLevel(specialtyName);
+
+    minimumDays = getMinimumDaysByLevel(level);
+
+    if (minimumDays === 0) {
+      message.innerText =
+        `Seu ranking em ${specialtyName} permite agendamento imediato`;
+    } else {
+      message.innerText =
+        `Seu ranking em ${specialtyName} permite agendamento em ${minimumDays} dias`;
+    }
   }
+
+  const minDate = new Date();
+
+  minDate.setDate(minDate.getDate() + minimumDays);
+
+  const formattedDate = formatDate(minDate);
+
+  input.min = formattedDate;
+  input.value = formattedDate;
+
+  SchedulingData.selectedDate = formattedDate;
 }
 
 function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
@@ -795,6 +830,7 @@ function applyDoctorSelection(doctor) {
 }
 
 function updateSchedulingUI() {
+  renderScheduleDate(getSelectedSpecialty())
   renderScheduleSlots(hasRequiredLevel(
     getSelectedSpecialty(), 
     UserRanking.specialties

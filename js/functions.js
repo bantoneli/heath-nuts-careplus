@@ -99,33 +99,33 @@ function getWeekdayKey(date) {
     return map[date.getDay()];
 }
 
+function formatDate(date) {
+    const ano = date.getFullYear();
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const dia = String(date.getDate()).padStart(2, '0');
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function getWeekLoad(dayIndex) {
+    const week = Math.floor(dayIndex / 7) + 1;
+
+    switch (week) {
+        case 1: return 0.95;
+        case 2: return 0.90;
+        case 3: return 0.85;
+        case 4: return 0.80;
+        case 5: return 0.60;
+        case 6: return 0.40;
+        case 7: return 0.20;
+        default: return 0.0;
+    }
+}
+
 function generateAppointmentsData(doctors, timeSlots) {
     const AppointmentsData = [];
 
     const today = new Date();
-
-    function formatDate(date) {
-        const ano = date.getFullYear();
-        const mes = String(date.getMonth() + 1).padStart(2, '0');
-        const dia = String(date.getDate()).padStart(2, '0');
-
-        return `${ano}-${mes}-${dia}`;
-    }
-
-    function getWeekLoad(dayIndex) {
-        const week = Math.floor(dayIndex / 7) + 1;
-
-        switch (week) {
-            case 1: return 0.95;
-            case 2: return 0.90;
-            case 3: return 0.85;
-            case 4: return 0.80;
-            case 5: return 0.60;
-            case 6: return 0.40;
-            case 7: return 0.20;
-            default: return 0.0;
-        }
-    }
 
     for (const doctor of doctors) {
         const schedule = {};
