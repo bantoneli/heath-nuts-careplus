@@ -7,21 +7,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader({ activePage: 'home', isSubpage: false });
   renderFooter();
-  initEventListeners();
   initDashboard();
 });
 
 function initEventListeners() {
-
-  const btnNovoAgendamento = document.querySelector('#btn-novo-agendamento');
-  const btnVerBeneficios = document.querySelector('#btn-ver-beneficios');
-  const btnVerRanking = document.querySelector('#btn-ver-ranking');
-  const btnVerRegulamento = document.querySelector('#btn-ver-regulamento');
-
-  if (btnNovoAgendamento) btnNovoAgendamento.addEventListener('click', handleNovoAgendamento);
-  if (btnVerBeneficios) btnVerBeneficios.addEventListener('click', handleVerBeneficios);
-  if (btnVerRanking) btnVerRanking.addEventListener('click', handleVerRanking);
-  if (btnVerRegulamento) btnVerRegulamento.addEventListener('click', handleVerRegulamento);
 }
 
 //Renderiza dados iniciais do dashboard via mock data.
