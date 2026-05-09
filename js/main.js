@@ -30,6 +30,8 @@ async function initDashboard() {
     limit: 1,
     specialty: 'Endocrinologia'
   });
+
+  renderFutureAppointmentsCount();
 }
 
 function renderAppointments(data) {
@@ -70,4 +72,24 @@ function renderAppointments(data) {
     </div>
 
   `).join('');
+}
+
+function renderFutureAppointmentsCount() {
+
+  const element = document.querySelector(
+    '#future-appointments-count'
+  );
+
+  if (!element) return;
+
+  const appointments = getUserAppointmentsData();
+
+  const total = appointments.length;
+
+  const label =
+    total === 1
+      ? '1 futura'
+      : `${total} futuras`;
+
+  element.textContent = label;
 }
