@@ -170,6 +170,194 @@ function generateAppointmentsData(doctors, timeSlots) {
     return AppointmentsData;
 }
 
+function getAppointmentsData() {
+    return JSON.parse(sessionStorage.getItem('appointmentsData') || '[]');
+}
+
+function saveAppointmentsData(data) {
+    sessionStorage.setItem('appointmentsData', JSON.stringify(data));
+}
+
+function getUserAppointmentsData() {
+    return JSON.parse(sessionStorage.getItem('userAppointmentsData') || '[]');
+}
+
+function saveUserAppointmentsData(data) {
+    sessionStorage.setItem('userAppointmentsData', JSON.stringify(data));
+}
+
+function addUserAppointment(appointment) {
+
+    const current = getUserAppointmentsData();
+
+    const alreadyExists = current.some(item => {
+        return (
+            item.doctor === appointment.doctor &&
+            item.date === appointment.date &&
+            item.time === appointment.time
+        );
+    });
+
+    if (alreadyExists) {
+        return false;
+    }
+
+    current.push(appointment);
+
+    saveUserAppointmentsData(current);
+
+    return true;
+}
+
+function createInitialNutritionAppointment() {
+
+    const alreadyCreated = sessionStorage.getItem('initialAppointmentCreated');
+
+    if (alreadyCreated === '1') {
+        return;
+    }
+
+    const appointmentsData = getAppointmentsData();
+
+    const nutritionDoctors = DoctorsData.filter(
+        doctor => doctor.specialty === 'Nutrição'
+    );
+
+    if (!nutritionDoctors.length) {
+        return;
+    }
+
+    const today = new Date();
+
+    for (let i = 0; i < 7; i++) {
+
+        const currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + 1 + i);
+
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+
+        const isoDate = `${year}-${month}-${day}`;
+
+        const weekdays = [
+            'dom',
+            'seg',
+            'ter',
+            'qua',
+            'qui',
+            'sex',
+            'sab'
+        ];
+
+        const currentWeekday = weekdays[currentDate.getDay()];
+
+        console.log('======================');
+        console.log('DATA ANALISADA');
+        console.log({
+            isoDate,
+            currentWeekday
+        });
+
+        for (const doctor of nutritionDoctors) {
+
+            console.log('MÉDICO');
+            console.log({
+                name: doctor.name,
+                specialty: doctor.specialty,
+                availableDays: doctor.workDays,
+                period: doctor.periods
+            });
+
+            const doctorWorksToday =
+                doctor.workDays?.includes(currentWeekday);
+
+            if (!doctorWorksToday) {
+                continue;
+}
+
+            const doctorAppointments = appointmentsData.find(
+                item => item.doctorId === doctor.id
+            );
+
+            if (!doctorAppointments) continue;
+
+            const occupiedSlots = doctorAppointments.schedule[isoDate] || [];
+            const availableSlots = SchedulingData.timeSlots.filter(slot => {
+
+                const matchesPeriod =
+                    doctor.periods?.includes(slot.period);
+
+                const isOccupied =
+                    occupiedSlots.includes(slot.id);
+
+                return matchesPeriod && !isOccupied;
+            });
+
+            if (!availableSlots.length) continue;
+
+            const randomIndex = Math.floor(
+                Math.random() * availableSlots.length
+            );
+
+            const availableSlot = availableSlots[randomIndex];
+
+            const appointment = {
+                id: Date.now(),
+                specialty: doctor.specialty,
+                doctor: doctor.name,
+                date: isoDate,
+                time: availableSlot.label,
+                clinic: doctor.clinic,
+                createdAutomatically: true
+            };
+
+            addUserAppointment(appointment);
+
+            occupyAppointmentSlot({
+                doctorId: doctor.id,
+                date: isoDate,
+                slotId: availableSlot.id
+            });
+
+            sessionStorage.setItem('initialAppointmentCreated', '1');
+
+            return appointment;
+        }
+    }
+}
+
+function occupyAppointmentSlot({
+    doctorId,
+    date,
+    slotId
+}) {
+
+    const appointmentsData = getAppointmentsData();
+
+    const doctorAppointments = appointmentsData.find(
+        item => item.doctorId === doctorId
+    );
+
+    if (!doctorAppointments) {
+        return;
+    }
+
+    if (!doctorAppointments.schedule[date]) {
+        doctorAppointments.schedule[date] = [];
+    }
+
+    const alreadyOccupied = doctorAppointments.schedule[date]
+        .includes(slotId);
+
+    if (alreadyOccupied) {
+        return;
+    }
+
+    doctorAppointments.schedule[date].push(slotId);
+
+    saveAppointmentsData(appointmentsData);
+}
 
 /** Mock: “Sair” zera o flag para a próxima abertura da raiz exibir o login de novo. */
 document.addEventListener('click', (event) => {
@@ -178,6 +366,10 @@ document.addEventListener('click', (event) => {
     event.preventDefault();
     try {
         localStorage.removeItem('healthnuts_mock_entrada');
+
+        sessionStorage.removeItem('appointmentsData');
+        sessionStorage.removeItem('userAppointmentsData');
+
     } catch (e) {
         /* ignore */
     }

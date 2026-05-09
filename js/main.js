@@ -15,23 +15,59 @@ function initEventListeners() {
 
 //Renderiza dados iniciais do dashboard via mock data.
 async function initDashboard() {
-  renderAppointments(DashboardData.appointments);
+
+  // cria agendamento automático inicial
+  createInitialNutritionAppointment();
+
+  // pega agendamentos do usuário
+  const userAppointments = getUserAppointmentsData();
+
+  renderAppointments(userAppointments);
+
   renderActions(ActionsData.actions, {
-    showExpiry:false, 
-    category:'Hábitos', 
-    limit: 1, 
+    showExpiry:false,
+    category:'Hábitos',
+    limit: 1,
     specialty: 'Endocrinologia'
   });
 }
 
 function renderAppointments(data) {
+
   const container = document.querySelector('#appointments-list');
+
   if (!container) return;
 
+  if (!data.length) {
+
+    container.innerHTML = `
+      <p class="text-muted mb-0">
+        Nenhum agendamento encontrado.
+      </p>
+    `;
+
+    return;
+  }
+
   container.innerHTML = data.map(item => `
+
     <div class="appointment-item">
-      <span class="appointment-item__specialty">${item.specialty}</span>
-      <p class="appointment-item__detail mb-0">${item.date} &bull; ${item.time} &bull; ${item.doctor}</p>
+
+      <span class="appointment-item__specialty">
+        ${item.specialty}
+      </span>
+
+      <p class="appointment-item__detail mb-1">
+        ${item.date}
+        &bull;
+        ${item.time}
+        &bull;
+        ${item.doctor}
+        &bull;
+        ${item.clinic}
+      </p>
+
     </div>
+
   `).join('');
 }

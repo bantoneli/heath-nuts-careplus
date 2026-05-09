@@ -464,7 +464,33 @@ function wireScheduleInteractions() {
       await simulateLoading(900);
       setButtonLoading(confirmBtn, false);
 
-      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');
+      const selectedDoctor = DoctorsData.find(
+        doctor => doctor.id === SchedulingData.selectedDoctorId
+      );
+
+      const selectedClinic = SchedulingData.clinics.find(
+        clinic => clinic.id == SchedulingData.selectedClinicId
+      );
+
+      const appointment = {
+        id: Date.now(),
+        specialty: getSelectedSpecialty(),
+        doctor: selectedDoctor?.name || 'Médico não informado',
+        date: SchedulingData.selectedDate,
+        time: SchedulingData.selectedSlotLabel,
+        clinic: selectedClinic?.name || 'Clínica não informada'
+      };
+
+      addUserAppointment(appointment);
+
+      occupyAppointmentSlot({
+        doctorId: SchedulingData.selectedDoctorId,
+        date: SchedulingData.selectedDate,
+        slotId: SchedulingData.selectedSlotId
+      });
+
+
+      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');    
     });
   }
 }
