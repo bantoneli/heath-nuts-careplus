@@ -14975,3 +14975,28 @@ const DoctorsData = [
   { id: 75, name: "Ulyana Freitas", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] }
 ];
 
+const UserRanking = {
+  specialties: [
+    {
+      name: 'Dermatologia',
+      level: 0,
+    },
+    {
+      name: 'Endocrinologia',
+      level: 1,
+    },
+    {
+      name: 'Nutrição',
+      level: 3,
+    },
+    {
+      name: 'Odontologia',
+      level: 0,
+    },
+    {
+      name: 'Psicologia',
+      level: 5,
+    },
+  ],
+}
+

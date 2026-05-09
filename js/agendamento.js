@@ -341,8 +341,11 @@ function wireScheduleInteractions() {
       if (isEncaixeSelected && !canShowEncaixe()) {
         resetSlotSelection();
       }
-      
-      renderScheduleSlots(true);
+    
+      renderScheduleSlots(hasRequiredLevel(
+        getSelectedSpecialty(), 
+        UserRanking.specialties
+      ));
       syncSummaryFromState();
     });
   });
@@ -792,7 +795,10 @@ function applyDoctorSelection(doctor) {
 }
 
 function updateSchedulingUI() {
-  renderScheduleSlots(true);
+  renderScheduleSlots(hasRequiredLevel(
+    getSelectedSpecialty(), 
+    UserRanking.specialties
+  ));
   renderScheduleClinic();
   renderActions(ActionsData.actions, {
     showExpiry: false, 
@@ -909,4 +915,11 @@ function renderDoctorDropdown(list) {
   }
 
   dropdown.classList.remove('d-none');
+}
+
+function hasRequiredLevel(specialtyName, userdata) {
+  const specialty = userdata.find(function (item) {
+    return item.name === specialtyName
+  })
+  return specialty ? specialty.level >= 3 : false
 }
