@@ -12,13 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initEventListeners() {
-  const btnAtualizar = document.querySelector('#btn-atualizar');
+
   const btnNovoAgendamento = document.querySelector('#btn-novo-agendamento');
   const btnVerBeneficios = document.querySelector('#btn-ver-beneficios');
   const btnVerRanking = document.querySelector('#btn-ver-ranking');
   const btnVerRegulamento = document.querySelector('#btn-ver-regulamento');
 
-  if (btnAtualizar) btnAtualizar.addEventListener('click', handleAtualizar);
   if (btnNovoAgendamento) btnNovoAgendamento.addEventListener('click', handleNovoAgendamento);
   if (btnVerBeneficios) btnVerBeneficios.addEventListener('click', handleVerBeneficios);
   if (btnVerRanking) btnVerRanking.addEventListener('click', handleVerRanking);
