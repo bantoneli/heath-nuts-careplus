@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   window.AppointmentsData = getAppointmentsData();
+  renderScheduleDate();
   updateSchedulingUI();
   wireScheduleInteractions();
   initSchedulePage();
@@ -303,6 +304,7 @@ function wireScheduleInteractions() {
 
     resetSlotSelection();
     resetDoctorSelection();
+    renderScheduleDate(getSelectedSpecialty())
     updateSchedulingUI();
   });
 
@@ -830,7 +832,6 @@ function applyDoctorSelection(doctor) {
 }
 
 function updateSchedulingUI() {
-  renderScheduleDate(getSelectedSpecialty())
   renderScheduleSlots(hasRequiredLevel(
     getSelectedSpecialty(), 
     UserRanking.specialties
