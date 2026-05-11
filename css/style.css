@@ -1517,3 +1517,221 @@ a {
 .redemption-history__nuts {
   font-size: 0.88rem;
 }
+.calendar-select {
+  border-radius: var(--radius-btn);
+  border-color: var(--color-border);
+  min-height: 46px;
+  font-size: 0.9rem;
+}
+
+.calendar-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(30,80,160,.12);
+}
+
+.calendar-appointments-row {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+
+.calendar-mini-card {
+  min-width: 260px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-stat);
+  padding: 1rem;
+  transition: all .2s ease;
+}
+
+.calendar-mini-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+}
+
+.calendar-mini-card__specialty {
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: .5rem;
+}
+
+.calendar-mini-card__doctor {
+  font-size: .88rem;
+  margin-bottom: .75rem;
+}
+
+.calendar-mini-card__meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--color-text-secondary);
+  font-size: .82rem;
+}
+
+.calendar-board-wrapper {
+  display: flex;
+  min-height: 75vh;
+}
+
+.calendar-sidebar {
+  width: 180px;
+  min-width: 180px;
+  background: var(--color-card);
+  border-right: 1px solid var(--color-border);
+  position: sticky;
+  left: 0;
+  z-index: 40;
+}
+
+.calendar-sidebar__header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 50;
+}
+
+.calendar-periods {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calendar-period-btn {
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--color-accent);
+  padding: .55rem 1rem;
+  font-weight: 600;
+  transition: all .2s ease;
+}
+
+.calendar-period-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.calendar-grid-scroll {
+  overflow: auto;
+  width: 100%;
+}
+
+.calendar-grid {
+  min-width: 5000px;
+}
+
+.calendar-days-row {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calendar-day-header {
+  width: 140px;
+  min-width: 140px;
+  padding: 1rem .5rem;
+  text-align: center;
+  border-right: 1px solid var(--color-border);
+}
+
+.calendar-day-header__weekday {
+  text-transform: capitalize;
+  font-size: .82rem;
+  color: var(--color-text-secondary);
+}
+
+.calendar-day-header__date {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.calendar-columns {
+  display: flex;
+}
+
+.calendar-day-column {
+  width: 140px;
+  min-width: 140px;
+  border-right: 1px solid var(--color-border);
+}
+
+.calendar-time-slot {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--color-border);
+  font-size: .8rem;
+  color: var(--color-text-secondary);
+}
+
+.calendar-slot {
+  position: relative;
+  height: 44px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.calendar-slot:hover {
+  background: rgba(30,80,160,.05);
+}
+
+.calendar-slot--available {
+  background: rgba(98,196,121,.12);
+}
+
+.calendar-slot--occupied {
+  background: rgba(220,53,69,.12);
+}
+
+.calendar-slot--user {
+  background: rgba(30,80,160,.16);
+}
+
+.calendar-slot__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.calendar-slot--available .calendar-slot__dot {
+  background: var(--color-success);
+}
+
+.calendar-slot--occupied .calendar-slot__dot {
+  background: #dc3545;
+}
+
+.calendar-slot--user .calendar-slot__dot {
+  background: var(--color-primary);
+}
+
+.calendar-empty-state {
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+}
+
+@media (max-width: 991px) {
+
+  .calendar-sidebar {
+    width: 140px;
+    min-width: 140px;
+  }
+
+  .calendar-day-column,
+  .calendar-day-header {
+    width: 110px;
+    min-width: 110px;
+  }
+}
