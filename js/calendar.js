@@ -2,10 +2,15 @@ const calendarState = {
   specialty: '',
   doctor: '',
   clinic: '',
-  weekStart: null
+  weekStart: null,
+  periods: {
+    manha: true,
+    tarde: true,
+    noite: true
+  }
 };
 
-const SLOT_HEIGHT = 44;
+const SLOT_HEIGHT = 22;
 
 const timeColumn = document.getElementById('calendar-time-column');
 const daysRow = document.getElementById('calendar-days-row');
@@ -20,6 +25,8 @@ const weekSelect = document.getElementById('calendar-week-select');
 initCalendarPage();
 
 function initCalendarPage() {
+  renderHeader({ activePage: 'agendamento', isSubpage: true });
+  renderFooter();
   initializeAppointments();
   populateFilters();
   populateWeeks();
@@ -27,6 +34,7 @@ function initCalendarPage() {
   renderAppointmentsCards();
   renderCalendar();
   bindEvents();
+  syncHorizontalScroll();
 }
 
 function initializeAppointments() {
@@ -108,12 +116,12 @@ function bindEvents() {
 
     calendarState.specialty = specialtyFilter.value;
 
-    renderCalendar();
-  });
+    if (calendarState.doctor) {
+      calendarState.doctor = '';
+      doctorFilter.value = '';
+    }
 
-  doctorFilter.addEventListener('change', () => {
-
-    calendarState.doctor = doctorFilter.value;
+    syncDoctorFilter();
 
     renderCalendar();
   });
@@ -121,6 +129,46 @@ function bindEvents() {
   clinicFilter.addEventListener('change', () => {
 
     calendarState.clinic = clinicFilter.value;
+
+    if (calendarState.doctor) {
+      calendarState.doctor = '';
+      doctorFilter.value = '';
+    }
+
+    syncDoctorFilter();
+
+    renderCalendar();
+  });
+
+  doctorFilter.addEventListener('change', () => {
+
+    calendarState.doctor = doctorFilter.value;
+
+    if (calendarState.doctor) {
+
+      const doctor = DoctorsData.find(
+        item => item.id === calendarState.doctor
+      );
+
+      if (doctor) {
+
+        calendarState.specialty = doctor.specialty;
+        calendarState.clinic = doctor.clinic;
+
+        specialtyFilter.value = doctor.specialty;
+        clinicFilter.value = doctor.clinic;
+
+        applyDoctorPeriods(doctor);
+      }
+    }
+    else {
+
+      enableAllPeriods();
+    }
+
+    syncDoctorFilter();
+
+    renderTimeColumn();
 
     renderCalendar();
   });
@@ -138,14 +186,29 @@ function bindEvents() {
 
       const period = btn.dataset.period;
 
-      const slot = document.querySelector(`.calendar-time-slot[data-period="${period}"]`);
+      const activePeriods = Object.values(
+        calendarState.periods
+      ).filter(Boolean).length;
 
-      if (!slot) return;
+      const isCurrentlyActive =
+        calendarState.periods[period];
 
-      slot.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
+      // impede desligar o último
+      if (activePeriods === 1 && isCurrentlyActive) {
+        return;
+      }
+
+      calendarState.periods[period] =
+        !calendarState.periods[period];
+
+      btn.classList.toggle(
+        'calendar-period-btn--inactive',
+        !calendarState.periods[period]
+      );
+
+      renderTimeColumn();
+
+      renderCalendar();
     });
   });
 }
@@ -154,7 +217,7 @@ function renderTimeColumn() {
 
   timeColumn.innerHTML = '';
 
-  SchedulingData.timeSlots.forEach(slot => {
+  getVisibleSlots().forEach(slot => {
 
     timeColumn.innerHTML += `
       <div
@@ -194,21 +257,18 @@ function renderAppointmentsCards() {
       <div class="calendar-mini-card">
 
         <div class="calendar-mini-card__specialty">
-          ${appointment.specialty}
+          ${appointment.specialty} - ${appointment.doctor}
         </div>
 
-        <div class="calendar-mini-card__doctor">
-          ${appointment.doctor}
-        </div>
 
         <div class="calendar-mini-card__meta">
           <i class="bi bi-calendar-event"></i>
-          ${appointment.date}
+          ${appointment.date} - ${appointment.time}
         </div>
 
         <div class="calendar-mini-card__meta">
           <i class="bi bi-clock"></i>
-          ${appointment.time}
+          ${appointment.clinic}
         </div>
 
       </div>
@@ -270,7 +330,7 @@ function renderDayColumn(date, isoDate) {
 
   const userAppointments = getUserAppointmentsData();
 
-  SchedulingData.timeSlots.forEach(slot => {
+  getVisibleSlots().forEach(slot => {
 
     const slotElement = document.createElement('div');
 
@@ -292,7 +352,7 @@ function renderDayColumn(date, isoDate) {
         return;
       }
 
-      if (calendarState.clinic && doctor.clinicId !== calendarState.clinic) {
+      if (calendarState.clinic && doctor.clinic !== calendarState.clinic) {
         return;
       }
 
@@ -339,4 +399,102 @@ function renderDayColumn(date, isoDate) {
   });
 
   columnsContainer.appendChild(column);
+}
+
+function getVisibleSlots() {
+
+  return SchedulingData.timeSlots.filter(slot => {
+    return calendarState.periods[slot.period];
+  });
+}
+
+function syncHorizontalScroll() {
+
+  const scrollBody =
+    document.getElementById('calendar-scroll-body');
+
+  const daysRow =
+    document.getElementById('calendar-days-row');
+
+  scrollBody.addEventListener('scroll', () => {
+
+    daysRow.style.transform =
+      `translateX(-${scrollBody.scrollLeft}px)`;
+  });
+}
+
+function syncDoctorFilter() {
+
+  doctorFilter.innerHTML = `
+    <option value="">Todos médicos</option>
+  `;
+
+  const filteredDoctors = DoctorsData.filter(doctor => {
+
+    const specialtyMatch =
+      !calendarState.specialty ||
+      doctor.specialty === calendarState.specialty;
+
+    const clinicMatch =
+      !calendarState.clinic ||
+      doctor.clinic === calendarState.clinic;
+
+    return specialtyMatch && clinicMatch;
+  });
+
+  filteredDoctors.forEach(doctor => {
+
+    doctorFilter.innerHTML += `
+      <option value="${doctor.id}">
+        ${doctor.name}
+      </option>
+    `;
+  });
+
+  doctorFilter.value = calendarState.doctor;
+}
+
+function applyDoctorPeriods(doctor) {
+
+  const periods = doctor.periods || [];
+
+  Object.keys(calendarState.periods).forEach(period => {
+
+    const enabled = periods.includes(period);
+
+    calendarState.periods[period] = enabled;
+
+    const button = document.querySelector(
+      `.calendar-period-btn[data-period="${period}"]`
+    );
+
+    if (!button) return;
+
+    button.disabled = !enabled;
+
+    button.classList.toggle(
+      'calendar-period-btn--inactive',
+      !enabled
+    );
+  });
+}
+
+function enableAllPeriods() {
+
+  Object.keys(calendarState.periods).forEach(period => {
+
+    calendarState.periods[period] = true;
+
+    const button = document.querySelector(
+      `.calendar-period-btn[data-period="${period}"]`
+    );
+
+    if (!button) return;
+
+    button.disabled = false;
+
+    button.classList.remove(
+      'calendar-period-btn--inactive'
+    );
+  });
 }
