@@ -4,6 +4,7 @@ const calendarState = {
   clinic: '',
   weekStart: null,
   selectedAppointment: null,
+  draggingAppointment: null,
   periods: {
     manha: true,
     tarde: true,
@@ -473,6 +474,152 @@ function selectAppointmentCard(appointment) {
   );
 }
 
+function getWeekStartFromDate(dateString) {
+
+  const date =
+    parseLocalDate(dateString);
+
+  const today = new Date();
+
+  today.setHours(0,0,0,0);
+
+  // primeira semana especial
+  const firstWeekEnd = new Date(today);
+
+  firstWeekEnd.setDate(
+    today.getDate() + (6 - today.getDay())
+  );
+
+  // se estiver na semana atual
+  if (date <= firstWeekEnd) {
+    return formatDate(today);
+  }
+
+  // próximas semanas domingo->sábado
+  const sunday = new Date(date);
+
+  sunday.setDate(
+    date.getDate() - date.getDay()
+  );
+
+  return formatDate(sunday);
+}
+
+function moveAppointment(
+  appointment,
+  newDate,
+  newTime
+) {
+
+  const userAppointments =
+    getUserAppointmentsData();
+
+  const appointmentsData =
+    getAppointmentsData();
+
+  // appointment do usuário
+  const appointmentIndex =
+    userAppointments.findIndex(app => {
+
+      return (
+        app.date === appointment.date &&
+        app.time === appointment.time &&
+        app.doctor === appointment.doctor
+      );
+    });
+
+  if (appointmentIndex === -1) {
+    return;
+  }
+
+  // encontra médico
+  const doctor = DoctorsData.find(
+    doctor =>
+      doctor.name === appointment.doctor
+  );
+
+  if (!doctor) {
+    return;
+  }
+
+  // agenda do médico
+  const doctorSchedule =
+    appointmentsData.find(
+      item => item.doctorId === doctor.id
+    );
+
+  if (!doctorSchedule) {
+    return;
+  }
+
+  // slot antigo
+  const oldSlots =
+    doctorSchedule.schedule[
+      appointment.date
+    ] || [];
+
+  // slot novo
+  const newSlots =
+    doctorSchedule.schedule[
+      newDate
+    ] || [];
+
+  // encontra slot ids
+  const oldSlot =
+    SchedulingData.timeSlots.find(
+      slot => slot.label === appointment.time
+    );
+
+  const newSlot =
+    SchedulingData.timeSlots.find(
+      slot => slot.label === newTime
+    );
+
+  if (!oldSlot || !newSlot) {
+    return;
+  }
+
+  // remove slot antigo
+  doctorSchedule.schedule[
+    appointment.date
+  ] = oldSlots.filter(
+    slotId => slotId !== oldSlot.id
+  );
+
+  // adiciona slot novo
+  doctorSchedule.schedule[
+    newDate
+  ] = [
+    ...newSlots,
+    newSlot.id
+  ];
+
+  // atualiza user appointment
+  userAppointments[appointmentIndex] = {
+    ...appointment,
+    date: newDate,
+    time: newTime
+  };
+
+  // salva tudo
+  saveAppointmentsData(
+    appointmentsData
+  );
+
+  saveUserAppointmentsData(
+    userAppointments
+  );
+
+  const targetWeek = getWeekStartFromDate(newDate);
+
+  calendarState.weekStart = targetWeek;
+  weekSelect.value = targetWeek;
+
+  renderAppointmentsCards();
+
+  renderCalendar();
+}
+
 function renderAppointmentsCards() {
 
   const userAppointments = getUserAppointmentsData();
@@ -498,6 +645,7 @@ function renderAppointmentsCards() {
 
       <div
         class="calendar-mini-card"
+        draggable="true"
         data-date="${appointment.date}"
         data-time="${appointment.time}"
       >
@@ -532,6 +680,18 @@ function renderAppointmentsCards() {
         selectAppointmentCard(appointment);
       });
 
+      card.addEventListener('dragstart', () => {
+
+        calendarState.draggingAppointment =
+          appointment;
+      });
+
+      card.addEventListener('dragend', () => {
+
+        calendarState.draggingAppointment =
+          null;
+      });
+
     });
 
   });
@@ -561,15 +721,16 @@ function renderCalendar() {
 
   columnsContainer.innerHTML = '';
 
-  const start = parseLocalDate(calendarState.weekStart);
+  const today = new Date();
 
+  today.setHours(0, 0, 0, 0);
   const days = [];
 
   for (let i = 0; i < 60; i++) {
 
-    const date = new Date(start);
+    const date = new Date(today);
 
-    date.setDate(start.getDate() + i);
+    date.setDate(today.getDate() + i);
 
     days.push(date);
   }
@@ -684,6 +845,34 @@ function renderDayColumn(date, isoDate) {
     });
 
     if (occupiedByUser) {
+      slotElement.draggable = true;
+
+      const userAppointment =
+        userAppointments.find(app => {
+
+          return (
+            app.date === isoDate &&
+            app.time === slot.label
+          );
+        });
+
+      slotElement.addEventListener(
+        'dragstart',
+        () => {
+
+          calendarState.draggingAppointment =
+            userAppointment;
+        }
+      );
+
+      slotElement.addEventListener(
+        'dragend',
+        () => {
+
+          calendarState.draggingAppointment =
+            null;
+        }
+      );
       slotElement.classList.add('calendar-slot--user');
     }
     else if (!hasAvailableDoctor) {
@@ -691,7 +880,56 @@ function renderDayColumn(date, isoDate) {
     }
     else {
       slotElement.classList.add('calendar-slot--available');
+      
+      slotElement.addEventListener(
+        'dragover',
+        event => {
+          event.preventDefault();
+
+          slotElement.classList.add(
+            'drag-over'
+          );
+          
+        }
+      );
+
+      slotElement.addEventListener(
+        'dragleave',
+        () => {
+
+          slotElement.classList.remove(
+            'drag-over'
+          );
+        }
+      );
+
+      slotElement.addEventListener(
+        'drop',
+        event => {
+
+          event.preventDefault();
+
+          const appointment =
+            calendarState.draggingAppointment;
+
+          if (!appointment) {
+            return;
+          }
+          
+          slotElement.classList.remove(
+            'drag-over'
+          );
+
+          moveAppointment(
+            appointment,
+            isoDate,
+            slot.label
+          );
+        }
+      );
     }
+
+    
 
     slotElement.dataset.date = isoDate;
     slotElement.dataset.time = slot.label;

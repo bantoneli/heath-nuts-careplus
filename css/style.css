@@ -1835,6 +1835,21 @@ a {
   }
 }
 
+.calendar-slot--available.drag-over {
+  outline: 2px dashed var(--color-primary);
+  background: rgba(30,80,160,.12);
+}
+
+.calendar-mini-card[draggable="true"],
+.calendar-slot[draggable="true"] {
+  cursor: grab;
+}
+
+.calendar-mini-card:active,
+.calendar-slot:active {
+  cursor: grabbing;
+}
+
 @media (max-width: 991px) {
 
   .calendar-day-column,
