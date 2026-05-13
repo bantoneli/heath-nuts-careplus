@@ -1814,6 +1814,27 @@ a {
   padding-bottom: 12px;
 }
 
+.calendar-slot--highlight {
+  animation: pulseSlot 1s ease infinite;
+  outline: 3px solid var(--color-accent);
+  z-index: 5;
+}
+
+@keyframes pulseSlot {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 991px) {
 
   .calendar-day-column,

@@ -3,6 +3,7 @@ const calendarState = {
   doctor: '',
   clinic: '',
   weekStart: null,
+  selectedAppointment: null,
   periods: {
     manha: true,
     tarde: true,
@@ -54,60 +55,206 @@ function initializeAppointments() {
 
 function populateFilters() {
 
-  SpecialtiesData.specialties.forEach(specialty => {
+  syncSpecialtyFilter();
+  syncClinicFilter();
+  syncDoctorFilter();
+}
+
+function syncSpecialtyFilter() {
+
+  specialtyFilter.innerHTML = `
+    <option value="">Todas especialidades</option>
+  `;
+
+  let doctors = DoctorsData;
+
+  if (calendarState.clinic) {
+    doctors = doctors.filter(
+      doctor => doctor.clinic === calendarState.clinic
+    );
+  }
+
+  const specialties = [
+    ...new Set(doctors.map(doctor => doctor.specialty))
+  ];
+
+  specialties.forEach(specialty => {
 
     specialtyFilter.innerHTML += `
-      <option value="${specialty}">${specialty}</option>
-    `;
-  });
-
-  DoctorsData.forEach(doctor => {
-
-    doctorFilter.innerHTML += `
-      <option value="${doctor.id}">
-        ${doctor.name}
+      <option value="${specialty}">
+        ${specialty}
       </option>
     `;
   });
 
-  SchedulingData.clinics.forEach(clinic => {
+  specialtyFilter.value = calendarState.specialty;
+}
+
+function syncClinicFilter() {
+
+  const previousClinic = calendarState.clinic;
+
+  clinicFilter.innerHTML = `
+    <option value="">Todas clínicas</option>
+  `;
+
+  let doctors = DoctorsData;
+
+  if (calendarState.specialty) {
+    doctors = doctors.filter(
+      doctor => doctor.specialty === calendarState.specialty
+    );
+  }
+
+  const clinics = [
+    ...new Set(
+      doctors.map(doctor => doctor.clinic)
+    )
+  ];
+
+  clinics.forEach(clinic => {
 
     clinicFilter.innerHTML += `
-      <option value="${clinic.id}">
-        ${clinic.name}
+      <option value="${clinic}">
+        ${clinic}
       </option>
     `;
   });
+
+  const clinicStillExists =
+    clinics.includes(previousClinic);
+
+  if (clinicStillExists) {
+    calendarState.clinic = previousClinic;
+    clinicFilter.value = previousClinic;
+  } else {
+    calendarState.clinic = '';
+    clinicFilter.value = '';
+  }
+}
+
+function createWeekOption(startDate, endDate) {
+
+  return `
+    <option value="${formatDate(startDate)}">
+
+      ${startDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit'
+      })}
+
+      →
+
+      ${endDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit'
+      })}
+
+    </option>
+  `;
 }
 
 function populateWeeks() {
 
+  weekSelect.innerHTML = '';
+
   const today = new Date();
 
-  const firstSunday = new Date(today);
+  today.setHours(0, 0, 0, 0);
 
-  firstSunday.setDate(today.getDate() - today.getDay());
+  // PRIMEIRA SEMANA
+  // começa hoje
+  const firstWeekStart = new Date(today);
+
+  // termina no próximo sábado
+  const firstWeekEnd = new Date(today);
+
+  firstWeekEnd.setDate(
+    today.getDate() + (6 - today.getDay())
+  );
+
+  weekSelect.innerHTML += createWeekOption(
+    firstWeekStart,
+    firstWeekEnd
+  );
+
+  // PRÓXIMAS SEMANAS
+  // começam no próximo domingo
+  const nextSunday = new Date(firstWeekEnd);
+
+  nextSunday.setDate(firstWeekEnd.getDate() + 1);
 
   for (let i = 0; i < 10; i++) {
 
-    const weekStart = new Date(firstSunday);
+    const weekStart = new Date(nextSunday);
 
-    weekStart.setDate(firstSunday.getDate() + i * 7);
+    weekStart.setDate(
+      nextSunday.getDate() + (i * 7)
+    );
 
     const weekEnd = new Date(weekStart);
 
-    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setDate(
+      weekStart.getDate() + 6
+    );
 
-    const value = formatDate(weekStart);
-
-    const label = `${weekStart.toLocaleDateString('pt-BR')} → ${weekEnd.toLocaleDateString('pt-BR')}`;
-
-    weekSelect.innerHTML += `
-      <option value="${value}">${label}</option>
-    `;
+    weekSelect.innerHTML += createWeekOption(
+      weekStart,
+      weekEnd
+    );
   }
 
-  calendarState.weekStart = weekSelect.value;
+  // começa na semana atual
+  calendarState.weekStart =
+    formatDate(firstWeekStart);
+
+  weekSelect.value =
+    calendarState.weekStart;
+}
+
+function scrollCalendarToDate(isoDate) {
+
+  const scrollBody =
+    document.getElementById(
+      'calendar-scroll-body'
+    );
+
+  const columns =
+    document.querySelectorAll(
+      '.calendar-day-column'
+    );
+
+  const targetColumn = [...columns].find(
+    column => {
+
+      const firstSlot =
+        column.querySelector('.calendar-slot');
+
+      return (
+        firstSlot &&
+        firstSlot.dataset.date === isoDate
+      );
+    }
+  );
+
+  if (!targetColumn) {
+    return;
+  }
+
+  const sidebar =
+    document.querySelector('.calendar-sidebar');
+
+  const sidebarWidth =
+    sidebar?.offsetWidth || 0;
+
+  const targetLeft =
+    targetColumn.offsetLeft - sidebarWidth;
+
+  scrollBody.scrollTo({
+    left: targetLeft,
+    behavior: 'smooth'
+  });
 }
 
 function bindEvents() {
@@ -121,8 +268,12 @@ function bindEvents() {
       doctorFilter.value = '';
     }
 
+    syncClinicFilter();
     syncDoctorFilter();
 
+    enableAllPeriods();
+
+    renderTimeColumn();
     renderCalendar();
   });
 
@@ -135,8 +286,12 @@ function bindEvents() {
       doctorFilter.value = '';
     }
 
+    syncSpecialtyFilter();
     syncDoctorFilter();
 
+    enableAllPeriods();
+
+    renderTimeColumn();
     renderCalendar();
   });
 
@@ -147,29 +302,40 @@ function bindEvents() {
     if (calendarState.doctor) {
 
       const doctor = DoctorsData.find(
-        item => item.id === calendarState.doctor
+        item => String(item.id) === String(calendarState.doctor)
       );
 
       if (doctor) {
 
+        // atualiza estado
         calendarState.specialty = doctor.specialty;
         calendarState.clinic = doctor.clinic;
 
+        // recria listas
+        syncSpecialtyFilter();
+        syncClinicFilter();
+        syncDoctorFilter();
+
+        // atualiza selects visuais
         specialtyFilter.value = doctor.specialty;
         clinicFilter.value = doctor.clinic;
+        doctorFilter.value = doctor.id;
 
+        // períodos
         applyDoctorPeriods(doctor);
       }
-    }
-    else {
 
+    } else {
+      calendarState.selectedAppointment = null;
+      calendarState.weekStart = formatDate(new Date());
+      weekSelect.value = calendarState.weekStart;
       enableAllPeriods();
+      syncSpecialtyFilter();
+      syncClinicFilter();
     }
 
     syncDoctorFilter();
-
     renderTimeColumn();
-
     renderCalendar();
   });
 
@@ -177,7 +343,9 @@ function bindEvents() {
 
     calendarState.weekStart = weekSelect.value;
 
-    renderCalendar();
+    scrollCalendarToDate(
+      calendarState.weekStart
+    );
   });
 
   document.querySelectorAll('.calendar-period-btn').forEach(btn => {
@@ -205,6 +373,8 @@ function bindEvents() {
         'calendar-period-btn--inactive',
         !calendarState.periods[period]
       );
+      
+      syncDoctorFilter();
 
       renderTimeColumn();
 
@@ -214,6 +384,11 @@ function bindEvents() {
 }
 
 function renderTimeColumn() {
+
+  if (!canRenderCalendar()) {
+    timeColumn.innerHTML = '';
+    return;
+  }
 
   timeColumn.innerHTML = '';
 
@@ -229,6 +404,73 @@ function renderTimeColumn() {
       </div>
     `;
   });
+}
+
+function selectAppointmentCard(appointment) {
+
+  calendarState.selectedAppointment =
+    appointment;
+
+  // filtros
+  calendarState.specialty =
+    appointment.specialty;
+
+  calendarState.clinic =
+    appointment.clinic;
+
+  // encontra médico
+  const doctor = DoctorsData.find(
+    doctor =>
+      doctor.name === appointment.doctor
+  );
+
+  if (doctor) {
+
+    calendarState.doctor =
+      String(doctor.id);
+
+    applyDoctorPeriods(doctor);
+  }
+
+  // sincroniza selects
+  syncSpecialtyFilter();
+  syncClinicFilter();
+  syncDoctorFilter();
+
+  specialtyFilter.value =
+    calendarState.specialty;
+
+  clinicFilter.value =
+    calendarState.clinic;
+
+  doctorFilter.value =
+    calendarState.doctor;
+
+  renderTimeColumn();
+  renderCalendar();
+
+  // scroll até semana
+  const appointmentDate =
+    parseLocalDate(appointment.date);
+
+  const sunday = new Date(appointmentDate);
+
+  sunday.setDate(
+    appointmentDate.getDate() -
+    appointmentDate.getDay()
+  );
+
+  const weekValue =
+    formatDate(sunday);
+
+  weekSelect.value = weekValue;
+
+  calendarState.weekStart = weekValue;
+
+  // scroll horizontal
+  scrollCalendarToDate(
+    appointment.date
+  );
 }
 
 function renderAppointmentsCards() {
@@ -254,7 +496,11 @@ function renderAppointmentsCards() {
 
     appointmentsRow.innerHTML += `
 
-      <div class="calendar-mini-card">
+      <div
+        class="calendar-mini-card"
+        data-date="${appointment.date}"
+        data-time="${appointment.time}"
+      >
 
         <div class="calendar-mini-card__specialty">
           ${appointment.specialty} - ${appointment.doctor}
@@ -273,10 +519,43 @@ function renderAppointmentsCards() {
 
       </div>
     `;
+    setTimeout(() => {
+
+      const cards = document.querySelectorAll(
+        '.calendar-mini-card'
+      );
+
+      const card = cards[cards.length - 1];
+
+      card.addEventListener('click', () => {
+
+        selectAppointmentCard(appointment);
+      });
+
+    });
+
   });
 }
 
 function renderCalendar() {
+
+  if (!canRenderCalendar()) {
+
+      columnsContainer.innerHTML = `
+        <div class="d-flex align-items-center justify-content-center w-100 p-5">
+          <div class="calendar-empty-state text-center">
+            <i class="bi bi-calendar2-week fs-1 d-block mb-3"></i>
+
+            Selecione uma especialidade, médico
+            ou um agendamento existente
+            para visualizar os horários.
+          </div>
+        </div>
+      `;
+
+      daysRow.innerHTML = '';
+      return;
+    }
 
   daysRow.innerHTML = '';
 
@@ -338,45 +617,76 @@ function renderDayColumn(date, isoDate) {
 
     slotElement.style.height = `${SLOT_HEIGHT}px`;
 
-    let occupied = false;
+    const dayKey = getWeekdayKey(date);
 
-    let occupiedByUser = false;
-
-    DoctorsData.forEach(doctor => {
-
-      if (calendarState.specialty && doctor.specialty !== calendarState.specialty) {
-        return;
-      }
-
-      if (calendarState.doctor && doctor.id !== calendarState.doctor) {
-        return;
-      }
-
-      if (calendarState.clinic && doctor.clinic !== calendarState.clinic) {
-        return;
-      }
-
-      const doctorSchedule = appointmentsData.find(
-        item => item.doctorId === doctor.id
+    const availableDoctors =
+      getAvailableDoctorsForSlot(
+        isoDate,
+        slot.id,
+        slot.period,
+        dayKey
       );
 
-      if (!doctorSchedule) return;
-
-      const occupiedSlots = doctorSchedule.schedule[isoDate] || [];
-
-      if (occupiedSlots.includes(slot.id)) {
-        occupied = true;
-      }
-    });
+      const hasAvailableDoctor =
+      availableDoctors.length > 0;
 
     occupiedByUser = userAppointments.some(app => {
-      return app.date === isoDate && app.time === slot.label;
+
+      // data/hora
+      if (
+        app.date !== isoDate ||
+        app.time !== slot.label
+      ) {
+        return false;
+      }
+
+      // especialidade
+      if (
+        calendarState.specialty &&
+        app.specialty !== calendarState.specialty
+      ) {
+        return false;
+      }
+
+      // clínica
+      if (
+        calendarState.clinic &&
+        app.clinic !== calendarState.clinic
+      ) {
+        return false;
+      }
+
+      // médico 
+      const selectedDoctor = DoctorsData.find(
+        doctor =>
+          String(doctor.id) ===
+          String(calendarState.doctor)
+      );
+
+      if (
+        calendarState.doctor &&
+        selectedDoctor &&
+        app.doctor !== selectedDoctor.name
+      ) {
+        return false;
+      }
+
+      // período
+      if (
+        slot.period &&
+        app.period &&
+        slot.period !== app.period
+      ) {
+        return false;
+      }
+
+      return true;
     });
 
     if (occupiedByUser) {
       slotElement.classList.add('calendar-slot--user');
     }
-    else if (occupied) {
+    else if (!hasAvailableDoctor) {
       slotElement.classList.add('calendar-slot--occupied');
     }
     else {
@@ -390,10 +700,18 @@ function renderDayColumn(date, isoDate) {
       <span class="calendar-slot__dot"></span>
     `;
 
-    slotElement.addEventListener('click', () => {
+    if (
+      slotElement.classList.contains(
+        'calendar-slot--available'
+      )
+    ) {
 
-      window.location.href = `agendamento.html?date=${isoDate}&time=${slot.label}`;
-    });
+      slotElement.addEventListener('click', () => {
+
+        window.location.href =
+          `agendamento.html?date=${isoDate}&time=${slot.label}`;
+      });
+    }
 
     column.appendChild(slotElement);
   });
@@ -425,24 +743,46 @@ function syncHorizontalScroll() {
 
 function syncDoctorFilter() {
 
+  const previousDoctor = calendarState.doctor;
+
   doctorFilter.innerHTML = `
     <option value="">Todos médicos</option>
   `;
 
-  const filteredDoctors = DoctorsData.filter(doctor => {
+  let doctors = [...DoctorsData];
 
-    const specialtyMatch =
-      !calendarState.specialty ||
-      doctor.specialty === calendarState.specialty;
+  // especialidade
+  if (calendarState.specialty) {
+    doctors = doctors.filter(
+      doctor => doctor.specialty === calendarState.specialty
+    );
+  }
 
-    const clinicMatch =
-      !calendarState.clinic ||
-      doctor.clinic === calendarState.clinic;
+  // clínica
+  if (calendarState.clinic) {
+    doctors = doctors.filter(
+      doctor => doctor.clinic === calendarState.clinic
+    );
+  }
 
-    return specialtyMatch && clinicMatch;
-  });
+  // períodos ativos
+  const activePeriods = Object.entries(calendarState.periods)
+    .filter(([, active]) => active)
+    .map(([period]) => period);
 
-  filteredDoctors.forEach(doctor => {
+  // se nenhum período ativo → nenhum médico
+  if (!activePeriods.length) {
+    doctors = [];
+  } else {
+
+    doctors = doctors.filter(doctor =>
+      doctor.periods.some(period =>
+        activePeriods.includes(period)
+      )
+    );
+  }
+
+  doctors.forEach(doctor => {
 
     doctorFilter.innerHTML += `
       <option value="${doctor.id}">
@@ -451,7 +791,21 @@ function syncDoctorFilter() {
     `;
   });
 
-  doctorFilter.value = calendarState.doctor;
+  // mantém médico apenas se ainda for válido
+  const doctorStillExists = doctors.some(
+    doctor => String(doctor.id) === String(previousDoctor)
+  );
+
+  if (doctorStillExists) {
+
+    calendarState.doctor = previousDoctor;
+    doctorFilter.value = previousDoctor;
+
+  } else {
+
+    calendarState.doctor = '';
+    doctorFilter.value = '';
+  }
 }
 
 function applyDoctorPeriods(doctor) {
@@ -497,4 +851,80 @@ function enableAllPeriods() {
       'calendar-period-btn--inactive'
     );
   });
+}
+
+function canRenderCalendar() {
+
+  return (
+    !!calendarState.doctor ||
+    !!calendarState.specialty ||
+    !!calendarState.selectedAppointment
+  );
+}
+
+function getAvailableDoctorsForSlot(
+  isoDate,
+  slotId,
+  period,
+  dayKey
+) {
+
+  let doctors = [...DoctorsData];
+
+  // especialidade
+  if (calendarState.specialty) {
+
+    doctors = doctors.filter(
+      doctor => doctor.specialty === calendarState.specialty
+    );
+  }
+
+  // clínica
+  if (calendarState.clinic) {
+
+    doctors = doctors.filter(
+      doctor => doctor.clinic === calendarState.clinic
+    );
+  }
+
+  // médico específico
+  if (calendarState.doctor) {
+
+    doctors = doctors.filter(
+      doctor =>
+        String(doctor.id) ===
+        String(calendarState.doctor)
+    );
+  }
+
+  // período
+  doctors = doctors.filter(
+    doctor => doctor.periods.includes(period)
+  );
+
+  // dia da semana
+  doctors = doctors.filter(
+    doctor => doctor.workDays.includes(dayKey)
+  );
+
+  const appointmentsData = getAppointmentsData();
+
+  // remove médicos ocupados
+  doctors = doctors.filter(doctor => {
+
+    const doctorSchedule = appointmentsData.find(
+      item => item.doctorId === doctor.id
+    );
+
+    if (!doctorSchedule) {
+      return true;
+    }
+
+    const occupiedSlots =
+      doctorSchedule.schedule[isoDate] || [];
+
+    return !occupiedSlots.includes(slotId);
+  });
+
+  return doctors;
 }
