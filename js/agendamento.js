@@ -1,6 +1,4 @@
-/**
- * Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
- */
+//Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
 
 const mapIframe = document.querySelector('.schedule-map__iframe');
 
@@ -11,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof SchedulingData === 'undefined') {
     return;
   }
-  initScheduleDateDefault();
-  window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
+  window.AppointmentsData = getAppointmentsData();
+  renderScheduleDate();
   updateSchedulingUI();
   wireScheduleInteractions();
   initSchedulePage();
@@ -38,6 +36,7 @@ function formatScheduleDateDisplay(isoDate) {
   const rest = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
   return `${weekday}, ${rest}`;
 }
+
 function syncSummaryFromState() {
   const specialty = getSelectedSpecialty() || 'Selecione';
   const doctor = getSelectedDoctor();
@@ -223,20 +222,56 @@ function renderScheduleClinic() {
     .join('');
 }
 
-function initScheduleDateDefault() {
+function getMinimumDaysByLevel(level) {
+  if (level >= 4) return 0;
+  if (level >= 2) return 7;
+  return 14;
+}
+
+function getSpecialtyLevel(specialtyName) {
+  const specialty = UserRanking.specialties.find(function (item) {
+    return item.name === specialtyName;
+  });
+
+  return specialty ? specialty.level : 0;
+}
+
+function renderScheduleDate(specialtyName = null) {
   const input = document.querySelector('#schedule-date');
-  if (input) {
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoje.getDate()).padStart(2, '0');
+  const message = document.querySelector('#schedule-date-message');
 
-    const hojeFormatado = `${ano}-${mes}-${dia}`;
+  if (!input || !message) return;
 
-    input.value = hojeFormatado; // já seta hoje
-    SchedulingData.selectedDate = hojeFormatado;
-    input.min = hojeFormatado;   // bloqueia datas anteriores
+  let minimumDays = 14;
+
+  // Estado inicial
+  if (!specialtyName) {
+    message.innerText =
+      'Selecione a especialidade para poder escolher a data';
+  } else {
+    const level = getSpecialtyLevel(specialtyName);
+
+    minimumDays = getMinimumDaysByLevel(level);
+
+    if (minimumDays === 0) {
+      message.innerText =
+        `Seu ranking em ${specialtyName} permite agendamento imediato`;
+    } else {
+      message.innerText =
+        `Seu ranking em ${specialtyName} permite agendamento em ${minimumDays} dias`;
+    }
   }
+
+  const minDate = new Date();
+
+  minDate.setDate(minDate.getDate() + minimumDays);
+
+  const formattedDate = formatDate(minDate);
+
+  input.min = formattedDate;
+  input.value = formattedDate;
+
+  SchedulingData.selectedDate = formattedDate;
 }
 
 function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
@@ -269,6 +304,7 @@ function wireScheduleInteractions() {
 
     resetSlotSelection();
     resetDoctorSelection();
+    renderScheduleDate(getSelectedSpecialty())
     updateSchedulingUI();
   });
 
@@ -342,8 +378,11 @@ function wireScheduleInteractions() {
       if (isEncaixeSelected && !canShowEncaixe()) {
         resetSlotSelection();
       }
-      
-      renderScheduleSlots(true);
+    
+      renderScheduleSlots(hasRequiredLevel(
+        getSelectedSpecialty(), 
+        UserRanking.specialties
+      ));
       syncSummaryFromState();
     });
   });
@@ -465,7 +504,34 @@ function wireScheduleInteractions() {
       await simulateLoading(900);
       setButtonLoading(confirmBtn, false);
 
-      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');
+      const selectedDoctor = DoctorsData.find(
+        doctor => doctor.id === SchedulingData.selectedDoctorId
+      );
+
+      const selectedClinic = SchedulingData.clinics.find(
+        clinic => clinic.id == SchedulingData.selectedClinicId
+      );
+
+      const appointment = {
+        id: Date.now(),
+        specialty: getSelectedSpecialty(),
+        doctor: selectedDoctor?.name || 'Médico não informado',
+        date: SchedulingData.selectedDate,
+        time: SchedulingData.selectedSlotLabel,
+        clinic: selectedClinic?.name || 'Clínica não informada'
+      };
+
+      addUserAppointment(appointment);
+
+      occupyAppointmentSlot({
+        doctorId: SchedulingData.selectedDoctorId,
+        date: SchedulingData.selectedDate,
+        slotId: SchedulingData.selectedSlotId
+      });
+
+      window.AppointmentsData = getAppointmentsData();
+
+      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');    
     });
   }
 }
@@ -603,82 +669,6 @@ function getDoctorsBySpecialty() {
   return availableDoctors.sort((a, b) =>
     a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })
   );
-}
-
-function getWeekdayKey(date) {
-  const map = ['dom','seg','ter','qua','qui','sex','sab'];
-  return map[date.getDay()];
-}
-
-function generateAppointmentsData(doctors, timeSlots) {
-  const AppointmentsData = [];
-
-  const today = new Date();
-
-  function formatDate(date) {
-    const ano = date.getFullYear();
-    const mes = String(date.getMonth() + 1).padStart(2, '0');
-    const dia = String(date.getDate()).padStart(2, '0');
-
-    return `${ano}-${mes}-${dia}`;
-  }
-
-  function getWeekLoad(dayIndex) {
-    const week = Math.floor(dayIndex / 7) + 1;
-
-    switch (week) {
-      case 1: return 0.95;
-      case 2: return 0.90;
-      case 3: return 0.85;
-      case 4: return 0.80;
-      case 5: return 0.60;
-      case 6: return 0.40;
-      case 7: return 0.20;
-      default: return 0.0;
-    }
-  }
-
-  for (const doctor of doctors) {
-    const schedule = {};
-
-    for (let i = 0; i < 60; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      const isoDate = formatDate(date);
-      const weekday = getWeekdayKey(date);
-
-      //  médico não trabalha nesse dia
-      if (!doctor.workDays.includes(weekday)) {
-        schedule[isoDate] = [];
-        continue;
-      }
-
-      const load = getWeekLoad(i);
-
-      // filtra slots válidos pro médico (período)
-      const validSlots = timeSlots.filter(slot =>
-        doctor.periods.includes(slot.period)
-      );
-
-      const occupiedCount = Math.floor(validSlots.length * load);
-
-      const shuffled = [...validSlots].sort(() => Math.random() - 0.5);
-
-      const occupiedSlots = shuffled
-        .slice(0, occupiedCount)
-        .map(s => s.id);
-
-      schedule[isoDate] = occupiedSlots;
-    }
-
-    AppointmentsData.push({
-      doctorId: doctor.id,
-      schedule
-    });
-  }
-
-  return AppointmentsData;
 }
 
 function isSlotBooked(doctorId, date, slotId) {
@@ -842,7 +832,10 @@ function applyDoctorSelection(doctor) {
 }
 
 function updateSchedulingUI() {
-  renderScheduleSlots(true);
+  renderScheduleSlots(hasRequiredLevel(
+    getSelectedSpecialty(), 
+    UserRanking.specialties
+  ));
   renderScheduleClinic();
   renderActions(ActionsData.actions, {
     showExpiry: false, 
@@ -941,4 +934,29 @@ function calculateReminderPoints(reminders) {
   if (reminders.includes('2h')) return 40;
 
   return 0;
+}
+
+function renderDoctorDropdown(list) {
+  const dropdown = document.querySelector('#doctor-dropdown');
+  if (!dropdown) return;
+
+  if (list.length === 0) {
+    dropdown.innerHTML = `<div class="doctor-dropdown__item">Nenhum médico encontrado</div>`;
+  } else {
+    dropdown.innerHTML = list.map(doc => `
+      <div class="doctor-dropdown__item" data-id="${doc.id}">
+        <strong>${doc.name} - ${doc.specialty}</strong><br>
+        <small>${doc.clinic}</small>
+      </div>
+    `).join('');
+  }
+
+  dropdown.classList.remove('d-none');
+}
+
+function hasRequiredLevel(specialtyName, userdata) {
+  const specialty = userdata.find(function (item) {
+    return item.name === specialtyName
+  })
+  return specialty ? specialty.level >= 3 : false
 }

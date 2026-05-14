@@ -18,15 +18,38 @@
     window.location.href = DASHBOARD_HREF;
   }
 
-  function mockLogin() {
-    try {
-      localStorage.setItem('healthnuts_mock_entrada', '1');
-    } catch (e) {
-      /* storage indisponível (ex.: modo privado restrito) */
-    }
-    showFeedback('Login realizado! Redirecionando…', 'success');
-    setTimeout(redirectToDashboard, 650);
+function mockLogin() {
+  try {
+    localStorage.setItem('healthnuts_mock_entrada', '1');
+
+    // ========================================
+    // GERA APPOINTMENTS DATA DA SESSÃO
+    // ========================================
+    const appointmentsData = generateAppointmentsData(
+      DoctorsData,
+      SchedulingData.timeSlots
+    );
+
+    sessionStorage.setItem(
+      'appointmentsData',
+      JSON.stringify(appointmentsData)
+    );
+
+    // ========================================
+    // USER APPOINTMENTS DATA
+    // ========================================
+    sessionStorage.setItem(
+      'userAppointmentsData',
+      JSON.stringify([])
+    );
+
+  } catch (e) {
+    console.error(e);
   }
+
+  showFeedback('Login realizado! Redirecionando…', 'success');
+  setTimeout(redirectToDashboard, 650);
+}
 
   function simulateDelay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

@@ -7,34 +7,89 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader({ activePage: 'home', isSubpage: false });
   renderFooter();
-  initEventListeners();
   initDashboard();
 });
 
 function initEventListeners() {
-  const btnAtualizar = document.querySelector('#btn-atualizar');
-  const btnNovoAgendamento = document.querySelector('#btn-novo-agendamento');
-  const btnVerBeneficios = document.querySelector('#btn-ver-beneficios');
-  const btnVerRanking = document.querySelector('#btn-ver-ranking');
-  const btnVerRegulamento = document.querySelector('#btn-ver-regulamento');
-
-  if (btnAtualizar) btnAtualizar.addEventListener('click', handleAtualizar);
-  if (btnNovoAgendamento) btnNovoAgendamento.addEventListener('click', handleNovoAgendamento);
-  if (btnVerBeneficios) btnVerBeneficios.addEventListener('click', handleVerBeneficios);
-  if (btnVerRanking) btnVerRanking.addEventListener('click', handleVerRanking);
-  if (btnVerRegulamento) btnVerRegulamento.addEventListener('click', handleVerRegulamento);
 }
 
-/**
- * Renderiza dados iniciais do dashboard via mock data.
- */
+//Renderiza dados iniciais do dashboard via mock data.
 async function initDashboard() {
-  //renderRanking(DashboardData.ranking);
-  renderAppointments(DashboardData.appointments);
+
+  // cria agendamento automático inicial
+  createInitialNutritionAppointment();
+
+  // pega agendamentos do usuário
+  const userAppointments = getUserAppointmentsData();
+
+  renderAppointments(userAppointments);
+
   renderActions(ActionsData.actions, {
-    showExpiry:false, 
-    category:'Hábitos', 
-    limit: 1, 
+    showExpiry:false,
+    category:'Hábitos',
+    limit: 1,
     specialty: 'Endocrinologia'
   });
+
+  renderFutureAppointmentsCount();
+}
+
+function renderAppointments(data) {
+
+  const container = document.querySelector('#appointments-list');
+
+  if (!container) return;
+
+  if (!data.length) {
+
+    container.innerHTML = `
+      <p class="text-muted mb-0">
+        Nenhum agendamento encontrado.
+      </p>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = data.map(item => `
+
+    <div class="appointment-item">
+
+      <span class="appointment-item__specialty">
+        ${item.specialty}
+      </span>
+
+      <p class="appointment-item__detail mb-1">
+        ${item.date}
+        &bull;
+        ${item.time}
+        &bull;
+        ${item.doctor}
+        &bull;
+        ${item.clinic}
+      </p>
+
+    </div>
+
+  `).join('');
+}
+
+function renderFutureAppointmentsCount() {
+
+  const element = document.querySelector(
+    '#future-appointments-count'
+  );
+
+  if (!element) return;
+
+  const appointments = getUserAppointmentsData();
+
+  const total = appointments.length;
+
+  const label =
+    total === 1
+      ? '1 futura'
+      : `${total} futuras`;
+
+  element.textContent = label;
 }
