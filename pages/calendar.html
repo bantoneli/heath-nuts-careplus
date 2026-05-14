@@ -29,6 +29,23 @@
         <!-- CARD 1 -->
         <section class="dashboard-card">
 
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h2 class="dashboard-card__title mb-0">
+              Selecione o agendamento que deseja alterar
+            </h2>
+
+            <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
+              0 consultas
+            </span>
+          </div>
+
+          <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
+
+        </section>
+
+        <!-- CARD 2 -->
+        <section class="dashboard-card">
+
           <div class="row g-3">
 
             <div class="col-lg-4">
@@ -62,23 +79,6 @@
             </div>
 
           </div>
-
-        </section>
-
-        <!-- CARD 2 -->
-        <section class="dashboard-card">
-
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <h2 class="dashboard-card__title mb-0">
-              Próximos agendamentos
-            </h2>
-
-            <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
-              0 consultas
-            </span>
-          </div>
-
-          <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
 
         </section>
 
@@ -132,6 +132,27 @@
 
     </div>
   </main>
+
+  <!-- Mostra opções de medicos em reagendamento com multiplos medicos -->
+  <div id="calendar-doctor-picker"></div>
+
+  <!-- Modal de confirmação de reagendamento -->
+  <div id="calendar-reschedule-modal" class="calendar-reschedule-modal">
+    <div class="calendar-reschedule-modal__content">
+      <div class="calendar-reschedule-modal__title">
+        Reagendar consulta
+      </div>
+      <div id="calendar-reschedule-modal-body"></div>
+      <div class="calendar-reschedule-modal__actions">
+        <button id="calendar-reschedule-cancel" class="btn btn-secondary">
+          Cancelar
+        </button>
+        <button id="calendar-reschedule-confirm" class="btn btn-primary">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div id="footer-placeholder"></div>
 
