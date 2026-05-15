@@ -30,7 +30,7 @@ function initCalendarPage() {
   renderHeader({ activePage: 'agendamento', isSubpage: true });
   renderFooter();
   initializeAppointments();
-  populateFilters();
+  syncFilters();
   populateWeeks();
   renderTimeColumn();
   renderAppointmentsCards();
@@ -54,7 +54,7 @@ function initializeAppointments() {
   createInitialNutritionAppointment();
 }
 
-function populateFilters() {
+function syncFilters() {
 
   syncSpecialtyFilter();
   syncClinicFilter();
@@ -272,7 +272,6 @@ function bindEvents() {
 
     syncClinicFilter();
     syncDoctorFilter();
-
     enableAllPeriods();
     renderAppointmentsCards();
     renderTimeColumn();
@@ -282,7 +281,6 @@ function bindEvents() {
   clinicFilter.addEventListener('change', () => {
 
     calendarState.clinic = clinicFilter.value;
-    calendarState.selectedAppointment = null;
 
     if (calendarState.doctor) {
       calendarState.doctor = '';
@@ -291,9 +289,7 @@ function bindEvents() {
 
     syncSpecialtyFilter();
     syncDoctorFilter();
-
     enableAllPeriods();
-
     renderTimeColumn();
     renderCalendar();
   });
@@ -301,7 +297,6 @@ function bindEvents() {
   doctorFilter.addEventListener('change', () => {
 
     calendarState.doctor = doctorFilter.value;
-    calendarState.selectedAppointment = null;
 
     if (calendarState.doctor) {
 
@@ -316,9 +311,7 @@ function bindEvents() {
         calendarState.clinic = doctor.clinic;
 
         // recria listas
-        syncSpecialtyFilter();
-        syncClinicFilter();
-        syncDoctorFilter();
+        syncFilters();
 
         // atualiza selects visuais
         specialtyFilter.value = doctor.specialty;
@@ -337,19 +330,15 @@ function bindEvents() {
       syncSpecialtyFilter();
       syncClinicFilter();
     }
-
+    
     syncDoctorFilter();
     renderTimeColumn();
     renderCalendar();
   });
 
   weekSelect.addEventListener('change', () => {
-
     calendarState.weekStart = weekSelect.value;
-
-    scrollCalendarToDate(
-      calendarState.weekStart
-    );
+    scrollCalendarToDate( calendarState.weekStart );
   });
 
   document.querySelectorAll('.calendar-period-btn').forEach(btn => {
@@ -357,31 +346,21 @@ function bindEvents() {
     btn.addEventListener('click', () => {
 
       const period = btn.dataset.period;
-
       const activePeriods = Object.values(
-        calendarState.periods
-      ).filter(Boolean).length;
+        calendarState.periods).filter(Boolean).length;
 
-      const isCurrentlyActive =
-        calendarState.periods[period];
+      const isCurrentlyActive = calendarState.periods[period];
 
       // impede desligar o último
-      if (activePeriods === 1 && isCurrentlyActive) {
-        return;
-      }
+      if (activePeriods === 1 && isCurrentlyActive) {return;}
 
-      calendarState.periods[period] =
-        !calendarState.periods[period];
+      calendarState.periods[period] = !calendarState.periods[period];
 
-      btn.classList.toggle(
-        'calendar-period-btn--inactive',
-        !calendarState.periods[period]
-      );
+      btn.classList.toggle('calendar-period-btn--inactive',
+        !calendarState.periods[period]);
       
       syncDoctorFilter();
-
       renderTimeColumn();
-
       renderCalendar();
     });
   });
@@ -411,93 +390,70 @@ function renderTimeColumn() {
 }
 
 function selectAppointmentCard(appointment) {
+  // TOGGLE OFF
+  if (isSameAppointment(
+      appointment,
+      calendarState.selectedAppointment)
+    ){
+      calendarState.selectedAppointment = null;
+      renderAppointmentsCards();
+      return;
+    }
 
-  calendarState.selectedAppointment =  appointment;
+  // ATIVA
+  calendarState.selectedAppointment = appointment;
+
   renderAppointmentsCards();
 
   // filtros
   calendarState.specialty = appointment.specialty;
   calendarState.clinic = appointment.clinic;
 
-  // encontra médico
-  const doctor = DoctorsData.find(
-    doctor =>
-      doctor.name === appointment.doctor
-  );
+  // médico
+  const doctor =
+    DoctorsData.find(
+      doctor =>
+        doctor.name ===
+        appointment.doctor
+    );
 
   if (doctor) {
     calendarState.doctor = String(doctor.id);
     applyDoctorPeriods(doctor);
+    syncDoctorFilter();
   }
 
-  // sincroniza selects
-  syncSpecialtyFilter();
-  syncClinicFilter();
-  syncDoctorFilter();
+  // sincroniza filtros
+  syncFilters();
 
-  specialtyFilter.value =
-    calendarState.specialty;
+  specialtyFilter.value = calendarState.specialty;
+  clinicFilter.value = calendarState.clinic;
+  doctorFilter.value = calendarState.doctor;
 
-  clinicFilter.value =
-    calendarState.clinic;
-
-  doctorFilter.value =
-    calendarState.doctor;
-
+  
   renderTimeColumn();
   renderCalendar();
-
-  // scroll até semana
-  const appointmentDate =
-    parseLocalDate(appointment.date);
-
-  const sunday = new Date(appointmentDate);
-
-  sunday.setDate(
-    appointmentDate.getDate() -
-    appointmentDate.getDay()
-  );
-
-  const weekValue =
-    formatDate(sunday);
-
-  weekSelect.value = weekValue;
-
-  calendarState.weekStart = weekValue;
-
-  // scroll horizontal
-  scrollCalendarToDate(
-    appointment.date
-  );
+  scrollCalendarToDate(appointment.date);
 }
 
 function getWeekStartFromDate(dateString) {
 
-  const date =
-    parseLocalDate(dateString);
-
+  const date = parseLocalDate(dateString);
   const today = new Date();
-
   today.setHours(0,0,0,0);
 
   // primeira semana especial
   const firstWeekEnd = new Date(today);
 
-  firstWeekEnd.setDate(
-    today.getDate() + (6 - today.getDay())
-  );
+  firstWeekEnd.setDate(today.getDate() + (6 - today.getDay()));
 
   // se estiver na semana atual
-  if (date <= firstWeekEnd) {
-    return formatDate(today);
-  }
+  if (date <= firstWeekEnd) {return formatDate(today);}
 
   // próximas semanas domingo->sábado
   const sunday = new Date(date);
 
-  sunday.setDate(
-    date.getDate() - date.getDay()
-  );
+  sunday.setDate(date.getDate() - date.getDay());
 
   return formatDate(sunday);
 }
@@ -508,20 +464,14 @@ function openDoctorPicker({
   onSelect
 }) {
 
-  const picker =
-    document.getElementById(
-      'calendar-doctor-picker'
-    );
-
+  const picker = document.getElementById('calendar-doctor-picker');
   picker.innerHTML = '';
 
   doctors.forEach(doctor => {
 
-    const item =
-      document.createElement('div');
+    const item = document.createElement('div');
 
-    item.className =
-      'calendar-doctor-picker__item';
+    item.className = 'calendar-doctor-picker__item';
 
     item.innerHTML = `
       <div>
@@ -534,9 +484,7 @@ function openDoctorPicker({
     `;
 
     item.addEventListener('click', () => {
-
       picker.style.display = 'none';
-
       onSelect(doctor);
     });
 
@@ -544,12 +492,8 @@ function openDoctorPicker({
   });
 
   picker.style.display = 'block';
-
-  picker.style.left =
-    `${event.clientX + 8}px`;
-
-  picker.style.top =
-    `${event.clientY + 8}px`;
+  picker.style.left = `${event.clientX + 8}px`;
+  picker.style.top = `${event.clientY + 8}px`;
 }
 
 function openScheduleRedirectModal({
@@ -613,8 +557,7 @@ function openScheduleRedirectModal({
       time: newTime
     });
 
-    window.location.href =
-      `agendamento.html?${params.toString()}`;
+    window.location.href = `agendamento.html?${params.toString()}`;
   };
 }
 
@@ -727,137 +670,74 @@ function moveAppointment(
   targetDoctor = null
 ) {
 
-  const userAppointments =
-    getUserAppointmentsData();
-
-  const appointmentsData =
-    getAppointmentsData();
+  const userAppointments = getUserAppointmentsData();
+  const appointmentsData = getAppointmentsData();
 
   // appointment do usuário
-  const appointmentIndex =
-    userAppointments.findIndex(app => {
+  const appointmentIndex = userAppointments.findIndex(app => {
+    return (
+      app.date === appointment.date &&
+      app.time === appointment.time &&
+      app.doctor === appointment.doctor
+    );
+  });
 
-      return (
-        app.date === appointment.date &&
-        app.time === appointment.time &&
-        app.doctor === appointment.doctor
-      );
-    });
-
-  if (appointmentIndex === -1) {
-    return;
-  }
+  if (appointmentIndex === -1) { return; }
 
   // médico ORIGINAL
-  const originalDoctor =
-    DoctorsData.find(
-      doctor =>
-        doctor.name === appointment.doctor
-    );
+  const originalDoctor = DoctorsData.find(
+    doctor => doctor.name === appointment.doctor );
 
-  if (!originalDoctor) {
-    return;
-  }
+  if (!originalDoctor) { return; }
 
   // médico FINAL
-  const finalDoctor =
-    targetDoctor || originalDoctor;
+  const finalDoctor = targetDoctor || originalDoctor;
 
   // agenda ORIGINAL
-  const originalDoctorSchedule =
-    appointmentsData.find(
-      item =>
-        item.doctorId === originalDoctor.id
-    );
+  const originalDoctorSchedule = appointmentsData.find(
+    item => item.doctorId === originalDoctor.id );
 
   // agenda DESTINO
-  const finalDoctorSchedule =
-    appointmentsData.find(
-      item =>
-        item.doctorId === finalDoctor.id
-    );
+  const finalDoctorSchedule = appointmentsData.find(
+    item => item.doctorId === finalDoctor.id );
 
-  if (
-    !originalDoctorSchedule ||
-    !finalDoctorSchedule
-  ) {
-    return;
-  }
+  if (!originalDoctorSchedule || !finalDoctorSchedule ) { return; }
 
   // slot antigo
-  const oldSlots =
-    originalDoctorSchedule.schedule[
-      appointment.date
-    ] || [];
+  const oldSlots = originalDoctorSchedule.schedule[
+    appointment.date ] || [];
 
   // slot novo
-  const newSlots =
-    finalDoctorSchedule.schedule[
-      newDate
-    ] || [];
+  const newSlots = finalDoctorSchedule.schedule[
+    newDate ] || [];
 
   // encontra slot ids
-  const oldSlot =
-    SchedulingData.timeSlots.find(
-      slot =>
-        slot.label === appointment.time
-    );
+  const oldSlot = SchedulingData.timeSlots.find(
+    slot => slot.label === appointment.time );
 
-  const newSlot =
-    SchedulingData.timeSlots.find(
-      slot =>
-        slot.label === newTime
-    );
+  const newSlot = SchedulingData.timeSlots.find(
+    slot => slot.label === newTime );
 
-  if (!oldSlot || !newSlot) {
-    return;
-  }
+  if (!oldSlot || !newSlot) { return; }
 
   // REMOVE slot antigo
-  originalDoctorSchedule.schedule[
-    appointment.date
-  ] = (
-    originalDoctorSchedule.schedule[
-      appointment.date
-    ] || []
-  ).filter(
-    slotId => slotId !== oldSlot.id
-  );
+  originalDoctorSchedule.schedule[ appointment.date ] = (
+    originalDoctorSchedule.schedule[ appointment.date ] || []
+  ).filter( slotId => slotId !== oldSlot.id );
 
   // limpa arrays vazios
-  if (
-    !originalDoctorSchedule.schedule[
-      appointment.date
-    ].length
-  ) {
-
-    delete originalDoctorSchedule.schedule[
-      appointment.date
-    ];
+  if (!originalDoctorSchedule.schedule[ appointment.date ].length) {
+    delete originalDoctorSchedule.schedule[ appointment.date ];
   }
 
   // GARANTE array destino
-  if (
-    !finalDoctorSchedule.schedule[
-      newDate
-    ]
-  ) {
-
-    finalDoctorSchedule.schedule[
-      newDate
-    ] = [];
+  if (!finalDoctorSchedule.schedule[ newDate ]){
+    finalDoctorSchedule.schedule[ newDate ] = [];
   }
 
   // EVITA DUPLICAÇÃO
-  if (
-    !finalDoctorSchedule.schedule[
-      newDate
-    ].includes(newSlot.id)
-  ) {
-
-    finalDoctorSchedule.schedule[
-      newDate
-    ].push(newSlot.id);
+  if (!finalDoctorSchedule.schedule[newDate].includes(newSlot.id)) {
+    finalDoctorSchedule.schedule[newDate].push(newSlot.id);
   }
 
   // atualiza appointment usuário
@@ -874,28 +754,17 @@ function moveAppointment(
   calendarState.selectedAppointment = userAppointments[appointmentIndex];
 
   // salva
-  saveAppointmentsData(
-    appointmentsData
-  );
-
-  saveUserAppointmentsData(
-    userAppointments
-  );
+  saveAppointmentsData(appointmentsData);
+  saveUserAppointmentsData(userAppointments);
 
   // atualiza navegação
-  const targetWeek =
-    getWeekStartFromDate(newDate);
+  const targetWeek = getWeekStartFromDate(newDate);
 
-  calendarState.weekStart =
-    targetWeek;
-
-  weekSelect.value =
-    targetWeek;
+  calendarState.weekStart = targetWeek;
+  weekSelect.value = targetWeek;
 
   renderAppointmentsCards();
-
   renderCalendar();
-
   scrollCalendarToDate(newDate);
 }
 
@@ -916,7 +785,9 @@ function renderAppointmentsCards() {
 
   const userAppointments = getUserAppointmentsData();
 
-  document.getElementById('calendar-appointments-count').innerText = `${userAppointments.length} consultas`;
+  document.getElementById(
+    'calendar-appointments-count'
+  ).innerText = `${userAppointments.length} consultas`;
 
   appointmentsRow.innerHTML = '';
 
@@ -933,21 +804,14 @@ function renderAppointmentsCards() {
 
   userAppointments.forEach(appointment => {
 
-    const card =
-      document.createElement('div');
-
+    const card = document.createElement('div');
     card.className = 'calendar-mini-card';
 
-    if (
-      isSameAppointment(
-        appointment,
-        calendarState.selectedAppointment
-      )
-    ) {
-
-      card.classList.add(
-        'calendar-mini-card--active'
-      );
+    if (isSameAppointment(
+      appointment,
+      calendarState.selectedAppointment)
+    ){
+      card.classList.add('calendar-mini-card--active');
     }
 
     card.draggable = true;
@@ -977,66 +841,75 @@ function renderAppointmentsCards() {
 
     // CLICK
     card.addEventListener('click', () => {
-
-      selectAppointmentCard(
-        appointment
-      );
+      selectAppointmentCard(appointment);
     });
 
     // DRAG START
-    card.addEventListener(
-      'dragstart',
-      () => {
-        calendarState.selectedAppointment = appointment;
-        calendarState.draggingAppointment = appointment;
-        // ativa visualmente sem rerender
-        document
-          .querySelectorAll('.calendar-mini-card')
-          .forEach(card => {
-            card.classList.remove('calendar-mini-card--active');
-          });
+    card.addEventListener('dragstart', () => {
+      calendarState.selectedAppointment = appointment;
+      calendarState.draggingAppointment = appointment;
+      // ativa visualmente sem rerender
+      document
+        .querySelectorAll('.calendar-mini-card')
+        .forEach(card => {
+          card.classList.remove('calendar-mini-card--active');
+        });
 
-        card.classList.add('calendar-mini-card--active');
-      }
+      card.classList.add('calendar-mini-card--active');
+    }
     );
 
     // DRAG END
-    card.addEventListener(
-      'dragend',
-      () => {
-
-        calendarState.draggingAppointment =
-          null;
-      }
-    );
+    card.addEventListener('dragend', () => {
+      calendarState.draggingAppointment = null;
+    });
 
     appointmentsRow.appendChild(card);
   });
 }
 
-function hasAvailableDoctorsInDay(
-  date,
-  isoDate
-) {
+function hasWorkingDoctorsInDay(date) {
+  const dayKey = getWeekdayKey(date);
 
-  const dayKey =
-    getWeekdayKey(date);
+  let doctors = [...DoctorsData];
 
-  const visibleSlots =
-    getVisibleSlots();
+  // especialidade
+  if (calendarState.specialty) {
 
-  return visibleSlots.some(slot => {
+    doctors = doctors.filter(
+      doctor => doctor.specialty === calendarState.specialty
+    );
+  }
 
-    const doctors =
-      getAvailableDoctorsForSlot(
-        isoDate,
-        slot.id,
-        slot.period,
-        dayKey
-      );
+  // clínica
+  if (calendarState.clinic) {
 
-    return doctors.length > 0;
+    doctors = doctors.filter(
+      doctor => doctor.clinic === calendarState.clinic
+    );
+  }
+
+  // médico
+  if (calendarState.doctor) {
+
+    doctors = doctors.filter(
+      doctor => String(doctor.id) === String(calendarState.doctor)
+    );
+  }
+
+  // períodos
+  doctors = doctors.filter(doctor => {
+    return doctor.periods.some(
+      period => calendarState.periods[period]
+    );
   });
+
+  // trabalha no dia
+  doctors = doctors.filter(
+    doctor => doctor.workDays.includes(dayKey)
+  );
+
+  return doctors.length > 0;
 }
 
 function renderCalendar() {
@@ -1060,20 +933,14 @@ function renderCalendar() {
     }
 
   daysRow.innerHTML = '';
-
   columnsContainer.innerHTML = '';
-
   const today = new Date();
-
   today.setHours(0, 0, 0, 0);
   const days = [];
 
   for (let i = 0; i < 60; i++) {
-
     const date = new Date(today);
-
     date.setDate(today.getDate() + i);
-
     days.push(date);
   }
 
@@ -1081,10 +948,7 @@ function renderCalendar() {
 
     const isoDate = formatDate(date);
 
-    const shouldRenderDay = hasAvailableDoctorsInDay(
-      date,
-      isoDate
-    );
+    const shouldRenderDay = hasWorkingDoctorsInDay(date);
 
     if (!shouldRenderDay) { return; }
 
@@ -1109,24 +973,53 @@ function renderCalendar() {
   });
 }
 
+function resolveSlotDoctors({
+  isoDate,
+  slot,
+  slotElement
+}) {
+
+  const dayKey = getWeekdayKey(parseLocalDate(isoDate));
+
+  const availableDoctors =
+    getAvailableDoctorsForSlot(
+      isoDate,
+      slot.id,
+      slot.period,
+      dayKey
+    );
+
+  if (!availableDoctors.length) { return null; }
+
+  return {
+    doctors: availableDoctors,
+
+    pickerEvent: {
+      clientX:
+        slotElement
+          .getBoundingClientRect()
+          .left,
+
+      clientY:
+        slotElement
+          .getBoundingClientRect()
+          .top
+    }
+  };
+}
+
 function renderDayColumn(date, isoDate) {
 
   const column = document.createElement('div');
-
   column.className = 'calendar-day-column';
-
   const appointmentsData = getAppointmentsData();
-
   const userAppointments = getUserAppointmentsData();
 
   getVisibleSlots().forEach(slot => {
 
     const slotElement = document.createElement('div');
-
     slotElement.className = 'calendar-slot';
-
     slotElement.style.height = `${SLOT_HEIGHT}px`;
-
     const dayKey = getWeekdayKey(date);
 
     const availableDoctors =
@@ -1137,8 +1030,7 @@ function renderDayColumn(date, isoDate) {
         dayKey
       );
 
-      const hasAvailableDoctor =
-      availableDoctors.length > 0;
+      const hasAvailableDoctor = availableDoctors.length > 0;
 
     occupiedByUser = userAppointments.some(app => {
 
@@ -1213,6 +1105,11 @@ function renderDayColumn(date, isoDate) {
         }
       );
 
+      slotElement.addEventListener( 'click', () => {
+          selectAppointmentCard( userAppointment );
+        }
+      );
+
       slotElement.addEventListener( 'dragend',
         () => {
 
@@ -1228,33 +1125,28 @@ function renderDayColumn(date, isoDate) {
     else {
       slotElement.classList.add('calendar-slot--available');
       
-      slotElement.addEventListener( 'click',
-        () => {
+      slotElement.addEventListener('click',() => {
 
           const appointment = calendarState.selectedAppointment;
-          
-          // NÃO existe appointment selecionado
-          if (!appointment) {
 
-            const dayKey = getWeekdayKey(parseLocalDate(isoDate));
+          const resolved =
+            resolveSlotDoctors({
+              isoDate,
+              slot,
+              slotElement
+            });
 
-            const availableDoctors =
-              getAvailableDoctorsForSlot(
-                isoDate,
-                slot.id,
-                slot.period,
-                dayKey
-              );
+          if (!resolved) { return; }
 
-            if (!availableDoctors.length) {
-              return;
-            }
+          const { doctors, pickerEvent } = resolved;
 
-            // um médico
-            if (availableDoctors.length === 1) {
+          const handleDoctor = doctor => {
+
+            // NOVO AGENDAMENTO
+            if (!appointment) {
 
               openScheduleRedirectModal({
-                targetDoctor: availableDoctors[0],
+                targetDoctor: doctor,
                 newDate: isoDate,
                 newTime: slot.label
               });
@@ -1262,173 +1154,95 @@ function renderDayColumn(date, isoDate) {
               return;
             }
 
-            // múltiplos médicos
-            openDoctorPicker({
+            // REMARCAÇÃO
+            openRescheduleModal({
+              appointment,
+              targetDoctor: doctor,
+              newDate: isoDate,
+              newTime: slot.label,
+              onConfirm: () => {
 
-              event: {
-                clientX:
-                  slotElement
-                    .getBoundingClientRect()
-                    .left,
-
-                clientY:
-                  slotElement
-                    .getBoundingClientRect()
-                    .top
-              },
-
-              doctors:
-                availableDoctors,
-
-              onSelect: doctor => {
-
-                openScheduleRedirectModal({
-
-                  targetDoctor:
-                    doctor,
-
-                  newDate:
-                    isoDate,
-
-                  newTime:
-                    slot.label
-                });
+                moveAppointment(
+                  appointment,
+                  isoDate,
+                  slot.label,
+                  doctor
+                );
               }
             });
-
-            return;
-          }
-
-          const dayKey = getWeekdayKey( parseLocalDate(isoDate));
-
-          const availableDoctors =
-            getAvailableDoctorsForSlot(
-              isoDate,
-              slot.id,
-              slot.period,
-              dayKey
-            );
-
-          if (!availableDoctors.length) { return; }
+          };
 
           // um médico
-          if (availableDoctors.length === 1) {
-
-            const doctor = availableDoctors[0];
-
-            openRescheduleModal({
-              appointment,
-              targetDoctor: doctor,
-              newDate: isoDate,
-              newTime: slot.label,
-
-              onConfirm: () => {
-
-                moveAppointment(
-                  appointment,
-                  isoDate,
-                  slot.label,
-                  doctor
-                );
-              }
-            });
-
+          if (doctors.length === 1) {
+            handleDoctor(  doctors[0] );
             return;
           }
 
           // múltiplos médicos
           openDoctorPicker({
-
-            event: {
-              clientX: slotElement.getBoundingClientRect().left,
-              clientY: slotElement.getBoundingClientRect().top
-            },
-
-            doctors: availableDoctors,
-
-            onSelect: doctor => {
-
-              openRescheduleModal({
-                appointment,
-                targetDoctor: doctor,
-                newDate: isoDate,
-                newTime: slot.label,
-                onConfirm: () => {
-
-                  moveAppointment(
-                    appointment,
-                    isoDate,
-                    slot.label,
-                    doctor
-                  );
-                }
-              });
-            }
+            event: pickerEvent,
+            doctors,
+            onSelect: handleDoctor
           });
         }
       );
 
-      slotElement.addEventListener(
-        'dragover',
-        event => {
-          event.preventDefault();
+      slotElement.addEventListener('dragover', event => { 
+        event.preventDefault();
+        slotElement.classList.add('drag-over');
+      });
 
-          slotElement.classList.add(
-            'drag-over'
+      slotElement.addEventListener( 'dragleave', () => {
+        slotElement.classList.remove('drag-over');
+      });
+
+      slotElement.addEventListener('drop', event => {
+        event.preventDefault();
+        slotElement.classList.remove('drag-over');
+        const appointment = calendarState.draggingAppointment;
+        if (!appointment) { return; }
+        const dayKey = getWeekdayKey( parseLocalDate(isoDate) );
+
+        const availableDoctors =
+          getAvailableDoctorsForSlot(
+            isoDate,
+            slot.id,
+            slot.period,
+            dayKey
           );
-          
+
+        // nenhum médico
+        if (!availableDoctors.length) { return; }
+
+        // somente um médico
+        if (availableDoctors.length === 1) {
+
+          const doctor = availableDoctors[0];
+
+          openRescheduleModal({
+            appointment,
+            targetDoctor: doctor,
+            newDate: isoDate,
+            newTime: slot.label,
+
+            onConfirm: () => {
+              moveAppointment(
+                appointment,
+                isoDate,
+                slot.label,
+                doctor
+              );
+            }
+          });
+
+          return;
         }
-      );
 
-      slotElement.addEventListener(
-        'dragleave',
-        () => {
-
-          slotElement.classList.remove(
-            'drag-over'
-          );
-        }
-      );
-
-      slotElement.addEventListener(
-        'drop',
-        event => {
-
-          event.preventDefault();
-
-          slotElement.classList.remove(
-            'drag-over'
-          );
-
-          const appointment =
-            calendarState.draggingAppointment;
-
-          if (!appointment) {
-            return;
-          }
-
-          const dayKey =
-            getWeekdayKey(
-              parseLocalDate(isoDate)
-            );
-
-          const availableDoctors =
-            getAvailableDoctorsForSlot(
-              isoDate,
-              slot.id,
-              slot.period,
-              dayKey
-            );
-
-          // nenhum médico
-          if (!availableDoctors.length) {
-            return;
-          }
-
-          // somente um médico
-          if (availableDoctors.length === 1) {
-
-            const doctor = availableDoctors[0];
+        // múltiplos médicos
+        openDoctorPicker({
+          event,
+          doctors: availableDoctors,
+          onSelect: doctor => {
 
             openRescheduleModal({
               appointment,
@@ -1445,35 +1259,9 @@ function renderDayColumn(date, isoDate) {
                 );
               }
             });
-
-            return;
           }
-
-          // múltiplos médicos
-          openDoctorPicker({
-            event,
-            doctors: availableDoctors,
-            onSelect: doctor => {
-
-              openRescheduleModal({
-                appointment,
-                targetDoctor: doctor,
-                newDate: isoDate,
-                newTime: slot.label,
-
-                onConfirm: () => {
-                  moveAppointment(
-                    appointment,
-                    isoDate,
-                    slot.label,
-                    doctor
-                  );
-                }
-              });
-            }
-          });
-        }
-      );
+        });
+      });
     }
 
     
@@ -1500,16 +1288,11 @@ function getVisibleSlots() {
 
 function syncHorizontalScroll() {
 
-  const scrollBody =
-    document.getElementById('calendar-scroll-body');
-
-  const daysRow =
-    document.getElementById('calendar-days-row');
+  const scrollBody = document.getElementById('calendar-scroll-body');
+  const daysRow = document.getElementById('calendar-days-row');
 
   scrollBody.addEventListener('scroll', () => {
-
-    daysRow.style.transform =
-      `translateX(-${scrollBody.scrollLeft}px)`;
+    daysRow.style.transform = `translateX(-${scrollBody.scrollLeft}px)`;
   });
 }
 
@@ -1582,25 +1365,27 @@ function syncDoctorFilter() {
 
 function applyDoctorPeriods(doctor) {
 
-  const periods = doctor.periods || [];
+  // reseta todos
+  calendarState.periods = {
+    manha: false,
+    tarde: false,
+    noite: false
+  };
 
-  Object.keys(calendarState.periods).forEach(period => {
+  // ativa somente os do médico
+  doctor.periods.forEach(period => {
 
-    const enabled = periods.includes(period);
+    calendarState.periods[period] =
+      true;
+  });
 
-    calendarState.periods[period] = enabled;
+  // atualiza UI
+  document.querySelectorAll('.calendar-period-btn').forEach(btn => {
+    const period = btn.dataset.period;
 
-    const button = document.querySelector(
-      `.calendar-period-btn[data-period="${period}"]`
-    );
-
-    if (!button) return;
-
-    button.disabled = !enabled;
-
-    button.classList.toggle(
+    btn.classList.toggle(
       'calendar-period-btn--inactive',
-      !enabled
+      !calendarState.periods[period]
     );
   });
 }
