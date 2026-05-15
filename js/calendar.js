@@ -23,11 +23,18 @@ const specialtyFilter = document.getElementById('calendar-specialty-filter');
 const doctorFilter = document.getElementById('calendar-doctor-filter');
 const clinicFilter = document.getElementById('calendar-clinic-filter');
 const weekSelect = document.getElementById('calendar-week-select');
+const trashZone = document.getElementById('calendar-trash-zone');
+
+const modal = document.getElementById('calendar-reschedule-modal');
+const body = document.getElementById('calendar-reschedule-modal-body');
+const confirmButton = document.getElementById('calendar-reschedule-confirm');
+const cancelButton = document.getElementById('calendar-reschedule-cancel');
+const title = document.getElementById('calendar-reschedule-modal-title');
 
 initCalendarPage();
 
 function initCalendarPage() {
-  renderHeader({ activePage: 'agendamento', isSubpage: true });
+  renderHeader({ activePage: 'calendar', isSubpage: true });
   renderFooter();
   initializeAppointments();
   syncFilters();
@@ -335,6 +342,32 @@ function bindEvents() {
       renderCalendar();
     });
   });
+
+  if (trashZone) {
+
+    trashZone?.addEventListener('click',() => {
+      const appointment = calendarState.selectedAppointment;
+      if (!appointment) { return; }
+      openCancelAppointmentModal(appointment);
+    });
+
+    trashZone.addEventListener('dragover',event => {
+      event.preventDefault();
+      trashZone.classList.add('calendar-trash-zone--drag-over');
+    });
+
+    trashZone.addEventListener('dragleave',() => {
+      trashZone.classList.remove('calendar-trash-zone--drag-over');
+    });
+
+    trashZone.addEventListener('drop',event => {
+      event.preventDefault();
+      trashZone.classList.remove('calendar-trash-zone--drag-over');
+      const appointment = calendarState.draggingAppointment;
+      if (!appointment) { return; }
+      openCancelAppointmentModal(appointment);
+    });
+  }
 }
 
 function renderTimeColumn() {
@@ -473,10 +506,8 @@ function openScheduleRedirectModal({
   newTime
 }) {
 
-  const modal = document.getElementById('calendar-reschedule-modal');
-  const body = document.getElementById('calendar-reschedule-modal-body');
-  const confirmButton = document.getElementById('calendar-reschedule-confirm');
-  const cancelButton = document.getElementById('calendar-reschedule-cancel');
+  title.innerHTML =
+    'Agendar consulta';
 
   body.innerHTML = `
 
@@ -540,25 +571,7 @@ function openRescheduleModal({
   onConfirm
 }) {
 
-  const modal =
-    document.getElementById(
-      'calendar-reschedule-modal'
-    );
-
-  const body =
-    document.getElementById(
-      'calendar-reschedule-modal-body'
-    );
-
-  const confirmButton =
-    document.getElementById(
-      'calendar-reschedule-confirm'
-    );
-
-  const cancelButton =
-    document.getElementById(
-      'calendar-reschedule-cancel'
-    );
+  title.innerHTML = 'Reagendar consulta';
 
   body.innerHTML = `
 
@@ -632,6 +645,169 @@ function openRescheduleModal({
 
     onConfirm();
   };
+}
+
+function openCancelAppointmentModal(appointment) {
+
+  title.innerHTML =
+    'Deletar consulta';
+
+  body.innerHTML = `
+
+    <div
+      class="
+        calendar-reschedule-modal__card
+      "
+    >
+
+      <div
+        class="
+          calendar-reschedule-modal__label
+        "
+      >
+        Consulta
+      </div>
+
+      <strong>
+        ${appointment.specialty}
+      </strong>
+
+      <div>
+        ${appointment.doctor}
+      </div>
+
+      <div>
+        ${appointment.date}
+        -
+        ${appointment.time}
+      </div>
+
+      <div>
+        ${appointment.clinic}
+      </div>
+
+    </div>
+
+    <p class="mb-0">
+      Deseja cancelar esta consulta?
+    </p>
+  `;
+
+  modal.classList.add(
+    'calendar-reschedule-modal--open'
+  );
+
+  const close = () => {
+
+    modal.classList.remove(
+      'calendar-reschedule-modal--open'
+    );
+  };
+
+  cancelButton.onclick = close;
+
+  confirmButton.onclick = () => {
+
+    close();
+
+    cancelAppointment(
+      appointment
+    );
+  };
+}
+
+function cancelAppointment(appointment) {
+
+  const userAppointments =
+    getUserAppointmentsData();
+
+  const appointmentsData =
+    getAppointmentsData();
+
+  const appointmentIndex =
+    userAppointments.findIndex(
+      app => {
+
+        return (
+          app.date ===
+            appointment.date &&
+
+          app.time ===
+            appointment.time &&
+
+          app.doctor ===
+            appointment.doctor
+        );
+      }
+    );
+
+  if (appointmentIndex === -1) {
+    return;
+  }
+
+  const doctor =
+    DoctorsData.find(
+      doctor =>
+        doctor.name ===
+        appointment.doctor
+    );
+
+  if (!doctor) {
+    return;
+  }
+
+  const doctorSchedule =
+    appointmentsData.find(
+      item =>
+        item.doctorId ===
+        doctor.id
+    );
+
+  if (!doctorSchedule) {
+    return;
+  }
+
+  const slot =
+    SchedulingData.timeSlots.find(
+      slot =>
+        slot.label ===
+        appointment.time
+    );
+
+  if (!slot) {
+    return;
+  }
+
+  doctorSchedule.schedule[
+    appointment.date
+  ] = (
+    doctorSchedule.schedule[
+      appointment.date
+    ] || []
+  ).filter(
+    slotId =>
+      slotId !== slot.id
+  );
+
+  userAppointments.splice(
+    appointmentIndex,
+    1
+  );
+
+  saveAppointmentsData(
+    appointmentsData
+  );
+
+  saveUserAppointmentsData(
+    userAppointments
+  );
+
+  calendarState.selectedAppointment =
+    null;
+
+  renderAppointmentsCards();
+
+  renderCalendar();
 }
 
 function moveAppointment(
@@ -753,6 +929,12 @@ function isSameAppointment(a, b) {
 }
 
 function renderAppointmentsCards() {
+
+
+  trashZone?.classList.toggle(
+    'calendar-trash-zone--visible',
+    !!calendarState.selectedAppointment
+  );
 
   const userAppointments = getUserAppointmentsData();
 

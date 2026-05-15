@@ -19,7 +19,7 @@
 
   <div id="header-placeholder"></div>
 
-  <main class="py-4">
+  <main class="p-4">
     <div class="container-fluid px-3 px-xl-4">
 
       <div class="d-flex flex-column gap-4">
@@ -28,6 +28,7 @@
         <section class="dashboard-card">
 
           <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+
             <h2 class="dashboard-card__title mb-0">
               Selecione o agendamento que deseja alterar
             </h2>
@@ -35,6 +36,11 @@
             <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
               0 consultas
             </span>
+
+            <div class="calendar-trash-zone" id="calendar-trash-zone">
+              <i class="bi bi-trash3"></i>
+              <span> Cancelar </span>
+            </div>
           </div>
 
           <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
@@ -89,11 +95,11 @@
             <div class="calendar-top-row">
 
               <!-- sidebar header -->
-              <div class="calendar-top-row__sidebar">
-                <label class="schedule-field-label mb-2 d-block">
+              <div class="calendar-top-row__sidebar px-3">
+                <label class="schedule-field-label m-2 d-block">
                   Semana
                 </label>
-                <select class="form-select calendar-select"id="calendar-week-select"></select>
+                <select class="form-select calendar-select mb-2"id="calendar-week-select"></select>
               </div>
 
               <!-- datas -->
@@ -156,9 +162,7 @@
   <!-- Modal de confirmação de reagendamento -->
   <div id="calendar-reschedule-modal" class="calendar-reschedule-modal">
     <div class="calendar-reschedule-modal__content">
-      <div class="calendar-reschedule-modal__title">
-        Reagendar consulta
-      </div>
+      <div class="calendar-reschedule-modal__title" id="calendar-reschedule-modal-title"></div>
       <div id="calendar-reschedule-modal-body"></div>
       <div class="calendar-reschedule-modal__actions">
         <button id="calendar-reschedule-cancel" class="btn btn-secondary">
