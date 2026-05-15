@@ -312,20 +312,6 @@ function renderScheduleClinic() {
     .join('');
 }
 
-function getMinimumDaysByLevel(level) {
-  if (level >= 4) return 0;
-  if (level >= 2) return 7;
-  return 14;
-}
-
-function getSpecialtyLevel(specialtyName) {
-  const specialty = UserRanking.specialties.find(function (item) {
-    return item.name === specialtyName;
-  });
-
-  return specialty ? specialty.level : 0;
-}
-
 function renderScheduleDate(specialtyName = null) {
   const input = document.querySelector('#schedule-date');
   const message = document.querySelector('#schedule-date-message');

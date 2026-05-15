@@ -359,6 +359,20 @@ function occupyAppointmentSlot({
     saveAppointmentsData(appointmentsData);
 }
 
+function getMinimumDaysByLevel(level) {
+    if (level >= 4) return 0;
+    if (level >= 2) return 7;
+    return 14;
+}
+
+function getSpecialtyLevel(specialtyName) {
+    const specialty = UserRanking.specialties.find(function (item) {
+        return item.name === specialtyName;
+    });
+
+    return specialty ? specialty.level : 0;
+}
+
 /** Mock: “Sair” zera o flag para a próxima abertura da raiz exibir o login de novo. */
 document.addEventListener('click', (event) => {
     const link = event.target.closest('a[data-mock-entrada-clear="1"]');

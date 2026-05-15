@@ -159,9 +159,7 @@ function createWeekOption(startDate, endDate) {
 function populateWeeks() {
 
   weekSelect.innerHTML = '';
-
   const today = new Date();
-
   today.setHours(0, 0, 0, 0);
 
   // PRIMEIRA SEMANA
@@ -170,87 +168,60 @@ function populateWeeks() {
 
   // termina no próximo sábado
   const firstWeekEnd = new Date(today);
-
-  firstWeekEnd.setDate(
-    today.getDate() + (6 - today.getDay())
-  );
-
-  weekSelect.innerHTML += createWeekOption(
-    firstWeekStart,
-    firstWeekEnd
-  );
+  firstWeekEnd.setDate(today.getDate() + (6 - today.getDay()));
+  weekSelect.innerHTML += createWeekOption(firstWeekStart,firstWeekEnd);
 
   // PRÓXIMAS SEMANAS
   // começam no próximo domingo
   const nextSunday = new Date(firstWeekEnd);
-
   nextSunday.setDate(firstWeekEnd.getDate() + 1);
 
   for (let i = 0; i < 10; i++) {
 
     const weekStart = new Date(nextSunday);
-
-    weekStart.setDate(
-      nextSunday.getDate() + (i * 7)
-    );
-
+    weekStart.setDate(nextSunday.getDate() + (i * 7));
     const weekEnd = new Date(weekStart);
-
-    weekEnd.setDate(
-      weekStart.getDate() + 6
-    );
-
-    weekSelect.innerHTML += createWeekOption(
-      weekStart,
-      weekEnd
-    );
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekSelect.innerHTML += createWeekOption(weekStart, weekEnd);
   }
 
   // começa na semana atual
-  calendarState.weekStart =
-    formatDate(firstWeekStart);
+  calendarState.weekStart = formatDate(firstWeekStart);
 
-  weekSelect.value =
-    calendarState.weekStart;
+  weekSelect.value = calendarState.weekStart;
 }
 
 function scrollCalendarToDate(isoDate) {
 
-  const scrollBody =
-    document.getElementById(
-      'calendar-scroll-body'
-    );
+  const scrollBody = document.getElementById('calendar-scroll-body');
+  const columns = [...document.querySelectorAll('.calendar-day-column')];
+  if (!columns.length) { return; }
 
-  const columns =
-    document.querySelectorAll(
-      '.calendar-day-column'
-    );
+  // tenta encontrar data exata
+  let targetColumn = columns.find(column => {
+    const firstSlot = column.querySelector('.calendar-slot');
+    return (firstSlot && firstSlot.dataset.date === isoDate);
+  });
 
-  const targetColumn = [...columns].find(
-    column => {
-
-      const firstSlot =
-        column.querySelector('.calendar-slot');
-
-      return (
-        firstSlot &&
-        firstSlot.dataset.date === isoDate
-      );
-    }
-  );
-
+  // fallback:
+  // pega próximo dia disponível
   if (!targetColumn) {
-    return;
+    targetColumn = columns.find(column => {
+      const firstSlot =column.querySelector('.calendar-slot');
+      return (firstSlot && firstSlot.dataset.date > isoDate);
+    });
   }
 
-  const sidebar =
-    document.querySelector('.calendar-sidebar');
+  // fallback final:
+  // primeiro dia renderizado
+  if (!targetColumn) { targetColumn = columns[0]; }
+  if (!targetColumn) { return; }
 
-  const sidebarWidth =
-    sidebar?.offsetWidth || 0;
+  const sidebar = document.querySelector('.calendar-sidebar');
 
-  const targetLeft =
-    targetColumn.offsetLeft - sidebarWidth;
+  const sidebarWidth = sidebar?.offsetWidth || 0;
+
+  const targetLeft = targetColumn.offsetLeft - sidebarWidth;
 
   scrollBody.scrollTo({
     left: targetLeft,
@@ -338,7 +309,7 @@ function bindEvents() {
 
   weekSelect.addEventListener('change', () => {
     calendarState.weekStart = weekSelect.value;
-    scrollCalendarToDate( calendarState.weekStart );
+    scrollCalendarToDate(calendarState.weekStart);
   });
 
   document.querySelectorAll('.calendar-period-btn').forEach(btn => {
@@ -1022,107 +993,84 @@ function renderDayColumn(date, isoDate) {
     slotElement.style.height = `${SLOT_HEIGHT}px`;
     const dayKey = getWeekdayKey(date);
 
-    const availableDoctors =
-      getAvailableDoctorsForSlot(
-        isoDate,
-        slot.id,
-        slot.period,
-        dayKey
-      );
+    const availableDoctors = getAvailableDoctorsForSlot(
+      isoDate,
+      slot.id,
+      slot.period,
+      dayKey
+    );
 
-      const hasAvailableDoctor = availableDoctors.length > 0;
+    const hasAvailableDoctor = availableDoctors.length > 0;
+
+    const blockedByLevel =isDateBlockedByLevel(isoDate);
 
     occupiedByUser = userAppointments.some(app => {
 
       // data/hora
-      if (
-        app.date !== isoDate ||
-        app.time !== slot.label
-      ) {
+      if ( app.date !== isoDate || app.time !== slot.label ) {
         return false;
       }
 
       // especialidade
-      if (
-        calendarState.specialty &&
-        app.specialty !== calendarState.specialty
-      ) {
+      if ( calendarState.specialty && app.specialty !== calendarState.specialty) {
         return false;
       }
 
       // clínica
-      if (
-        calendarState.clinic &&
-        app.clinic !== calendarState.clinic
-      ) {
+      if (calendarState.clinic && app.clinic !== calendarState.clinic) {
         return false;
       }
 
       // médico 
       const selectedDoctor = DoctorsData.find(
-        doctor =>
-          String(doctor.id) ===
-          String(calendarState.doctor)
-      );
+        doctor => String(doctor.id) === String(calendarState.doctor));
 
       if (
-        calendarState.doctor &&
-        selectedDoctor &&
-        app.doctor !== selectedDoctor.name
+        calendarState.doctor && selectedDoctor && app.doctor !== selectedDoctor.name
       ) {
         return false;
       }
 
       // período
-      if (
-        slot.period &&
-        app.period &&
-        slot.period !== app.period
-      ) {
+      if (slot.period && app.period && slot.period !== app.period) {
         return false;
       }
 
       return true;
     });
 
-    if (occupiedByUser) {
+    if (occupiedByUser) { 
       slotElement.draggable = true;
+      const userAppointment = userAppointments.find(app => {
+        return (app.date === isoDate && app.time === slot.label);
+      });
 
-      const userAppointment =
-        userAppointments.find(app => {
-
-          return (
-            app.date === isoDate &&
-            app.time === slot.label
-          );
-        });
-
-      slotElement.addEventListener('dragstart',
-        () => {
-          calendarState.selectedAppointment = userAppointment;
-          calendarState.draggingAppointment = userAppointment;
-          renderAppointmentsCards();
-        }
-      );
+      slotElement.addEventListener('dragstart', () => {
+        calendarState.selectedAppointment = userAppointment;
+        calendarState.draggingAppointment = userAppointment;
+        renderAppointmentsCards();
+      });
 
       slotElement.addEventListener( 'click', () => {
-          selectAppointmentCard( userAppointment );
-        }
-      );
+        selectAppointmentCard(userAppointment);
+      });
 
-      slotElement.addEventListener( 'dragend',
-        () => {
+      slotElement.addEventListener( 'dragend', () => {
+        calendarState.draggingAppointment = null;
+      });
 
-          calendarState.draggingAppointment =
-            null;
-        }
-      );
       slotElement.classList.add('calendar-slot--user');
-    }
-    else if (!hasAvailableDoctor) {
+
+    // BLOQUEADO POR REGRA
+    }else if (blockedByLevel) {
+      slotElement.classList.add('calendar-slot--blocked');
+
+    // OCUPADO
+    } else if (!hasAvailableDoctor && !blockedByLevel) {
       slotElement.classList.add('calendar-slot--occupied');
-    }
-    else {
+    
+    // DISPONIVEL
+    } else {
       slotElement.classList.add('calendar-slot--available');
       
       slotElement.addEventListener('click',() => {
@@ -1484,4 +1432,29 @@ function getAvailableDoctorsForSlot(
   });
 
   return doctors;
+}
+
+function isDateBlockedByLevel(isoDate ) {
+  const specialty = calendarState.specialty;
+
+  if (!specialty) {return false; }
+
+  const level = getSpecialtyLevel(specialty);
+  const minimumDays = getMinimumDaysByLevel(level);
+
+  if (minimumDays <= 0) {return false;}
+
+  const today = new Date();
+
+  today.setHours(0,0,0,0);
+
+  const limitDate = new Date(today);
+
+  limitDate.setDate(today.getDate() + minimumDays);
+
+  const targetDate = parseLocalDate(isoDate);
+
+  targetDate.setHours(0,0,0,0);
+
+  return targetDate < limitDate;
 }

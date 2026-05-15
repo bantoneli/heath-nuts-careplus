@@ -1614,7 +1614,7 @@ a {
 
 .calendar-periods {
   display: grid;
-  grid-template-columns: 130px 64px;
+  grid-template-columns: 1fr 64px;
   min-height: 100%;
 }
 
@@ -1682,7 +1682,6 @@ a {
 
 .calendar-columns {
   display: flex;
-  
 }
 
 .calendar-day-column {
@@ -1692,7 +1691,6 @@ a {
 }
 
 .calendar-time-slot {
-  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1725,6 +1723,15 @@ a {
   background: rgba(30,80,160,.16);
 }
 
+.calendar-slot--blocked {
+  background: rgba(255, 212, 95, .25);
+}
+
+.calendar-slot--blocked
+.calendar-slot__dot {
+  background:#FFD45F;
+}
+
 .calendar-slot__dot {
   width: 10px;
   height: 10px;
@@ -1753,16 +1760,11 @@ a {
 }
 
 .calendar-top-row {
-
   display: flex;
-
   position: sticky;
   top: 0;
-
   z-index: 200;
-
   background: white;
-
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -1776,20 +1778,14 @@ a {
 }
 
 .calendar-scroll-body {
-
   display: flex;
-
   overflow: auto;
-
   flex: 1;
-
   position: relative;
 }
 
 .calendar-days-row-wrapper {
-
   overflow: hidden;
-
   flex: 1;
 }
 
@@ -1821,18 +1817,9 @@ a {
 }
 
 @keyframes pulseSlot {
-
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.08);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  0% {transform: scale(1);}
+  50% {transform: scale(1.08);}
+  100% {transform: scale(1);}
 }
 
 .calendar-slot--available.drag-over {
@@ -1904,7 +1891,6 @@ a {
 }
 
 .calendar-reschedule-modal__content {
-
   background: white;
   width: 520px;
   max-width: calc(100vw - 32px);
@@ -1936,6 +1922,43 @@ a {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;
+}
+
+.calendar-slots-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calendar-slots-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.calendar-slots-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.calendar-slots-legend__dot--available {
+  background: #62C479;
+}
+
+.calendar-slots-legend__dot--occupied {
+  background: #dc3545;
+}
+
+.calendar-slots-legend__dot--user {
+  background: var(--color-primary);
+}
+
+.calendar-slots-legend__dot--blocked {
+  background:#FFD45F;
 }
 
 @media (max-width: 991px) {

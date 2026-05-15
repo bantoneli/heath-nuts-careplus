@@ -26,62 +26,64 @@
 
       <div class="d-flex flex-column gap-4">
 
-        <!-- CARD 1 -->
-        <section class="dashboard-card">
+        <div>
+          <!-- CARD 1 AGENDAMENTOS -->
+          <section class="dashboard-card">
 
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <h2 class="dashboard-card__title mb-0">
-              Selecione o agendamento que deseja alterar
-            </h2>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <h2 class="dashboard-card__title mb-0">
+                Selecione o agendamento que deseja alterar
+              </h2>
 
-            <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
-              0 consultas
-            </span>
-          </div>
-
-          <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
-
-        </section>
-
-        <!-- CARD 2 -->
-        <section class="dashboard-card">
-
-          <div class="row g-3">
-
-            <div class="col-lg-4">
-              <label class="schedule-field-label mb-2 d-block">
-                Especialidade
-              </label>
-
-              <select class="form-select calendar-select" id="calendar-specialty-filter">
-                <option value="">Todas especialidades</option>
-              </select>
+              <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
+                0 consultas
+              </span>
             </div>
 
-            <div class="col-lg-4">
-              <label class="schedule-field-label mb-2 d-block">
-                Médico
-              </label>
+            <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
 
-              <select class="form-select calendar-select" id="calendar-doctor-filter">
-                <option value="">Todos médicos</option>
-              </select>
+          </section>
+
+          <!-- CARD 2 FILTROS -->
+          <section class="dashboard-card">
+
+            <div class="row g-3">
+
+              <div class="col-lg-4">
+                <label class="schedule-field-label mb-2 d-block">
+                  Especialidade
+                </label>
+
+                <select class="form-select calendar-select" id="calendar-specialty-filter">
+                  <option value="">Todas especialidades</option>
+                </select>
+              </div>
+
+              <div class="col-lg-4">
+                <label class="schedule-field-label mb-2 d-block">
+                  Médico
+                </label>
+
+                <select class="form-select calendar-select" id="calendar-doctor-filter">
+                  <option value="">Todos médicos</option>
+                </select>
+              </div>
+
+              <div class="col-lg-4">
+                <label class="schedule-field-label mb-2 d-block">
+                  Clínica
+                </label>
+
+                <select class="form-select calendar-select" id="calendar-clinic-filter">
+                  <option value="">Todas clínicas</option>
+                </select>
+              </div>
+
             </div>
 
-            <div class="col-lg-4">
-              <label class="schedule-field-label mb-2 d-block">
-                Clínica
-              </label>
-
-              <select class="form-select calendar-select" id="calendar-clinic-filter">
-                <option value="">Todas clínicas</option>
-              </select>
-            </div>
-
-          </div>
-
-        </section>
-
+          </section>
+          
+        </div>
         <!-- CARD 3 -->
         <section class="dashboard-card p-0 overflow-hidden">
 
@@ -110,11 +112,30 @@
               <!-- SIDEBAR -->
               <div class="calendar-sidebar">
                 <div class="calendar-periods">
-                  <div class="calendar-periods-buttons d-flex flex-column gap-5 px-3 py-3" id="calendar-periods-buttons">
+                  <div class="calendar-periods-buttons d-flex flex-column gap-2 px-3 py-2" id="calendar-periods-buttons">
                     <button class="calendar-period-btn" data-period="manha">Manhã</button>
                     <button class="calendar-period-btn" data-period="tarde">Tarde </button>
                     <button class="calendar-period-btn" data-period="noite">Noite</button>
+                    <div class="calendar-slots-legend">
+                      <div class="calendar-slots-legend__item">
+                        <span class="calendar-slots-legend__dot calendar-slots-legend__dot--available"></span>
+                        Disponível
+                      </div>
+                      <div class="calendar-slots-legend__item">
+                        <span class="calendar-slots-legend__dot calendar-slots-legend__dot--occupied"></span>
+                        Ocupado
+                      </div>
+                      <div class="calendar-slots-legend__item">
+                        <span class="calendar-slots-legend__dot calendar-slots-legend__dot--user"></span>
+                        Minha consulta
+                      </div>
+                      <div class="calendar-slots-legend__item">
+                        <span class="calendar-slots-legend__dot calendar-slots-legend__dot--blocked"></span>
+                        Bloqueado
+                      </div>
+                    </div>
                   </div>
+
                   <div class="calendar-time-column" id="calendar-time-column"></div>
                 </div>
               </div>
