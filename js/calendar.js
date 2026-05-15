@@ -471,6 +471,12 @@ function openDoctorPicker({
   const picker = document.getElementById('calendar-doctor-picker');
   picker.innerHTML = '';
 
+  const closePicker = () => {
+    picker.style.display = 'none';
+    picker.innerHTML = '';
+    document.removeEventListener('mousedown', handleOutsideClick);
+  };
+
   doctors.forEach(doctor => {
 
     const item = document.createElement('div');
@@ -488,7 +494,7 @@ function openDoctorPicker({
     `;
 
     item.addEventListener('click', () => {
-      picker.style.display = 'none';
+      closePicker();
       onSelect(doctor);
     });
 
@@ -497,7 +503,23 @@ function openDoctorPicker({
 
   picker.style.display = 'block';
   picker.style.left = `${event.clientX + 8}px`;
-  picker.style.top = `${event.clientY + 8}px`;
+  picker.style.top = `${event.clientY - 140}px`;
+
+  const handleOutsideClick = event => {
+    const clickedInside = picker.contains(event.target);
+    if (!clickedInside) {closePicker();}
+  };
+
+  // timeout evita fechar
+  // no mesmo click que abriu
+  setTimeout(() => {
+
+    document.addEventListener(
+      'mousedown',
+      handleOutsideClick
+    );
+
+  }, 0);
 }
 
 function openScheduleRedirectModal({
