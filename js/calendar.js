@@ -718,95 +718,51 @@ function openCancelAppointmentModal(appointment) {
 
 function cancelAppointment(appointment) {
 
-  const userAppointments =
-    getUserAppointmentsData();
+  const userAppointments = getUserAppointmentsData();
+  const appointmentsData = getAppointmentsData();
 
-  const appointmentsData =
-    getAppointmentsData();
-
-  const appointmentIndex =
-    userAppointments.findIndex(
-      app => {
-
-        return (
-          app.date ===
-            appointment.date &&
-
-          app.time ===
-            appointment.time &&
-
-          app.doctor ===
-            appointment.doctor
-        );
-      }
+  const appointmentIndex = userAppointments.findIndex(app => {
+    return (
+      app.date ===appointment.date &&
+      app.time === appointment.time &&
+      app.doctor === appointment.doctor
     );
+  });
 
-  if (appointmentIndex === -1) {
-    return;
+  if (appointmentIndex === -1) { return; }
+
+  const doctor = DoctorsData.find(
+    doctor => doctor.name === appointment.doctor);
+
+  if (!doctor) {  return; }
+
+  const doctorSchedule = appointmentsData.find(
+    item => item.doctorId === doctor.id);
+
+  if (!doctorSchedule) { return; }
+
+  const isFittingAppointment = appointment.time === 'encaixe';
+
+  const slot = SchedulingData.timeSlots.find(
+    slot => slot.label === appointment.time );
+
+  // consulta normal
+  if (!isFittingAppointment && slot) {
+    doctorSchedule.schedule[appointment.date] = (
+      doctorSchedule.schedule[appointment.date] || []
+    ).filter(slotId => slotId !== slot.id);
+
+    // limpa arrays vazios
+    if (!doctorSchedule.schedule[appointment.date].length) {
+      delete doctorSchedule.schedule[appointment.date];
+    }
   }
 
-  const doctor =
-    DoctorsData.find(
-      doctor =>
-        doctor.name ===
-        appointment.doctor
-    );
-
-  if (!doctor) {
-    return;
-  }
-
-  const doctorSchedule =
-    appointmentsData.find(
-      item =>
-        item.doctorId ===
-        doctor.id
-    );
-
-  if (!doctorSchedule) {
-    return;
-  }
-
-  const slot =
-    SchedulingData.timeSlots.find(
-      slot =>
-        slot.label ===
-        appointment.time
-    );
-
-  if (!slot) {
-    return;
-  }
-
-  doctorSchedule.schedule[
-    appointment.date
-  ] = (
-    doctorSchedule.schedule[
-      appointment.date
-    ] || []
-  ).filter(
-    slotId =>
-      slotId !== slot.id
-  );
-
-  userAppointments.splice(
-    appointmentIndex,
-    1
-  );
-
-  saveAppointmentsData(
-    appointmentsData
-  );
-
-  saveUserAppointmentsData(
-    userAppointments
-  );
-
-  calendarState.selectedAppointment =
-    null;
-
+  userAppointments.splice(appointmentIndex, 1);
+  saveAppointmentsData(appointmentsData);
+  saveUserAppointmentsData(userAppointments);
+  calendarState.selectedAppointment = null;
   renderAppointmentsCards();
-
   renderCalendar();
 }
 
