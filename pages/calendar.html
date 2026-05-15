@@ -22,68 +22,64 @@
   <main class="py-4">
     <div class="container-fluid px-3 px-xl-4">
 
-
-
       <div class="d-flex flex-column gap-4">
 
-        <div>
-          <!-- CARD 1 AGENDAMENTOS -->
-          <section class="dashboard-card">
+        <!-- CARD 1 AGENDAMENTOS -->
+        <section class="dashboard-card">
 
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-              <h2 class="dashboard-card__title mb-0">
-                Selecione o agendamento que deseja alterar
-              </h2>
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h2 class="dashboard-card__title mb-0">
+              Selecione o agendamento que deseja alterar
+            </h2>
 
-              <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
-                0 consultas
-              </span>
+            <span class="badge-pts badge-pts--yellow" id="calendar-appointments-count">
+              0 consultas
+            </span>
+          </div>
+
+          <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
+
+        </section>
+
+        <!-- CARD 2 FILTROS -->
+        <section class="dashboard-card">
+
+          <div class="row g-3">
+
+            <div class="col-lg-4">
+              <label class="schedule-field-label mb-2 d-block">
+                Especialidade
+              </label>
+
+              <select class="form-select calendar-select" id="calendar-specialty-filter">
+                <option value="">Todas especialidades</option>
+              </select>
             </div>
 
-            <div class="calendar-appointments-row" id="calendar-appointments-row"></div>
+            <div class="col-lg-4">
+              <label class="schedule-field-label mb-2 d-block">
+                Médico
+              </label>
 
-          </section>
-
-          <!-- CARD 2 FILTROS -->
-          <section class="dashboard-card">
-
-            <div class="row g-3">
-
-              <div class="col-lg-4">
-                <label class="schedule-field-label mb-2 d-block">
-                  Especialidade
-                </label>
-
-                <select class="form-select calendar-select" id="calendar-specialty-filter">
-                  <option value="">Todas especialidades</option>
-                </select>
-              </div>
-
-              <div class="col-lg-4">
-                <label class="schedule-field-label mb-2 d-block">
-                  Médico
-                </label>
-
-                <select class="form-select calendar-select" id="calendar-doctor-filter">
-                  <option value="">Todos médicos</option>
-                </select>
-              </div>
-
-              <div class="col-lg-4">
-                <label class="schedule-field-label mb-2 d-block">
-                  Clínica
-                </label>
-
-                <select class="form-select calendar-select" id="calendar-clinic-filter">
-                  <option value="">Todas clínicas</option>
-                </select>
-              </div>
-
+              <select class="form-select calendar-select" id="calendar-doctor-filter">
+                <option value="">Todos médicos</option>
+              </select>
             </div>
 
-          </section>
-          
-        </div>
+            <div class="col-lg-4">
+              <label class="schedule-field-label mb-2 d-block">
+                Clínica
+              </label>
+
+              <select class="form-select calendar-select" id="calendar-clinic-filter">
+                <option value="">Todas clínicas</option>
+              </select>
+            </div>
+
+          </div>
+
+        </section>
+        
         <!-- CARD 3 -->
         <section class="dashboard-card p-0 overflow-hidden">
 
