@@ -39,18 +39,27 @@ const NotificationsData = {
       label: 'Hoje',
       items: [
         {
-          icon: 'bi-calendar-check-fill',
+          icon: 'bi-car-front-fill',
           iconColor: 'primary',
-          title: 'Lembrete de consulta amanhã às 09:30',
-          subtitle: 'Clínica Vida+ Centro • Check-in antecipado garante +30 pts',
+          title: 'Saía de casa com 47min de antecedência',
+          subtitle: 'De acordo com informações do trânsito, este é o tempo estimado para chegar saindo de casa. Se estiver no trabalho, saia com 25min de antecedência.',
           pts: 30,
           action: { label: 'Ver rota', icon: 'bi-signpost-split-fill' },
           unread: true
         },
         {
+          icon: 'bi-patch-check-fill',
+          iconColor: 'accent',
+          title: 'Deseja confirmar sua consulta de hoje?',
+          subtitle: 'A confirmação antecipada garante melhor organização do atendimento e rende +10 pts.',
+          pts: 10,
+          action: { label: 'Confirmar', icon: 'bi-check2-circle' },
+          unread: true
+        },
+        {
           icon: 'bi-graph-up-arrow',
           iconColor: 'accent',
-          title: 'Você subiu para 12º no ranking da empresa',
+          title: 'Você subiu para 2º no ranking da empresa em Psicologia',
           subtitle: 'Parabéns! Continue registrando hábitos diários.',
           badge: 'Novo',
           unread: true
@@ -60,6 +69,23 @@ const NotificationsData = {
     {
       label: 'Ontem',
       items: [
+        {
+          icon: 'bi-cloud-rain-heavy-fill',
+          iconColor: 'primary',
+          title: 'Previsão de chuva para amanhã',
+          subtitle: 'Há possibilidade de trânsito intenso e atrasos. Recomendamos sair com um pouco mais de antecedência.',
+          action: { label: 'Ver previsão', icon: 'bi-cloud-drizzle-fill' },
+          unread: false
+        },
+        {
+          icon: 'bi-calendar-check-fill',
+          iconColor: 'primary',
+          title: 'Lembrete de consulta amanhã às 09:30',
+          subtitle: 'Clínica Vida+ Centro • Check-in antecipado garante +30 pts',
+          pts: 30,
+          action: { label: 'Ver rota', icon: 'bi-signpost-split-fill' },
+          unread: false
+        },
         {
           icon: 'bi-gift-fill',
           iconColor: 'primary',
@@ -83,11 +109,36 @@ const NotificationsData = {
       label: 'Esta semana',
       items: [
         {
+          icon: 'bi-chat-dots-fill',
+          iconColor: 'primary',
+          title: 'Abriu uma vaga de encaixe hoje às 19h com sua psicóloga',
+          subtitle: 'Deseja confirmar este horário? A vaga ficará disponível por tempo limitado.',
+          action: { label: 'Confirmar horário', icon: 'bi-check2-circle' },
+          unread: true
+        },
+        {
+          icon: 'bi-clipboard2-pulse-fill',
+          iconColor: 'accent',
+          title: 'Questionário pré-consulta disponível',
+          subtitle: 'Preencha antes da consulta com sua nutricionista e ganhe +50 pts.',
+          pts: 50,
+          action: { label: 'Responder', icon: 'bi-pencil-square' },
+          unread: true
+        },
+        {
           icon: 'bi-bell-fill',
           iconColor: 'primary',
           title: 'Notificações inteligentes ativadas',
           subtitle: 'Receba alertas de agendamentos, pontos e benefícios relevantes',
           action: { label: 'Configurar', icon: null },
+          unread: false
+        },
+        {
+          icon: 'bi-camera-video-fill',
+          iconColor: 'primary',
+          title: 'Sua sessão de psicologia também pode ser por telemedicina',
+          subtitle: 'Evite deslocamentos até o consultório realizando sua consulta online, com a mesma segurança e praticidade.',
+          action: { label: 'Solicitar teleconsulta', icon: 'bi-laptop-fill' },
           unread: false
         }
       ]
