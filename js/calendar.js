@@ -330,22 +330,22 @@ function bindEvents() {
 
   if (trashZone) {
 
-    trashZone?.addEventListener('click',() => {
+    trashZone?.addEventListener('click', () => {
       const appointment = calendarState.selectedAppointment;
       if (!appointment) { return; }
       openCancelAppointmentModal(appointment);
     });
 
-    trashZone.addEventListener('dragover',event => {
+    trashZone.addEventListener('dragover', event => {
       event.preventDefault();
       trashZone.classList.add('calendar-trash-zone--drag-over');
     });
 
-    trashZone.addEventListener('dragleave',() => {
+    trashZone.addEventListener('dragleave', () => {
       trashZone.classList.remove('calendar-trash-zone--drag-over');
     });
 
-    trashZone.addEventListener('drop',event => {
+    trashZone.addEventListener('drop', event => {
       event.preventDefault();
       trashZone.classList.remove('calendar-trash-zone--drag-over');
       const appointment = calendarState.draggingAppointment;
@@ -378,16 +378,16 @@ function renderTimeColumn() {
   });
 }
 
-function selectAppointmentCard(appointment) {
+function selectAppointmentCard(appointment, skipToggle = false) {
   // TOGGLE OFF
-  if (isSameAppointment(
-      appointment,
-      calendarState.selectedAppointment)
-    ){
-      calendarState.selectedAppointment = null;
-      renderAppointmentsCards();
-      return;
-    }
+  if (!skipToggle && isSameAppointment(
+    appointment,
+    calendarState.selectedAppointment
+  )){
+    calendarState.selectedAppointment = null;
+    renderAppointmentsCards();
+    return;
+  }
 
   // ATIVA
   calendarState.selectedAppointment = appointment;
@@ -893,10 +893,9 @@ function isSameAppointment(a, b) {
 
 function renderAppointmentsCards() {
 
-
   trashZone?.classList.toggle(
     'calendar-trash-zone--visible',
-    !!calendarState.selectedAppointment
+    !!calendarState.selectedAppointment||!!calendarState.draggingAppointment
   );
 
   const userAppointments = getUserAppointmentsData();
@@ -964,6 +963,9 @@ function renderAppointmentsCards() {
     card.addEventListener('dragstart', () => {
       calendarState.selectedAppointment = appointment;
       calendarState.draggingAppointment = appointment;
+
+
+      trashZone?.classList.add('calendar-trash-zone--visible');
       // ativa visualmente sem rerender
       document
         .querySelectorAll('.calendar-mini-card')
@@ -977,7 +979,12 @@ function renderAppointmentsCards() {
 
     // DRAG END
     card.addEventListener('dragend', () => {
+      selectAppointmentCard(calendarState.selectedAppointment, true);
       calendarState.draggingAppointment = null;
+      trashZone?.classList.toggle(
+        'calendar-trash-zone--visible',
+        !!calendarState.selectedAppointment
+      );
     });
 
     appointmentsRow.appendChild(card);

@@ -155,7 +155,7 @@ const BeneficiosData = {
     {
       title: 'Retorno preventivo',
       nuts: 120,
-      linkLabel: 'Ver calendário',
+      linkLabel: 'Ver agendamento',
       linkHref: 'agendamento.html'
     },
     {

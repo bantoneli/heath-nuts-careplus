@@ -34,40 +34,61 @@ async function initDashboard() {
   renderFutureAppointmentsCount();
 }
 
-function renderAppointments(data) {
+function formatDate(dateString) {
+    const date = parseLocalDate(dateString);
 
+    if (!date) return '';
+
+    return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit'
+    });
+}
+
+function renderAppointments(data) {
   const container = document.querySelector('#appointments-list');
 
   if (!container) return;
 
   if (!data.length) {
-
     container.innerHTML = `
       <p class="text-muted mb-0">
         Nenhum agendamento encontrado.
       </p>
     `;
-
     return;
   }
 
   container.innerHTML = data.map(item => `
 
-    <div class="appointment-item">
+    <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
 
-      <span class="appointment-item__specialty">
-        ${item.specialty}
-      </span>
+      <div class="flex-grow-1 min-w-0 pe-3">
 
-      <p class="appointment-item__detail mb-1">
-        ${item.date}
-        &bull;
-        ${item.time}
-        &bull;
-        ${item.doctor}
-        &bull;
-        ${item.clinic}
-      </p>
+        <div class="fw-bold text-dark small mb-1">
+          ${item.specialty}
+        </div>
+
+        <div class="text-muted small text-truncate">
+          ${item.doctor}
+          &bull;
+          ${item.clinic}
+        </div>
+
+      </div>
+
+      <div class="text-end flex-shrink-0">
+
+        <div class="fw-semibold small text-dark">
+          ${formatDate(item.date)}
+        </div>
+
+        <div class="app-time fw-bold fs-5 lh-1">
+          ${item.time}
+        </div>
+
+      </div>
 
     </div>
 
