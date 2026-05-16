@@ -221,7 +221,7 @@ function renderBenefitsRewards(state) {
             <div class="min-w-0">
               <h3 class="benefit-reward-card__title mb-1">${item.title}</h3>
               <p class="benefit-reward-card__desc small mb-2">${item.description}</p>
-              <div class="d-flex flex-wrap gap-2 align-items-center">
+              <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
                 <span class="badge-pts badge-pts--yellow">${item.costNuts} nuts</span>
                 <span class="benefit-reward-card__tag-cat small rounded-pill px-2 py-1">${item.category}</span>
               </div>

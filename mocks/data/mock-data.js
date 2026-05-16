@@ -118,9 +118,9 @@ const BeneficiosData = {
   rewards: [
     {
       id: 'r1',
-      title: 'Voucher Alimentação',
-      description: 'R$30 em parceiros',
-      costNuts: 250,
+      title: 'Huawei Watch D2',
+      description: 'Smartwatch medidor de pressão arterial',
+      costNuts: 3.000,
       category: 'Bem-estar',
       cta: 'resgatar',
       meta: 'Entrega imediata',
