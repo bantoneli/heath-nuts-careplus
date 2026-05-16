@@ -120,8 +120,8 @@ const BeneficiosData = {
       id: 'r1',
       title: 'Huawei Watch D2',
       description: 'Smartwatch medidor de pressão arterial',
-      costNuts: 3.000,
-      category: 'Bem-estar',
+      costNuts: 3000,
+      category: 'Produtos',
       cta: 'resgatar',
       meta: 'Entrega imediata',
       redeemed: false
@@ -158,19 +158,19 @@ const BeneficiosData = {
     },
     {
       id: 'r5',
-      title: 'Consulta nutricional',
-      description: '1 sessão online',
-      costNuts: 320,
-      category: 'Saúde',
+      title: 'Sessão de acupuntura',
+      description: '60 min',
+      costNuts: 220,
+      category: 'Bem-estar',
       cta: 'resgatar',
       redeemed: false
     },
     {
       id: 'r6',
       title: 'Cashback parceiro',
-      description: '10% em farmácias',
+      description: '10% em vitaminas',
       costNuts: 150,
-      category: 'Produtos',
+      category: 'Saúde',
       cta: 'detalhes',
       redeemed: true
     }

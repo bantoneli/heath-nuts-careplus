@@ -5,6 +5,7 @@ const mapIframe = document.querySelector('.schedule-map__iframe');
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader({ activePage: 'agendamento', isSubpage: true });
   renderFooter();
+  initializeAppointments();
 
   if (typeof SchedulingData === 'undefined') {
     return;
@@ -318,23 +319,32 @@ function renderScheduleDate(specialtyName = null) {
 
   if (!input || !message) return;
 
+  const currentSpecialty = specialtyName || null;
+
+  //  evita resetar data sem mudança real
+  if (
+    SchedulingData.calendarSelectedSpecialty === currentSpecialty
+  ) {
+    return;
+  }
+
   let minimumDays = 14;
 
   // Estado inicial
-  if (!specialtyName) {
+  if (!currentSpecialty) {
     message.innerText =
-      'Selecione a especialidade para poder escolher a data';
+      'Selecione a especialidade ou médico para poder escolher a data';
   } else {
-    const level = getSpecialtyLevel(specialtyName);
+    const level = getSpecialtyLevel(currentSpecialty);
 
     minimumDays = getMinimumDaysByLevel(level);
 
     if (minimumDays === 0) {
       message.innerText =
-        `Seu ranking em ${specialtyName} permite agendamento imediato`;
+        `Seu ranking em ${currentSpecialty} permite agendamento imediato`;
     } else {
       message.innerText =
-        `Seu ranking em ${specialtyName} permite agendamento em ${minimumDays} dias`;
+        `Seu ranking em ${currentSpecialty} permite agendamento em ${minimumDays} dias`;
     }
   }
 
@@ -348,6 +358,9 @@ function renderScheduleDate(specialtyName = null) {
   input.value = formattedDate;
 
   SchedulingData.selectedDate = formattedDate;
+
+  // NOVO: atualiza estado
+  SchedulingData.calendarSelectedSpecialty = currentSpecialty;
 }
 
 function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
@@ -380,7 +393,6 @@ function wireScheduleInteractions() {
 
     resetSlotSelection();
     resetDoctorSelection();
-    renderScheduleDate(getSelectedSpecialty())
     updateSchedulingUI();
   });
 
@@ -684,7 +696,6 @@ function initDoctorSearchDropdown() {
     }
     updateSchedulingUI();
   });
-
 }
 
 function getDoctorsBySpecialty() {
@@ -918,6 +929,7 @@ function updateSchedulingUI() {
     category:'Engajamento', 
     limit: 4
   });
+  renderScheduleDate(getSelectedSpecialty());
   syncSummaryFromState();
 }
 

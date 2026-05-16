@@ -3,6 +3,21 @@ function getSelectedSpecialty() {
     return active ? active.dataset.specialty : null;
 }
 
+function initializeAppointments() {
+
+    let appointmentsData = getAppointmentsData();
+    if (!appointmentsData.length) {
+        appointmentsData = generateAppointmentsData(
+            DoctorsData,
+            SchedulingData.timeSlots
+        );
+
+        saveAppointmentsData(appointmentsData);
+    }
+
+    createInitialNutritionAppointment();
+}
+
 function getSearchQuery() {
     const input = document.querySelector('#ranking-search-input');
     return input ? input.value.toLowerCase().trim() : '';

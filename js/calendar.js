@@ -46,21 +46,6 @@ function initCalendarPage() {
   syncHorizontalScroll();
 }
 
-function initializeAppointments() {
-
-  let appointmentsData = getAppointmentsData();
-  if (!appointmentsData.length) {
-    appointmentsData = generateAppointmentsData(
-      DoctorsData,
-      SchedulingData.timeSlots
-    );
-
-    saveAppointmentsData(appointmentsData);
-  }
-
-  createInitialNutritionAppointment();
-}
-
 function syncFilters() {
 
   syncSpecialtyFilter();
@@ -711,7 +696,7 @@ function openCancelAppointmentModal(appointment) {
     </div>
 
     <p class="mb-0">
-      Deseja cancelar esta consulta?
+      Deseja desmarcar esta consulta?
     </p>
   `;
 
