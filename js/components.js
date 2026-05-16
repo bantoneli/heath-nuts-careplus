@@ -8,11 +8,12 @@ function renderHeader(options = {}) {
   const prefix = options.isSubpage ? '../' : '';
 
   const menuItems = [
-    { label: 'Início',        icon: 'bi-house-door',        href: prefix + 'index.html',                                  pageKey: 'home' },
-    { label: 'Agendamentos',  icon: 'bi-calendar2-event',   href: prefix + 'pages/agendamento.html',         pageKey: 'agendamento' },
+    { label: 'Início',        icon: 'bi-house-door',        href: prefix + 'index.html',                     pageKey: 'home' },
+    { label: 'Agendamentos',  icon: 'bi-journal-check',     href: prefix + 'pages/agendamento.html',         pageKey: 'agendamento' },
+    { label: 'Agenda',        icon: 'bi-calendar2-event',   href: prefix + 'pages/calendar.html',            pageKey: 'calendar' },
     { label: 'Rankings',      icon: 'bi-trophy',            href: prefix + 'pages/rankings.html',            pageKey: 'rankings' },
     { label: 'Benefícios',    icon: 'bi-gift',              href: prefix + 'pages/beneficios.html',          pageKey: 'beneficios' },
-    { label: 'Notificações',  icon: 'bi-bell',              href: prefix + 'pages/notificacoes.html',                                 pageKey: 'notifications' },
+    { label: 'Notificações',  icon: 'bi-bell',              href: prefix + 'pages/notificacoes.html',        pageKey: 'notifications' },
     { label: 'Regulamento',   icon: 'bi-file-earmark-text', href: prefix + 'pages/regulamento.html',         pageKey: 'regulamento' },
     { divider: true },
     { label: 'Perfil',        icon: 'bi-person-circle',     href: '#',                                       pageKey: 'perfil' },
