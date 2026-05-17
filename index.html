@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Health Nuts — Dashboard</title>
+  <script>
+    (function () {
+      try {
+        if (!localStorage.getItem('healthnuts_mock_entrada')) {
+          location.replace('pages/login.html');
+        }
+      } catch (e) {
+        location.replace('pages/login.html');
+      }
+    })();
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,13 +48,10 @@
           <section class="dashboard-card" aria-label="Resumo do usuário">
             <div class="d-flex justify-content-between align-items-start mb-3">
               <h1 class="dashboard-card__title">Bem-vindo de volta, João!</h1>
-              <button class="btn btn-accent" id="btn-atualizar">
-                <i class="bi bi-arrow-clockwise"></i> Atualizar
-              </button>
             </div>
 
             <!-- Stat boxes 2x2 -->
-            <div class="row g-2 mb-3" id="stats-grid">
+            <div class="row g-2 mb-3">
               <div class="col-6">
                 <div class="stat-box">
                   <span class="stat-box__label">Nuts</span>
@@ -57,7 +65,7 @@
                 <div class="stat-box">
                   <span class="stat-box__label">Consultas</span>
                   <span class="stat-box__value">
-                    2 futuras
+                    <span id="future-appointments-count">0 futuras</span>
                     <i class="bi bi-calendar-event stat-box__icon"></i>
                   </span>
                 </div>
@@ -75,7 +83,7 @@
                 <div class="stat-box">
                   <span class="stat-box__label">Ranking da sua Empresa</span>
                   <span class="stat-box__value">
-                    3º Lugar
+                    9º Lugar
                     <i class="bi bi-trophy-fill stat-box__icon"></i>
                   </span>
                 </div>
@@ -85,29 +93,24 @@
             <!-- Priority message -->
             <p class="priority-msg mb-3">
               <span class="priority-msg__dot"></span>
-              Você está a 150 pts da Prioridade 1 — você está quase lá!
+              Você está a 140 pts de vencer o ranking de Psicologia da sua empresa!
             </p>
 
             <!-- Action buttons -->
             <div class="d-flex flex-wrap gap-2">
-              <button class="btn btn-primary-custom" id="btn-novo-agendamento">
+              <a href="pages/agendamento.html" class="btn btn-primary-custom">
                 <i class="bi bi-plus-circle-fill"></i> Novo agendamento
-              </button>
-              <button class="btn btn-accent" id="btn-ver-beneficios">
+              </a>
+              <a href="pages/beneficios.html"  class="btn btn-accent">
                 <i class="bi bi-gift-fill"></i> Ver benefícios
-              </button>
+              </a>
             </div>
           </section>
 
           <!-- Card: Missão do dia -->
-          <section class="dashboard-card" aria-label="Missão do dia">
-            <div class="mission-card">
-              <div class="mission-card__text">
-                <span class="mission-card__label">Missão do dia</span>
-                <p class="mission-card__desc mb-0">Auferir pressão arterial</p>
-              </div>
-              <span class="badge-pts">+10 pts</span>
-            </div>
+          <section class="dashboard-card px-3 py-2" aria-label="Missão do dia">
+            <span class="mission-card__label">Missão do dia: Endocrinologia</span>
+            <div id="actions-list"></div>
           </section>
 
           <!-- Card: Sequência -->
@@ -133,23 +136,12 @@
           <section class="dashboard-card" aria-label="Ranking por especialidade">
             <div class="d-flex justify-content-between align-items-start mb-3">
               <h2 class="dashboard-card__title">Ranking por Especialidade</h2>
-              <button class="btn btn-accent" id="btn-ver-ranking">
+              <a href="pages/rankings.html" class ="btn btn-accent">
                 <i class="bi bi-bar-chart-line-fill"></i> Ver ranking
-              </button>
+              </a>
             </div>
 
             <div id="ranking-list">
-              <!-- Nutrição -->
-              <div class="ranking-item">
-                <div class="ranking-item__icon">
-                  <img src="assets/img/nutricao.png" alt="Nutrição" width="36" height="36">
-                </div>
-                <div class="ranking-item__info">
-                  <span class="ranking-item__name">Nutrição</span>
-                  <span class="ranking-item__pts">1.250 pts</span>
-                </div>
-                <span class="ranking-item__rank">120º</span>
-              </div>
 
               <!-- Psicologia -->
               <div class="ranking-item">
@@ -158,9 +150,21 @@
                 </div>
                 <div class="ranking-item__info">
                   <span class="ranking-item__name">Psicologia</span>
-                  <span class="ranking-item__pts">1.320 pts</span>
+                  <span class="ranking-item__pts">9.718 pts</span>
                 </div>
-                <span class="ranking-item__rank">130º</span>
+                <span class="ranking-item__rank">12º</span>
+              </div>
+
+              <!-- Nutrição -->
+              <div class="ranking-item">
+                <div class="ranking-item__icon">
+                  <img src="assets/img/nutricao.png" alt="Nutrição" width="36" height="36">
+                </div>
+                <div class="ranking-item__info">
+                  <span class="ranking-item__name">Nutrição</span>
+                  <span class="ranking-item__pts">5.001 pts</span>
+                </div>
+                <span class="ranking-item__rank">216º</span>
               </div>
 
               <!-- Endocrinologia -->
@@ -170,54 +174,113 @@
                 </div>
                 <div class="ranking-item__info">
                   <span class="ranking-item__name">Endocrinologia</span>
-                  <span class="ranking-item__pts">1.450 pts</span>
+                  <span class="ranking-item__pts">212 pts</span>
                 </div>
-                <span class="ranking-item__rank">167º</span>
+                <span class="ranking-item__rank">422º</span>
               </div>
             </div>
           </section>
 
           <!-- Card: Próximos agendamentos -->
           <section class="dashboard-card" aria-label="Próximos agendamentos">
-            <h2 class="dashboard-card__title mb-3">Próximos agendamentos</h2>
-
-            <div id="appointments-list">
-              <div class="appointment-item">
-                <span class="appointment-item__specialty">Endocrinologista</span>
-                <p class="appointment-item__detail mb-0">Seg, 12 Nov &bull; 09:00 &bull; Dra. Cora Coralina</p>
-              </div>
-              <div class="appointment-item">
-                <span class="appointment-item__specialty">Nutricionista</span>
-                <p class="appointment-item__detail mb-0">Qui, 22 Nov &bull; 14:30 &bull; Nutricionista José Pereira</p>
-              </div>
-              <div class="appointment-item">
-                <span class="appointment-item__specialty">Dermatologista</span>
-                <p class="appointment-item__detail mb-0">Sex, 06 Dez &bull; 11:15 &bull; Dr. João Pelin</p>
-              </div>
+            <div class="d-flex justify-content-between align-items-start">
+              <h2 class="dashboard-card__title mb-3">Próximos agendamentos</h2>
+              <a href="pages/calendar.html"  class="btn btn-accent">
+                <i class="bi bi-calendar2-event"></i> Modificar Agenda
+              </a>
             </div>
+            <div id="appointments-list"></div>
           </section>
 
           <!-- Card: Badges conquistados -->
           <section class="dashboard-card" aria-label="Badges conquistados">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h2 class="dashboard-card__title">Badges conquistados</h2>
-              <button class="btn btn-accent" id="btn-ver-regulamento">
-                <i class="bi bi-file-earmark-text-fill"></i> Ver regulamento
-              </button>
+            <div class="d-flex justify-content-between align-items-start mb-4">
+              <h2 class="dashboard-card__title mb-0">
+                Badges conquistados
+              </h2>
+
+              <a href="pages/regulamento.html" class="btn btn-accent">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                Ver regulamento
+              </a>
             </div>
 
-            <div class="badges-categories mb-2">
-              <span class="badges-categories__tag">Dermatologia</span>
-              <span class="badges-categories__tag">Endocrinologia</span>
-              <span class="badges-categories__tag">Nutrição</span>
-              <span class="badges-categories__tag">Odontologia</span>
-              <span class="badges-categories__tag">Psicologia</span>
-            </div>
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 text-center">
 
-            <div class="badges-icons">
-              <i class="bi bi-tree-fill badges-icons__tree"></i>
-              <i class="bi bi-tree-fill badges-icons__tree" style="opacity: 0.6;"></i>
-              <i class="bi bi-tree-fill badges-icons__tree" style="opacity: 0.4;"></i>
+              <!-- Dermatologia -->
+              <div class="col">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="badges-categories__tag mb-2">
+                    Dermatologia
+                  </span>
+                </div>
+              </div>
+
+              <!-- Endocrinologia -->
+              <div class="col">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="badges-categories__tag mb-2">
+                    Endocrinologia
+                  </span>
+
+                  <span class="badge__avatar">
+                    <img
+                      src="./assets/svg/badges/Adormecida.svg"
+                      alt="Badge Endocrinologia"
+                      width="42"
+                      height="42"
+                    >
+                  </span>
+                </div>
+              </div>
+
+              <!-- Nutrição -->
+              <div class="col">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="badges-categories__tag mb-2">
+                    Nutrição
+                  </span>
+
+                  <span class="badge__avatar">
+                    <img
+                      src="./assets/svg/badges/Juvenil.svg"
+                      alt="Badge Nutrição"
+                      width="42"
+                      height="42"
+                    >
+                  </span>
+                </div>
+              </div>
+
+              <!-- Odontologia -->
+              <div class="col">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="badges-categories__tag mb-2">
+                    Odontologia
+                  </span>
+
+
+                </div>
+              </div>
+
+              <!-- Psicologia -->
+              <div class="col">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="badges-categories__tag mb-2">
+                    Psicologia
+                  </span>
+
+                  <span class="badge__avatar">
+                    <img
+                      src="./assets/svg/badges/Produtiva.svg"
+                      alt="Badge Psicologia"
+                      width="42"
+                      height="42"
+                    >
+                  </span>
+                </div>
+              </div>
+
             </div>
           </section>
 
@@ -239,6 +302,7 @@
 
   <!-- JavaScript Vanilla -->
   <script src="js/components.js"></script>
+  <script src="js/functions.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

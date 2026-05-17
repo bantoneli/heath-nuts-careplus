@@ -39,18 +39,27 @@ const NotificationsData = {
       label: 'Hoje',
       items: [
         {
-          icon: 'bi-calendar-check-fill',
+          icon: 'bi-car-front-fill',
           iconColor: 'primary',
-          title: 'Lembrete de consulta amanhã às 09:30',
-          subtitle: 'Clínica Vida+ Centro • Check-in antecipado garante +30 pts',
+          title: 'Saía de casa com 47min de antecedência',
+          subtitle: 'De acordo com informações do trânsito, este é o tempo estimado para chegar saindo de casa. Se estiver no trabalho, saia com 25min de antecedência.',
           pts: 30,
           action: { label: 'Ver rota', icon: 'bi-signpost-split-fill' },
           unread: true
         },
         {
+          icon: 'bi-patch-check-fill',
+          iconColor: 'accent',
+          title: 'Deseja confirmar sua consulta de hoje?',
+          subtitle: 'A confirmação antecipada garante melhor organização do atendimento e rende +10 pts.',
+          pts: 10,
+          action: { label: 'Confirmar', icon: 'bi-check2-circle' },
+          unread: true
+        },
+        {
           icon: 'bi-graph-up-arrow',
           iconColor: 'accent',
-          title: 'Você subiu para 12º no ranking da empresa',
+          title: 'Você subiu para 2º no ranking da empresa em Psicologia',
           subtitle: 'Parabéns! Continue registrando hábitos diários.',
           badge: 'Novo',
           unread: true
@@ -60,6 +69,23 @@ const NotificationsData = {
     {
       label: 'Ontem',
       items: [
+        {
+          icon: 'bi-cloud-rain-heavy-fill',
+          iconColor: 'primary',
+          title: 'Previsão de chuva para amanhã',
+          subtitle: 'Há possibilidade de trânsito intenso e atrasos. Recomendamos sair com um pouco mais de antecedência.',
+          action: { label: 'Ver previsão', icon: 'bi-cloud-drizzle-fill' },
+          unread: false
+        },
+        {
+          icon: 'bi-calendar-check-fill',
+          iconColor: 'primary',
+          title: 'Lembrete de consulta amanhã às 09:30',
+          subtitle: 'Clínica Vida+ Centro • Check-in antecipado garante +30 pts',
+          pts: 30,
+          action: { label: 'Ver rota', icon: 'bi-signpost-split-fill' },
+          unread: false
+        },
         {
           icon: 'bi-gift-fill',
           iconColor: 'primary',
@@ -83,11 +109,36 @@ const NotificationsData = {
       label: 'Esta semana',
       items: [
         {
+          icon: 'bi-chat-dots-fill',
+          iconColor: 'primary',
+          title: 'Abriu uma vaga de encaixe hoje às 19h com sua psicóloga',
+          subtitle: 'Deseja confirmar este horário? A vaga ficará disponível por tempo limitado.',
+          action: { label: 'Confirmar horário', icon: 'bi-check2-circle' },
+          unread: true
+        },
+        {
+          icon: 'bi-clipboard2-pulse-fill',
+          iconColor: 'accent',
+          title: 'Questionário pré-consulta disponível',
+          subtitle: 'Preencha antes da consulta com sua nutricionista e ganhe +50 pts.',
+          pts: 50,
+          action: { label: 'Responder', icon: 'bi-pencil-square' },
+          unread: true
+        },
+        {
           icon: 'bi-bell-fill',
           iconColor: 'primary',
           title: 'Notificações inteligentes ativadas',
           subtitle: 'Receba alertas de agendamentos, pontos e benefícios relevantes',
           action: { label: 'Configurar', icon: null },
+          unread: false
+        },
+        {
+          icon: 'bi-camera-video-fill',
+          iconColor: 'primary',
+          title: 'Sua sessão de psicologia também pode ser por telemedicina',
+          subtitle: 'Evite deslocamentos até o consultório realizando sua consulta online, com a mesma segurança e praticidade.',
+          action: { label: 'Solicitar teleconsulta', icon: 'bi-laptop-fill' },
           unread: false
         }
       ]
@@ -104,7 +155,7 @@ const BeneficiosData = {
     {
       title: 'Retorno preventivo',
       nuts: 120,
-      linkLabel: 'Ver calendário',
+      linkLabel: 'Ver agendamento',
       linkHref: 'agendamento.html'
     },
     {
@@ -118,10 +169,10 @@ const BeneficiosData = {
   rewards: [
     {
       id: 'r1',
-      title: 'Voucher Alimentação',
-      description: 'R$30 em parceiros',
-      costNuts: 250,
-      category: 'Bem-estar',
+      title: 'Huawei Watch D2',
+      description: 'Smartwatch medidor de pressão arterial',
+      costNuts: 3000,
+      category: 'Produtos',
       cta: 'resgatar',
       meta: 'Entrega imediata',
       redeemed: false
@@ -158,19 +209,19 @@ const BeneficiosData = {
     },
     {
       id: 'r5',
-      title: 'Consulta nutricional',
-      description: '1 sessão online',
-      costNuts: 320,
-      category: 'Saúde',
+      title: 'Sessão de acupuntura',
+      description: '60 min',
+      costNuts: 220,
+      category: 'Bem-estar',
       cta: 'resgatar',
       redeemed: false
     },
     {
       id: 'r6',
       title: 'Cashback parceiro',
-      description: '10% em farmácias',
+      description: '10% em vitaminas',
       costNuts: 150,
-      category: 'Produtos',
+      category: 'Saúde',
       cta: 'detalhes',
       redeemed: true
     }
@@ -195,8 +246,6 @@ const RankingsData = {
     { id: 7, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-activity', title: 'Passos diários', subtitle: 'Atingir 10.000 passos', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 8, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-lightning-charge', title: 'Treino HIIT', subtitle: 'Realizar treino HIIT', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 9, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-speedometer', title: 'Pesagem diária', subtitle: 'Registrar peso diariamente', nuts: 10, pts: 10, expiry: '05/set/2026' },
-    { id: 18, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15, expiry: '05/set/2026' },
-    { id: 19, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10, expiry: '05/set/2026' },
     { id: 11, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000, expiry: '05/set/2026' },
     { id: 17, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15, expiry: '05/set/2026' },
     { id: 12, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20, expiry: '05/set/2026' },
@@ -287,7 +336,7 @@ const SchedulingData = {
 
 const SpecialtiesData = {
   specialties: ['Dermatologia', 'Endocrinologia', 'Nutrição', 'Odontologia', 'Psicologia'],
-  defaultSpecialty: 'Endocrinologia',
+  defaultSpecialty: 'Psicologia',
 }
 
 const ActionsData = {
@@ -350,22 +399,35 @@ const ActionsData = {
 
     // Prevenção
     { id: 40, specialty: 'Odontologia', category: 'Prevenção', icon: 'bi-emoji-smile', title: 'Limpeza dentária', subtitle: 'Realizar limpeza semestral', nuts: 1000, pts: 1000 },
-    { id: 48, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15 },
-    { id: 49, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10 },
+    { id: 41, specialty: 'Dermatologia', category: 'Prevenção', icon: 'bi-droplet', title: 'Rotina de skincare', subtitle: 'Realizar rotina diária de cuidados com a pele', nuts: 15, pts: 15 },
+    { id: 42, specialty: 'Dermatologia', category: 'Hábitos', icon: 'bi-sun', title: 'Uso de protetor solar', subtitle: 'Aplicar protetor solar no dia', nuts: 10, pts: 10 },
 
     // Saúde mental
-    { id: 41, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000 },
-    { id: 47, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15 },
-    { id: 52, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20 },
+    { id: 43, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-chat-dots', title: 'Acompanhamento contínuo', subtitle: '4 consultas seguidas sem cancelar', nuts: 1000, pts: 1000 },
+    { id: 44, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-journal-text', title: 'Registro emocional', subtitle: 'Preencher diário emocional', nuts: 15, pts: 15 },
+    { id: 45, specialty: 'Psicologia', category: 'Saúde mental', icon: 'bi-moon-stars', title: 'Higiene do sono', subtitle: 'Seguir rotina de higiene do sono', nuts: 20, pts: 20 },
 
     // Extras hábitos / clínico
-    { id: 42, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up', title: 'Colesterol controlado', subtitle: 'Manter níveis ideais', nuts: 100, pts: 100 },
-    { id: 43, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up-arrow', title: 'Melhora do colesterol', subtitle: 'Melhorar níveis entre exames', nuts: 100, pts: 100 },
-    { id: 44, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-cup-straw', title: 'Hidratação adequada', subtitle: 'Registrar consumo ideal de água no dia', nuts: 10, pts: 10 },
-    { id: 45, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-egg-fried', title: 'Plano alimentar seguido', subtitle: 'Seguir plano alimentar prescrito no dia', nuts: 20, pts: 20 },
-    { id: 46, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-capsule', title: 'Adesão medicamentosa', subtitle: 'Tomar medicação conforme prescrição', nuts: 20, pts: 20 },
-    { id: 50, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-moon', title: 'Sono adequado', subtitle: 'Dormir pelo menos 7h', nuts: 20, pts: 20 },
-    { id: 51, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-moon', title: 'Qualidade do sono', subtitle: 'Registrar sono adequado', nuts: 20, pts: 20 }
+    { id: 46, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up', title: 'Colesterol controlado', subtitle: 'Manter níveis ideais', nuts: 100, pts: 100 },
+    { id: 47, specialty: 'Endocrinologia', category: 'Exames', icon: 'bi-graph-up-arrow', title: 'Melhora do colesterol', subtitle: 'Melhorar níveis entre exames', nuts: 100, pts: 100 },
+    { id: 48, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-cup-straw', title: 'Hidratação adequada', subtitle: 'Registrar consumo ideal de água no dia', nuts: 10, pts: 10 },
+    { id: 49, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-egg-fried', title: 'Plano alimentar seguido', subtitle: 'Seguir plano alimentar prescrito no dia', nuts: 20, pts: 20 },
+    { id: 50, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-capsule', title: 'Adesão medicamentosa', subtitle: 'Tomar medicação conforme prescrição', nuts: 20, pts: 20 },
+    { id: 51, specialty: 'Endocrinologia', category: 'Hábitos', icon: 'bi-moon', title: 'Sono adequado', subtitle: 'Dormir pelo menos 7h', nuts: 20, pts: 20 },
+    { id: 52, specialty: 'Nutrição', category: 'Hábitos', icon: 'bi-moon', title: 'Qualidade do sono', subtitle: 'Registrar sono adequado', nuts: 20, pts: 20 },
+    // Mais ações para exemplificar pontos
+    { id: 53, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-check2-circle', title: 'Confirmar consulta', subtitle: 'Confirmar consulta no aplicativo', nuts: 50, pts: 50 },
+    { id: 54, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-ui-checks', title: 'Questionário pré-consulta', subtitle: 'Preencher questionário pré-consulta', nuts: 50, pts: 50 },
+    { id: 55, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-calendar-plus', title: 'Adicionar ao calendário', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 56, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-check2-circle', title: 'Confirmar consulta', subtitle: 'Confirmar consulta no aplicativo', nuts: 50, pts: 50 },
+    { id: 57, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-ui-checks', title: 'Questionário pré-consulta', subtitle: 'Preencher questionário pré-consulta', nuts: 50, pts: 50 },
+    { id: 58, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-calendar-plus', title: 'Adicionar ao calendário', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 59, specialty: 'Dermatologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 60, specialty: 'Odontologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 61, specialty: 'Nutrição', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 62, specialty: 'Endocrinologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+    { id: 63, specialty: 'Psicologia', category: 'Engajamento', icon: 'bi-clock', title: 'Chegar no horario', subtitle: 'Adicionar consulta ao calendário', nuts: 100, pts: 100 },
+
   ]
 }
 
@@ -434,12 +496,12 @@ const UsersRanking = [
     "company": "UnitedHealth Group",
     "specialties": {
       "Dermatologia": {
-        "pts": 5438,
-        "monthlyGain": 130
+        "pts": null,
+        "monthlyGain": null
       },
       "Endocrinologia": {
-        "pts": 2809,
-        "monthlyGain": 191
+        "pts": 212,
+        "monthlyGain": 0
       },
       "Nutrição": {
         "pts": 5001,
@@ -450,7 +512,7 @@ const UsersRanking = [
         "monthlyGain": null
       },
       "Psicologia": {
-        "pts": 4718,
+        "pts": 9718,
         "monthlyGain": 189
       }
     },
@@ -14963,4 +15025,29 @@ const DoctorsData = [
   { id: 74, name: "Tadeu Barros", specialty: "Psicologia", clinic: "Care Plus Clinic - Morumbi", workDays: ['qua','qui','sex'], periods: ['noite'] },
   { id: 75, name: "Ulyana Freitas", specialty: "Psicologia", clinic: "Care Plus Clinic - Campo Belo", workDays: ['seg','ter','qua'], periods: ['tarde'] }
 ];
+
+const UserRanking = {
+  specialties: [
+    {
+      name: 'Dermatologia',
+      level: 0,
+    },
+    {
+      name: 'Endocrinologia',
+      level: 1,
+    },
+    {
+      name: 'Nutrição',
+      level: 3,
+    },
+    {
+      name: 'Odontologia',
+      level: 0,
+    },
+    {
+      name: 'Psicologia',
+      level: 5,
+    },
+  ],
+}
 

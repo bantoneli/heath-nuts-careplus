@@ -1,27 +1,115 @@
-/**
- * Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
- */
+//Página de agendamento: header/footer, listas a partir de SchedulingData e sincronização do resumo.
 
 const mapIframe = document.querySelector('.schedule-map__iframe');
 
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader({ activePage: 'agendamento', isSubpage: true });
   renderFooter();
+  initializeAppointments();
 
   if (typeof SchedulingData === 'undefined') {
     return;
   }
-  initScheduleDateDefault();
-  window.AppointmentsData = generateAppointmentsData(DoctorsData,SchedulingData.timeSlots);
+  window.AppointmentsData = getAppointmentsData();
+  renderScheduleDate();
   updateSchedulingUI();
-  renderScheduleBenefits();
   wireScheduleInteractions();
   initSchedulePage();
   initDoctorSearchDropdown();
+  applyCalendarParams();
 });
 
 function initSchedulePage() {
     renderSpecialtiesFilters(SpecialtiesData, null);
+}
+
+function applyCalendarParams() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const specialty = params.get('specialty');
+  const doctorId = Number(params.get('doctor'));
+  const clinicName = params.get('clinic');
+  const date = params.get('date');
+  const time = params.get('time');
+
+  // especialidade
+  if (specialty) {
+
+    setSpecialty(specialty);
+    renderScheduleDate(specialty);
+  }
+
+  // clínica
+  if (clinicName) {
+
+    const clinic =
+      SchedulingData.clinics.find(
+        clinic =>
+          clinic.name === clinicName
+      );
+
+    if (clinic) {
+
+      SchedulingData.selectedClinicId = clinic.id;
+      updateMapByClinicId( clinic.id );
+    }
+  }
+
+  // data
+  if (date) {
+
+    SchedulingData.selectedDate = date;
+
+    const input = document.querySelector( '#schedule-date' );
+
+    if (input) { input.value = date; }
+  }
+
+  // médico
+  if (doctorId) {
+
+    const doctor =
+      DoctorsData.find(
+        doctor =>
+          doctor.id === doctorId
+      );
+
+    if (doctor) { applyDoctorSelection( doctor );}
+  }
+
+  // renderiza slots
+  updateSchedulingUI();
+
+  // horário
+  if (time) {
+
+    const slot =
+      SchedulingData.timeSlots.find(
+        slot =>
+          slot.label === time
+      );
+
+    if (slot) {
+
+      SchedulingData.selectedSlotId = slot.id;
+
+      SchedulingData.selectedSlotLabel = slot.label;
+
+      const button = document.querySelector(
+          `[data-slot-id="${slot.id}"]`
+        );
+
+      button?.classList.add(
+        'ranking-filters__pill--accent-active'
+      );
+    }
+  }
+
+  syncSummaryFromState();
 }
 
 function formatScheduleDateDisplay(isoDate) {
@@ -40,16 +128,24 @@ function formatScheduleDateDisplay(isoDate) {
   return `${weekday}, ${rest}`;
 }
 
-function getSelectedSlotLabel() {
-  const active = document.querySelector('#schedule-slots .ranking-filters__pill--accent-active');
-  return active ? active.dataset.slotLabel || active.textContent.trim() : '—';
-}
-
 function syncSummaryFromState() {
   const specialty = getSelectedSpecialty() || 'Selecione';
   const doctor = getSelectedDoctor();
   const iso = SchedulingData.selectedDate || '';
-  const slotLabel = getSelectedSlotLabel();
+
+  let slotLabel = SchedulingData.selectedSlotLabel || '—';
+
+  if (SchedulingData.selectedSlotId === 'encaixe' && SchedulingData.selectedPeriod) {
+    const periodMap = {
+      manha: 'Manhã',
+      tarde: 'Tarde',
+      noite: 'Noite'
+    };
+
+    const periodLabel = periodMap[SchedulingData.selectedPeriod] || SchedulingData.selectedPeriod;
+
+    slotLabel = `${slotLabel} • ${periodLabel}`;
+  }
 
   const specialtyEl = document.querySelector('#summary-specialty');
   const doctorEl = document.querySelector('#summary-doctor');
@@ -74,40 +170,108 @@ function syncSummaryFromState() {
   applyLiveValidation();
 }
 
-function renderScheduleSlots() {
+function renderEncaixeButton(isActive = false) {
+  const activeClass = isActive
+    ? ' ranking-filters__pill--accent-active'
+    : '';
+
+  return `
+    <button type="button"
+      class="ranking-filters__pill${activeClass}"
+      data-slot-id="encaixe"
+      data-slot-label="Encaixe">
+      Encaixe
+    </button>
+  `;
+}
+
+function canShowEncaixe() {
+  const doctorId = SchedulingData.selectedDoctorId;
+  const period = SchedulingData.selectedPeriod;
+  const date = SchedulingData.selectedDate;
+
+  // sem médico → sempre pode mostrar encaixe
+  if (!doctorId) return true;
+
+  const doctor = DoctorsData.find(d => d.id === doctorId);
+  if (!doctor) return false;
+
+  // valida dia
+  if (date) {
+    const dayKey = getDayKeyFromDate(date);
+
+    if (!doctor.workDays.includes(dayKey)) {
+      return false;
+    }
+  }
+
+  // valida período (se houver)
+  if (period) {
+    if (!doctor.periods.includes(period)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function renderScheduleSlots(showEncaixe = false) {
   const slots = document.querySelector('#schedule-slots');
   if (!slots) return;
 
   const specialty = getSelectedSpecialty();
   const doctorId = SchedulingData.selectedDoctorId;
 
+  const date = SchedulingData.selectedDate;
+
+  if (date) {
+    const weekday = getDayKeyFromDate(date);
+
+    if (weekday === 'sab' || weekday === 'dom') {
+      slots.innerHTML = '<p class="text-muted">Nenhum médico atendendo neste periodo/dia</p>';
+      return;
+    }
+  }
+
   if (!specialty && !doctorId) {
     slots.innerHTML = '<p class="text-muted">Selecione médico ou especialidade desejada</p>';
     return;
   }
 
-  const date = SchedulingData.selectedDate;
   const filteredSlots = getAvailableSlots(date);
 
+  const selectedSlotId = SchedulingData.selectedSlotId;
+  const isEncaixeSelected = selectedSlotId === 'encaixe';
+
   if (filteredSlots.length === 0) {
-    slots.innerHTML = '<p class="text-muted">Sem horários disponíveis este dia</p>';
+    if (showEncaixe && canShowEncaixe()) {
+      slots.innerHTML = renderEncaixeButton(isEncaixeSelected);
+    } else {
+      slots.innerHTML = '<p class="text-muted">Sem horários disponíveis este dia</p>';
+    }
     return;
   }
 
-  const selectedSlotId = SchedulingData.selectedSlotId;
-
-  slots.innerHTML = filteredSlots.map(slot => {
+  let buttons = filteredSlots.map(slot => {
     const isActive = String(slot.id) === String(selectedSlotId)
       ? ' ranking-filters__pill--accent-active'
       : '';
 
-    return `<button type="button"
-      class="ranking-filters__pill${isActive}"
-      data-slot-id="${slot.id}"
-      data-slot-label="${slot.label}">
-      ${slot.label}
-    </button>`;
-  }).join('');
+    return `
+      <button type="button"
+        class="ranking-filters__pill${isActive}"
+        data-slot-id="${slot.id}"
+        data-slot-label="${slot.label}">
+        ${slot.label}
+      </button>
+    `;
+  });
+
+  if (showEncaixe && canShowEncaixe()) {
+    buttons.push(renderEncaixeButton(isEncaixeSelected));
+  }
+
+  slots.innerHTML = buttons.join('');
 }
 
 function renderScheduleClinic() {
@@ -149,45 +313,65 @@ function renderScheduleClinic() {
     .join('');
 }
 
-function renderScheduleBenefits() {
-  const benefits = document.querySelector('#schedule-benefits-list');
-  if (benefits) {
-    benefits.innerHTML = SchedulingData.benefits
-      .map(
-        b => `<li class="schedule-benefits-list__row">
-        <span class="schedule-benefits-list__label">${b.label}</span>
-        <span class="badge-pts badge-pts--yellow">+${b.pts} pts</span>
-      </li>`
-      )
-      .join('');
-  }
-}
-
-function initScheduleDateDefault() {
+function renderScheduleDate(specialtyName = null) {
   const input = document.querySelector('#schedule-date');
-  if (input) {
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoje.getDate()).padStart(2, '0');
+  const message = document.querySelector('#schedule-date-message');
 
-    const hojeFormatado = `${ano}-${mes}-${dia}`;
+  if (!input || !message) return;
 
-    input.value = hojeFormatado; // já seta hoje
-    SchedulingData.selectedDate = hojeFormatado;
-    input.min = hojeFormatado;   // bloqueia datas anteriores
+  const currentSpecialty = specialtyName || null;
+
+  //  evita resetar data sem mudança real
+  if (
+    SchedulingData.calendarSelectedSpecialty === currentSpecialty
+  ) {
+    return;
   }
+
+  let minimumDays = 14;
+
+  // Estado inicial
+  if (!currentSpecialty) {
+    message.innerText =
+      'Selecione a especialidade ou médico para poder escolher a data';
+  } else {
+    const level = getSpecialtyLevel(currentSpecialty);
+
+    minimumDays = getMinimumDaysByLevel(level);
+
+    if (minimumDays === 0) {
+      message.innerText =
+        `Seu ranking em ${currentSpecialty} permite agendamento imediato`;
+    } else {
+      message.innerText =
+        `Seu ranking em ${currentSpecialty} permite agendamento em ${minimumDays} dias`;
+    }
+  }
+
+  const minDate = new Date();
+
+  minDate.setDate(minDate.getDate() + minimumDays);
+
+  const formattedDate = formatDate(minDate);
+
+  input.min = formattedDate;
+  input.value = formattedDate;
+
+  SchedulingData.selectedDate = formattedDate;
+
+  // NOVO: atualiza estado
+  SchedulingData.calendarSelectedSpecialty = currentSpecialty;
 }
 
 function setExclusiveAccent(containerSelector, itemSelector, activeBtn) {
   document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(btn => {
     btn.classList.remove('ranking-filters__pill--accent-active');
-    btn.classList.remove('ranking-filters__toggle-btn--accent-active');
+    btn.classList.remove('scheduling-filters__toggle-btn--accent-active');
   });
   if (activeBtn.classList.contains('ranking-filters__pill')) {
     activeBtn.classList.add('ranking-filters__pill--accent-active');
   } else {
-    activeBtn.classList.add('ranking-filters__toggle-btn--accent-active');
+    activeBtn.classList.add('scheduling-filters__toggle-btn--accent-active');
   }
 }
 
@@ -207,6 +391,7 @@ function wireScheduleInteractions() {
       setSpecialty(specialty);
     }
 
+    resetSlotSelection();
     resetDoctorSelection();
     updateSchedulingUI();
   });
@@ -232,6 +417,11 @@ function wireScheduleInteractions() {
     SchedulingData.selectedSlotId = slotId;
     SchedulingData.selectedSlotLabel = btn.dataset.slotLabel;
 
+    if (slotId === 'encaixe') {
+      syncSummaryFromState();
+      return;
+    }
+
     const doctors = getDoctorsBySlot(slotId, date);
 
     const input = document.querySelector('#schedule-doctor-search');
@@ -256,44 +446,54 @@ function wireScheduleInteractions() {
   document.querySelectorAll('#schedule-period button').forEach(btn => {
     btn.addEventListener('click', () => {
 
-      const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
+      const isActive = btn.classList.contains('scheduling-filters__toggle-btn--accent-active');
 
       //  limpa todos
       document.querySelectorAll('#schedule-period button')
-        .forEach(b => b.classList.remove('ranking-filters__toggle-btn--accent-active'));
+        .forEach(b => b.classList.remove('scheduling-filters__toggle-btn--accent-active'));
 
       if (isActive) {
         //  desativar (toggle off)
         SchedulingData.selectedPeriod = null;
       } else {
         //  ativar novo
-        btn.classList.add('ranking-filters__toggle-btn--accent-active');
+        btn.classList.add('scheduling-filters__toggle-btn--accent-active');
         SchedulingData.selectedPeriod = btn.dataset.period;
       }
 
-      renderScheduleSlots();
+      const isEncaixeSelected = SchedulingData.selectedSlotId === 'encaixe';
+
+      if (isEncaixeSelected && !canShowEncaixe()) {
+        resetSlotSelection();
+      }
+    
+      renderScheduleSlots(hasRequiredLevel(
+        getSelectedSpecialty(), 
+        UserRanking.specialties
+      ));
+      syncSummaryFromState();
     });
   });
 
   document.querySelector('#schedule-reminder')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.ranking-filters__toggle-btn');
+    const btn = e.target.closest('.scheduling-filters__toggle-btn');
     if (!btn) return;
 
     const value = btn.dataset.reminder;
 
     let selected = SchedulingData.selectedReminders || [];
 
-    const isActive = btn.classList.contains('ranking-filters__toggle-btn--accent-active');
+    const isActive = btn.classList.contains('scheduling-filters__toggle-btn--accent-active');
 
     //  CASO: "none"
     if (value === 'none') {
       selected = ['none'];
 
       // desativa todos
-      document.querySelectorAll('#schedule-reminder .ranking-filters__toggle-btn')
-        .forEach(b => b.classList.remove('ranking-filters__toggle-btn--accent-active'));
+      document.querySelectorAll('#schedule-reminder .scheduling-filters__toggle-btn')
+        .forEach(b => b.classList.remove('scheduling-filters__toggle-btn--accent-active'));
 
-      btn.classList.add('ranking-filters__toggle-btn--accent-active');
+      btn.classList.add('scheduling-filters__toggle-btn--accent-active');
 
     } else {
       // remove "none" se estiver ativo
@@ -302,16 +502,16 @@ function wireScheduleInteractions() {
       if (isActive) {
         // desativa
         selected = selected.filter(r => r !== value);
-        btn.classList.remove('ranking-filters__toggle-btn--accent-active');
+        btn.classList.remove('scheduling-filters__toggle-btn--accent-active');
       } else {
         // ativa
         selected.push(value);
-        btn.classList.add('ranking-filters__toggle-btn--accent-active');
+        btn.classList.add('scheduling-filters__toggle-btn--accent-active');
       }
 
       // garante que botão "none" fique desativado
       const noneBtn = document.querySelector('[data-reminder="none"]');
-      noneBtn?.classList.remove('ranking-filters__toggle-btn--accent-active');
+      noneBtn?.classList.remove('scheduling-filters__toggle-btn--accent-active');
     }
 
     SchedulingData.selectedReminders = selected;
@@ -363,6 +563,7 @@ function wireScheduleInteractions() {
   document.querySelector('#schedule-date')?.addEventListener('change', (e) => {
     SchedulingData.selectedDate = e.target.value;
 
+    resetSlotSelection();
     updateSchedulingUI();
   });
 
@@ -391,7 +592,34 @@ function wireScheduleInteractions() {
       await simulateLoading(900);
       setButtonLoading(confirmBtn, false);
 
-      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');
+      const selectedDoctor = DoctorsData.find(
+        doctor => doctor.id === SchedulingData.selectedDoctorId
+      );
+
+      const selectedClinic = SchedulingData.clinics.find(
+        clinic => clinic.id == SchedulingData.selectedClinicId
+      );
+
+      const appointment = {
+        id: Date.now(),
+        specialty: getSelectedSpecialty(),
+        doctor: selectedDoctor?.name || 'Médico não informado',
+        date: SchedulingData.selectedDate,
+        time: SchedulingData.selectedSlotLabel,
+        clinic: selectedClinic?.name || 'Clínica não informada'
+      };
+
+      addUserAppointment(appointment);
+
+      occupyAppointmentSlot({
+        doctorId: SchedulingData.selectedDoctorId,
+        date: SchedulingData.selectedDate,
+        slotId: SchedulingData.selectedSlotId
+      });
+
+      window.AppointmentsData = getAppointmentsData();
+
+      alert('Agendamento confirmado! Você receberá a confirmação por WhatsApp.');    
     });
   }
 }
@@ -468,7 +696,6 @@ function initDoctorSearchDropdown() {
     }
     updateSchedulingUI();
   });
-
 }
 
 function getDoctorsBySpecialty() {
@@ -529,82 +756,6 @@ function getDoctorsBySpecialty() {
   return availableDoctors.sort((a, b) =>
     a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })
   );
-}
-
-function generateAppointmentsData(doctors, timeSlots) {
-  const AppointmentsData = [];
-
-  const today = new Date();
-
-  function formatDate(date) {
-    const ano = date.getFullYear();
-    const mes = String(date.getMonth() + 1).padStart(2, '0');
-    const dia = String(date.getDate()).padStart(2, '0');
-
-    return `${ano}-${mes}-${dia}`;
-  }
-
-  function getWeekLoad(dayIndex) {
-    const week = Math.floor(dayIndex / 7) + 1;
-
-    switch (week) {
-      case 1: return 0.95;
-      case 2: return 0.90;
-      case 3: return 0.85;
-      case 4: return 0.80;
-      case 5: return 0.60;
-      case 6: return 0.40;
-      case 7: return 0.20;
-      default: return 0.0;
-    }
-  }
-
-  function getWeekdayKey(date) {
-    const map = ['dom','seg','ter','qua','qui','sex','sab'];
-    return map[date.getDay()];
-  }
-
-  for (const doctor of doctors) {
-    const schedule = {};
-
-    for (let i = 0; i < 60; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      const isoDate = formatDate(date);
-      const weekday = getWeekdayKey(date);
-
-      //  médico não trabalha nesse dia
-      if (!doctor.workDays.includes(weekday)) {
-        schedule[isoDate] = [];
-        continue;
-      }
-
-      const load = getWeekLoad(i);
-
-      // filtra slots válidos pro médico (período)
-      const validSlots = timeSlots.filter(slot =>
-        doctor.periods.includes(slot.period)
-      );
-
-      const occupiedCount = Math.floor(validSlots.length * load);
-
-      const shuffled = [...validSlots].sort(() => Math.random() - 0.5);
-
-      const occupiedSlots = shuffled
-        .slice(0, occupiedCount)
-        .map(s => s.id);
-
-      schedule[isoDate] = occupiedSlots;
-    }
-
-    AppointmentsData.push({
-      doctorId: doctor.id,
-      schedule
-    });
-  }
-
-  return AppointmentsData;
 }
 
 function isSlotBooked(doctorId, date, slotId) {
@@ -768,8 +919,17 @@ function applyDoctorSelection(doctor) {
 }
 
 function updateSchedulingUI() {
-  renderScheduleSlots();
+  renderScheduleSlots(hasRequiredLevel(
+    getSelectedSpecialty(), 
+    UserRanking.specialties
+  ));
   renderScheduleClinic();
+  renderActions(ActionsData.actions, {
+    showExpiry: false, 
+    category:'Engajamento', 
+    limit: 4
+  });
+  renderScheduleDate(getSelectedSpecialty());
   syncSummaryFromState();
 }
 
@@ -862,4 +1022,29 @@ function calculateReminderPoints(reminders) {
   if (reminders.includes('2h')) return 40;
 
   return 0;
+}
+
+function renderDoctorDropdown(list) {
+  const dropdown = document.querySelector('#doctor-dropdown');
+  if (!dropdown) return;
+
+  if (list.length === 0) {
+    dropdown.innerHTML = `<div class="doctor-dropdown__item">Nenhum médico encontrado</div>`;
+  } else {
+    dropdown.innerHTML = list.map(doc => `
+      <div class="doctor-dropdown__item" data-id="${doc.id}">
+        <strong>${doc.name} - ${doc.specialty}</strong><br>
+        <small>${doc.clinic}</small>
+      </div>
+    `).join('');
+  }
+
+  dropdown.classList.remove('d-none');
+}
+
+function hasRequiredLevel(specialtyName, userdata) {
+  const specialty = userdata.find(function (item) {
+    return item.name === specialtyName
+  })
+  return specialty ? specialty.level >= 3 : false
 }

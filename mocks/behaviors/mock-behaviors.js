@@ -18,22 +18,6 @@ function setButtonLoading(btn, loading) {
   }
 }
 
-async function handleAtualizar() {
-  const btn = document.querySelector('#btn-atualizar');
-  if (!btn) return;
-
-  setButtonLoading(btn, true);
-  await simulateLoading(1000);
-
-  const statsGrid = document.querySelector('#stats-grid');
-  if (statsGrid) {
-    statsGrid.classList.add('animate-pulse');
-    setTimeout(() => statsGrid.classList.remove('animate-pulse'), 600);
-  }
-
-  setButtonLoading(btn, false);
-}
-
 function handleNovoAgendamento() {
   window.location.href = 'pages/agendamento.html';
 }
